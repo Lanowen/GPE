@@ -1,0 +1,17 @@
+#pragma once
+
+#include <SerializeableData.hpp>
+
+BOOST_SERIALIZATION_ASSUME_ABSTRACT(SerializableData)
+
+BOOST_CLASS_EXPORT_GUID(SerializableData, "SerializableData")
+BOOST_SERIALIZATION_SHARED_PTR(SerializableData)
+
+BOOST_CLASS_EXPORT_GUID(SerializableUINT32, "SerializableUINT32")
+BOOST_SERIALIZATION_SHARED_PTR(SerializableUINT32)
+
+BOOST_CLASS_EXPORT_GUID(SerializableVector3, "SerializableVector3")
+BOOST_SERIALIZATION_SHARED_PTR(SerializableVector3)
+
+BOOST_CLASS_EXPORT_GUID(SerializableCharacterData, "SerializableCharacterData")
+BOOST_SERIALIZATION_SHARED_PTR(SerializableCharacterData)

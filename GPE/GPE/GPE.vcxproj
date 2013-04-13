@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B25C7BFA-0D83-4967-AF63-CB680F7C5E6E}</ProjectGuid>
+    <RootNamespace>GPE</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(ProjectDir)/include;$(BOOST_1_52_0);$(OGRE_SRC_1_8_1)/OgreMain/include;$(OGRE_SRC_1_8_1)/Dependencies/include;C:/Dev/OgreSDK_vc11_v1-8-1/include;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Include;$(V8_DIR)/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BOOST_1_52_0)/stage/lib;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Lib/win32;$(OGRE_SRC_1_8_1)/Dependencies/lib/Debug;C:/Dev/OgreSDK_vc11_v1-8-1\lib\Debug;$(V8_DIR)\build\Debug\lib;$(LibraryPath)</LibraryPath>
+    <SourcePath>$(ProjectDir)/src;$(OGRE_SRC_1_8_1)/OgreMain/src;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(ProjectDir)/include;$(BOOST_1_52_0);$(OGRE_SRC_1_8_1)/OgreMain/include;$(OGRE_SRC_1_8_1)/Dependencies/include;C:/Dev/OgreSDK_vc11_v1-8-1/include;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Include;$(V8_DIR)/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BOOST_1_52_0)/stage/lib;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Lib/win32;$(OGRE_SRC_1_8_1)/Dependencies/lib/Release;C:/Dev/OgreSDK_vc11_v1-8-1\lib\Release;$(V8_DIR)\build\Release\lib;$(LibraryPath)</LibraryPath>
+    <SourcePath>$(ProjectDir)/src;$(OGRE_SRC_1_8_1)/OgreMain/src;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>WIN32;PHYSX_PROFILE_SDK;PX_CHECKED;PX_SUPPORT_VISUAL_DEBUGGER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>OgreMain_d.lib;OgrePaging_d.lib;OgreProperty_d.lib;OgreRTShaderSystem_d.lib;OgreTerrain_d.lib;OIS_d.lib;WINMM.LIB;v8_base.lib;preparser_lib.lib;v8_nosnapshot.lib;PhysX3DEBUG_x86.lib;PhysX3CommonDEBUG_x86.lib;PhysX3CookingDEBUG_x86.lib;RepXUpgrader3DEBUG.lib;PhysXVisualDebuggerSDKDEBUG.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;PhysX3CharacterKinematicDEBUG_x86.lib;RepX3DEBUG.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD.lib;libcpmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;PHYSX_PROFILE_SDK;PX_SUPPORT_VISUAL_DEBUGGER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>OgreMain.lib;OgrePaging.lib;OgreProperty.lib;OgreRTShaderSystem.lib;OgreTerrain.lib;OIS.lib;WINMM.LIB;v8_base.lib;preparser_lib.lib;v8_nosnapshot.lib;PhysX3_x86.lib;PhysX3Common_x86.lib;PhysX3Cooking_x86.lib;RepXUpgrader3.lib;PhysXVisualDebuggerSDK.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;PhysX3CharacterKinematic_x86.lib;RepX3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib;libcpmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Enemy.cpp" />
+    <ClCompile Include="src\EventDispatcherHelper.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameObject.cpp" />
+    <ClCompile Include="src\GameState.cpp" />
+    <ClCompile Include="src\GPENet.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\Physics.cpp" />
+    <ClCompile Include="src\PlayerCharacter.cpp" />
+    <ClCompile Include="src\Projectile.cpp" />
+    <ClCompile Include="src\SceneWideEvent.cpp" />
+    <ClCompile Include="src\ScriptingManager.cpp" />
+    <ClCompile Include="src\ScriptingObject.cpp" />
+    <ClCompile Include="src\Scripting_ExposeGPE.cpp" />
+    <ClCompile Include="src\Scripting_ExposeOGRE.cpp" />
+    <ClCompile Include="src\Scripting_ExposePx.cpp" />
+    <ClCompile Include="src\SerializeableData.cpp" />
+    <ClCompile Include="src\V8Scripting.cpp" />
+    <ClCompile Include="src\VisualDebugger.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\buffer.hpp" />
+    <ClInclude Include="include\DotSceneLoader.hpp" />
+    <ClInclude Include="include\DynamicConstraints.hpp" />
+    <ClInclude Include="include\Enemy.hpp" />
+    <ClInclude Include="include\ErrorStream.h" />
+    <ClInclude Include="include\EventDispatcherHelper.hpp" />
+    <ClInclude Include="include\Game.hpp" />
+    <ClInclude Include="include\GameObject.hpp" />
+    <ClInclude Include="include\GameState.hpp" />
+    <ClInclude Include="include\GPENet.hpp" />
+    <ClInclude Include="include\IInputListener.hpp" />
+    <ClInclude Include="include\Physics.hpp" />
+    <ClInclude Include="include\PlayerCharacter.hpp" />
+    <ClInclude Include="include\Projectile.hpp" />
+    <ClInclude Include="include\Sample.h" />
+    <ClInclude Include="include\SceneWideEvent.hpp" />
+    <ClInclude Include="include\ScriptingManager.hpp" />
+    <ClInclude Include="include\ScriptingObject.hpp" />
+    <ClInclude Include="include\Scripting_ExposeGPE.hpp" />
+    <ClInclude Include="include\Scripting_ExposeOGRE.hpp" />
+    <ClInclude Include="include\Scripting_ExposePx.hpp" />
+    <ClInclude Include="include\Scripting_Helpers.hpp" />
+    <ClInclude Include="include\SerializationClassExports.hpp" />
+    <ClInclude Include="include\SerializeableData.hpp" />
+    <ClInclude Include="include\Util.hpp" />
+    <ClInclude Include="include\V8Scripting.hpp" />
+    <ClInclude Include="include\VisualDebugger.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Media\scripts\BasicProjectile.js" />
+    <None Include="..\Media\scripts\Enemy.js" />
+    <None Include="..\Media\scripts\playerController.js" />
+    <None Include="..\Media\scripts\playerController2.js" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
