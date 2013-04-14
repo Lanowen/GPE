@@ -3,17 +3,6 @@
 
 #include <Ogre.h>
 
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8Vector3>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8Quaternion>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8Radian>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8Degree>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8Node>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8AnimationStateSet>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8AnimationState>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8Entity>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8Matrix3>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8SceneNode>::templ;
-
 using namespace Ogre;
 
 Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback, Handle<Value> data, Handle<Signature> signature)
@@ -34,13 +23,13 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 				V8Vector3::getTemplate()->SetClassName(v8::String::New("Vector3"));
 				GPEFuncTemplateBase->PrototypeTemplate()->Set(v8::String::New("Vector3"), V8Vector3::getTemplate());
 
-				objTemp = V8Vector3::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8Vector3::getTemplate()->PrototypeTemplate();
+				V8Vector3::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(v8::String::New("x"), V8Vector3::getX, V8Vector3::setX);
-				objTemp->SetAccessor(v8::String::New("y"), V8Vector3::getY, V8Vector3::setY);
-				objTemp->SetAccessor(v8::String::New("z"), V8Vector3::getZ, V8Vector3::setZ);
-				objTemp->SetIndexedPropertyHandler(V8Vector3::elementGet, V8Vector3::elementSet);
+				V8Vector3::getTemplate()->InstanceTemplate()->SetAccessor(v8::String::New("x"), V8Vector3::getX, V8Vector3::setX);
+				V8Vector3::getTemplate()->InstanceTemplate()->SetAccessor(v8::String::New("y"), V8Vector3::getY, V8Vector3::setY);
+				V8Vector3::getTemplate()->InstanceTemplate()->SetAccessor(v8::String::New("z"), V8Vector3::getZ, V8Vector3::setZ);
+				V8Vector3::getTemplate()->InstanceTemplate()->SetIndexedPropertyHandler(V8Vector3::elementGet, V8Vector3::elementSet);
 
 				objTemp->Set(v8::String::New("compare"), FunctionTemplate::New(InvocationCallback( V8Vector3::compare )));
 				objTemp->Set(v8::String::New("acompare"), FunctionTemplate::New(InvocationCallback( V8Vector3::acompare )));
@@ -91,14 +80,14 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 				V8Quaternion::getTemplate()->SetClassName(v8::String::New("Quaternion"));
 				GPEFuncTemplateBase->PrototypeTemplate()->Set(v8::String::New("Quaternion"), V8Quaternion::getTemplate());
 
-				objTemp = V8Quaternion::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8Quaternion::getTemplate()->PrototypeTemplate();
+				V8Quaternion::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(v8::String::New("x"), V8Quaternion::getX, V8Quaternion::setX);
-				objTemp->SetAccessor(v8::String::New("y"), V8Quaternion::getY, V8Quaternion::setY);
-				objTemp->SetAccessor(v8::String::New("z"), V8Quaternion::getZ, V8Quaternion::setZ);
-				objTemp->SetAccessor(v8::String::New("w"), V8Quaternion::getW, V8Quaternion::setW);
-				objTemp->SetIndexedPropertyHandler(V8Quaternion::elementGet, V8Quaternion::elementSet);
+				V8Quaternion::getTemplate()->InstanceTemplate()->SetAccessor(v8::String::New("x"), V8Quaternion::getX, V8Quaternion::setX);
+				V8Quaternion::getTemplate()->InstanceTemplate()->SetAccessor(v8::String::New("y"), V8Quaternion::getY, V8Quaternion::setY);
+				V8Quaternion::getTemplate()->InstanceTemplate()->SetAccessor(v8::String::New("z"), V8Quaternion::getZ, V8Quaternion::setZ);
+				V8Quaternion::getTemplate()->InstanceTemplate()->SetAccessor(v8::String::New("w"), V8Quaternion::getW, V8Quaternion::setW);
+				V8Quaternion::getTemplate()->InstanceTemplate()->SetIndexedPropertyHandler(V8Quaternion::elementGet, V8Quaternion::elementSet);
 
 				objTemp->Set(v8::String::New("FromRotationMatrix"), FunctionTemplate::New(InvocationCallback( V8Quaternion::FromRotationMatrix )));
 				objTemp->Set(v8::String::New("ToRotationMatrix"), FunctionTemplate::New(InvocationCallback( V8Quaternion::ToRotationMatrix )));
@@ -144,8 +133,8 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 				V8Radian::getTemplate()->SetClassName(v8::String::New("Radian"));
 				GPEFuncTemplateBase->PrototypeTemplate()->Set(v8::String::New("Radian"), V8Radian::getTemplate());
 
-				objTemp = V8Radian::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8Radian::getTemplate()->PrototypeTemplate();
+				V8Radian::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(v8::String::New("valueDegrees"), FunctionTemplate::New(InvocationCallback( V8Radian::valueDegrees )));
 				objTemp->Set(v8::String::New("valueRadians"), FunctionTemplate::New(InvocationCallback( V8Radian::valueRadians )));
@@ -174,8 +163,8 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 				V8Degree::getTemplate()->SetClassName(v8::String::New("Degree"));
 				GPEFuncTemplateBase->PrototypeTemplate()->Set(v8::String::New("Degree"), V8Degree::getTemplate());
 
-				objTemp = V8Degree::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8Degree::getTemplate()->PrototypeTemplate();
+				V8Degree::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(v8::String::New("valueDegrees"), FunctionTemplate::New(InvocationCallback( V8Degree::valueDegrees )));
 				objTemp->Set(v8::String::New("valueRadians"), FunctionTemplate::New(InvocationCallback( V8Degree::valueRadians )));
@@ -212,8 +201,8 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 				temp->PrototypeTemplate()->Set(v8::String::New("TS_PARENT"), Uint32::New(Node::TransformSpace::TS_PARENT));
 				temp->PrototypeTemplate()->Set(v8::String::New("TS_WORLD"), Uint32::New(Node::TransformSpace::TS_WORLD));
 
-				objTemp = V8Node::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8Node::getTemplate()->PrototypeTemplate();
+				V8Node::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(v8::String::New("getName"), FunctionTemplate::New(InvocationCallback( V8Node::getName )));
 				objTemp->Set(v8::String::New("getParent"), FunctionTemplate::New(InvocationCallback( V8Node::getParent )));
@@ -268,8 +257,8 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 				V8AnimationStateSet::getTemplate()->SetClassName(v8::String::New("AnimationStateSet"));
 				GPEFuncTemplateBase->PrototypeTemplate()->Set(v8::String::New("AnimationStateSet"), V8AnimationStateSet::getTemplate());
 
-				objTemp = V8AnimationStateSet::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8AnimationStateSet::getTemplate()->PrototypeTemplate();
+				V8AnimationStateSet::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(v8::String::New("createAnimationState"), FunctionTemplate::New(InvocationCallback( V8AnimationStateSet::createAnimationState )));
 				objTemp->Set(v8::String::New("getAnimationState"), FunctionTemplate::New(InvocationCallback( V8AnimationStateSet::getAnimationState )));
@@ -287,8 +276,8 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 				V8AnimationState::getTemplate()->SetClassName(v8::String::New("AnimationState"));
 				GPEFuncTemplateBase->PrototypeTemplate()->Set(v8::String::New("AnimationState"), V8AnimationState::getTemplate());
 
-				objTemp = V8AnimationState::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8AnimationState::getTemplate()->PrototypeTemplate();
+				V8AnimationState::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(v8::String::New("getAnimationName"), FunctionTemplate::New(InvocationCallback( V8AnimationState::getAnimationName )));
 				objTemp->Set(v8::String::New("getTimePosition"), FunctionTemplate::New(InvocationCallback( V8AnimationState::getTimePosition )));

@@ -9,11 +9,6 @@
 #include <Enemy.hpp>
 #include <GameState.hpp>
 
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8GameObject>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PlayerCharacter>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8Enemy>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8GameState>::templ;
-
 Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, Handle<Value> data, Handle<Signature> signature)
 	{
 		Local<FunctionTemplate> GPEFuncTemplateBase = FunctionTemplate::New();
@@ -32,8 +27,8 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 				V8GameObject::getTemplate()->SetClassName(v8::String::New("GameObject"));
 				GPEFuncTemplateBase->PrototypeTemplate()->Set(v8::String::New("GameObject"), V8GameObject::getTemplate());
 
-				objTemp = V8GameObject::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8GameObject::getTemplate()->PrototypeTemplate();
+				V8GameObject::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(v8::String::New("loadScript"), FunctionTemplate::New(InvocationCallback( V8GameObject::loadScript )));
 				objTemp->Set(v8::String::New("dispatchEvent"), FunctionTemplate::New(InvocationCallback( V8GameObject::dispatchEvent )));
@@ -49,7 +44,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 				objTemp = V8PlayerCharacter::getTemplate()->InstanceTemplate();
 				objTemp->SetInternalFieldCount(1);
 
-				objTemp->Set(v8::String::New("addForceAtLocalPos"), FunctionTemplate::New(InvocationCallback( V8PlayerCharacter::addForceAtLocalPos )));
+				V8PlayerCharacter::getTemplate()->PrototypeTemplate()->Set(v8::String::New("addForceAtLocalPos"), FunctionTemplate::New(InvocationCallback( V8PlayerCharacter::addForceAtLocalPos )));
 
 				objTemp->SetAccessor(v8::String::New("entity"), V8PlayerCharacter::getEntity);
 				objTemp->SetAccessor(v8::String::New("gunTip"), V8PlayerCharacter::getGunTip);
@@ -78,16 +73,16 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 
 				V8Enemy::getTemplate()->Inherit(V8GameObject::getTemplate());
 
-				objTemp = V8Enemy::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8Enemy::getTemplate()->PrototypeTemplate();
+				V8Enemy::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 			//GPEGameState
 				V8GameState::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New());
 				V8GameState::getTemplate()->SetClassName(v8::String::New("GameState"));
 				GPEFuncTemplateBase->PrototypeTemplate()->Set(v8::String::New("GameState"), V8GameState::getTemplate());
 
-				objTemp = V8GameState::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8GameState::getTemplate()->PrototypeTemplate();
+				V8GameState::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 		//ENUMS
 

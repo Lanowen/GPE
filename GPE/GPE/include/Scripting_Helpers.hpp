@@ -10,8 +10,7 @@
 
 using namespace v8;
 
-
-
+//Best idea ever
 template<class T>
 class BaseV8TemplateObject {
 public:
@@ -23,13 +22,15 @@ public:
 	
 };
 
+
+//god yes
 template<class T>
 Persistent<FunctionTemplate> BaseV8TemplateObject<T>::templ;
 
 template <class TYPE>
 static TYPE* unwrap( const Local<v8::Object>& wrapped ){
 	Local<External> external = Local<External>::Cast( wrapped->GetInternalField(0) );
-	TYPE* obj = static_cast<TYPE*>(external->Value());
+	TYPE* obj = reinterpret_cast<TYPE*>(external->Value());
 
 	return obj;
 }
@@ -148,7 +149,8 @@ static Handle<Value> autoWrap(const Arguments& args){
 
 	if(args.Length() == 0) 
     {
-		T* ptr = static_cast<T*>(External::Cast(*args.Holder()->GetHiddenValue(v8::String::New("GameObject")))->Value());
+
+		T* ptr = reinterpret_cast<T*>(External::Cast(*args.Holder()->GetHiddenValue(v8::String::New("GameObject")))->Value());
 
 		Persistent<Object> obj = Persistent<Object>::New(Isolate::GetCurrent(),templ::getTemplate()->InstanceTemplate()->NewInstance());			
 		obj.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly );
@@ -161,5 +163,6 @@ static Handle<Value> autoWrap(const Arguments& args){
 	return scope.Close( Undefined() );
 }
 
-#define EXPOSE_TO_SCRIPTS(type, templateObj, name) exposeObject(name, FunctionTemplate::New( InvocationCallback( autoWrap<type, templateObj> ) ))
+//#define EXPOSE_TO_SCRIPTS(type, templateObj, name) exposeObject(name, FunctionTemplate::New( InvocationCallback( autoWrap<type, templateObj> ) ))
+//#define EXPOSE_TO_SCRIPTS(type, templateObj, name, obj) exposeObject(name, wrapByVal<type, templateObj>(obj))
 

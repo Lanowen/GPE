@@ -5,76 +5,6 @@
 #include <Scripting_Helpers.hpp>
 //#include <Util.hpp>
 
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxSerializable>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxRefResolver>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxUserReferences>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxCollection>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxVec2>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxVec3>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxExtendedVec3>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxVec4>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxQuat>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxMat33>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxMat44>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxTransform>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxBounds3>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxShape>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxControllerShapeHit>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxControllersHit>::templ;
-//
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxPadding<0>>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxPadding<1>>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxPadding<2>>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxPadding<3>>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxPadding<4>>::templ;
-//
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxGeometry>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxBoxGeometry>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxCapsuleGeometry>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxConvexMeshGeometry>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxHeightFieldGeometry>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxSphereGeometry>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxPlaneGeometry>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxTriangleMeshGeometry>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxTriangleMesh>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxFieldDescriptor>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxSerialStream>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxMeshScale>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxConvexMesh>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxHeightField>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxFilterData>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxHullPolygon>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxMaterial>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxObserver>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxObservable>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxActor>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxRigidActor>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxRigidBody>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxParticleBase>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxLockedData>::templ;
-//
-//
-//
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxParticleReadData>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxRigidDynamic>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxRigidStatic>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxScene>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxSceneQueryImpactHit>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxSceneQueryHit>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxRaycastHit>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxControllerDesc>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxNameManager>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxParticleCreationData>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxParticleSystem>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxParticleFluid>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxDeformable>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxArticulationLink>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxConstraint>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxShapeDesc>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxAggregate>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxController>::templ;
-
-
 //TODO: Change mallocs into new[]
 
 
@@ -100,7 +30,7 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxSerializable::getTemplate()->SetClassName(String::New("PxSerializable"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxSerializable"), V8PxSerializable::getTemplate());
 
-				objTemp = V8PxSerializable::getTemplate()->InstanceTemplate();
+				objTemp = V8PxSerializable::getTemplate()->PrototypeTemplate();
 				objTemp->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("getOrder"), FunctionTemplate::New(InvocationCallback( V8PxSerializable::getOrder )));
@@ -136,8 +66,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxRefResolver::getTemplate()->SetClassName(String::New("PxRefResolver"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxRefResolver"), V8PxRefResolver::getTemplate());
 
-				objTemp = V8PxRefResolver::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxRefResolver::getTemplate()->PrototypeTemplate();
+				V8PxRefResolver::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("newAddress"), FunctionTemplate::New(InvocationCallback( V8PxRefResolver::newAddress )));
 				objTemp->Set(String::New("setNewAddress"), FunctionTemplate::New(InvocationCallback( V8PxRefResolver::setNewAddress )));
@@ -147,8 +77,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxUserReferences::getTemplate()->SetClassName(String::New("PxUserReferences"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxUserReferences"), V8PxUserReferences::getTemplate());
 
-				objTemp = V8PxUserReferences::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxUserReferences::getTemplate()->PrototypeTemplate();
+				V8PxUserReferences::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("getObjectFromID"), FunctionTemplate::New(InvocationCallback( V8PxUserReferences::getObjectFromID )));
 				objTemp->Set(String::New("setUserData"), FunctionTemplate::New(InvocationCallback( V8PxUserReferences::setUserData )));
@@ -158,8 +88,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxCollection::getTemplate()->SetClassName(String::New("PxCollection"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxCollection"), V8PxCollection::getTemplate());
 
-				objTemp = V8PxCollection::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxCollection::getTemplate()->PrototypeTemplate();
+				V8PxCollection::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("serialize"), FunctionTemplate::New(InvocationCallback( V8PxCollection::serialize )));
 				objTemp->Set(String::New("deserialize"), FunctionTemplate::New(InvocationCallback( V8PxCollection::deserialize )));
@@ -173,14 +103,14 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxVec2::getTemplate()->SetClassName(String::New("PxVec2"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxVec2"), V8PxVec2::getTemplate());
 
-				objTemp = V8PxVec2::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxVec2::getTemplate()->PrototypeTemplate();
+				V8PxVec2::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				V8PxVec2::getTemplate()->Set(String::New("createArray"), FunctionTemplate::New(InvocationCallback( createArray<PxVec2>::makeArray )));
 
-				objTemp->SetAccessor(String::New("x"), V8PxVec2::getX, V8PxVec2::setX);
-				objTemp->SetAccessor(String::New("y"), V8PxVec2::getY, V8PxVec2::setY);
-				objTemp->SetIndexedPropertyHandler(V8PxVec2::elementGet, V8PxVec2::elementSet);
+				V8PxVec2::getTemplate()->InstanceTemplate()->SetAccessor(String::New("x"), V8PxVec2::getX, V8PxVec2::setX);
+				V8PxVec2::getTemplate()->InstanceTemplate()->SetAccessor(String::New("y"), V8PxVec2::getY, V8PxVec2::setY);
+				V8PxVec2::getTemplate()->InstanceTemplate()->SetIndexedPropertyHandler(V8PxVec2::elementGet, V8PxVec2::elementSet);
 
 				objTemp->Set(String::New("compare"), FunctionTemplate::New(InvocationCallback( V8PxVec2::compare )));
 				objTemp->Set(String::New("acompare"), FunctionTemplate::New(InvocationCallback( V8PxVec2::acompare )));
@@ -215,13 +145,13 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxVec3::getTemplate()->SetClassName(String::New("PxVec3"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxVec3"), V8PxVec3::getTemplate());
 
-				objTemp = V8PxVec3::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxVec3::getTemplate()->PrototypeTemplate();
+				V8PxVec3::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("x"), V8PxVec3::getX, V8PxVec3::setX);
-				objTemp->SetAccessor(String::New("y"), V8PxVec3::getY, V8PxVec3::setY);
-				objTemp->SetAccessor(String::New("z"), V8PxVec3::getZ, V8PxVec3::setZ);
-				objTemp->SetIndexedPropertyHandler(V8PxVec3::elementGet, V8PxVec3::elementSet);
+				V8PxVec3::getTemplate()->InstanceTemplate()->SetAccessor(String::New("x"), V8PxVec3::getX, V8PxVec3::setX);
+				V8PxVec3::getTemplate()->InstanceTemplate()->SetAccessor(String::New("y"), V8PxVec3::getY, V8PxVec3::setY);
+				V8PxVec3::getTemplate()->InstanceTemplate()->SetAccessor(String::New("z"), V8PxVec3::getZ, V8PxVec3::setZ);
+				V8PxVec3::getTemplate()->InstanceTemplate()->SetIndexedPropertyHandler(V8PxVec3::elementGet, V8PxVec3::elementSet);
 
 				objTemp->Set(String::New("compare"), FunctionTemplate::New(InvocationCallback( V8PxVec3::compare )));
 				objTemp->Set(String::New("acompare"), FunctionTemplate::New(InvocationCallback( V8PxVec3::acompare )));
@@ -257,13 +187,13 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxExtendedVec3::getTemplate()->SetClassName(String::New("PxExtendedVec3"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxExtendedVec3"), V8PxExtendedVec3::getTemplate());
 
-				objTemp = V8PxExtendedVec3::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxExtendedVec3::getTemplate()->PrototypeTemplate();
+				V8PxExtendedVec3::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("x"), V8PxExtendedVec3::getX, V8PxExtendedVec3::setX);
-				objTemp->SetAccessor(String::New("y"), V8PxExtendedVec3::getY, V8PxExtendedVec3::setY);
-				objTemp->SetAccessor(String::New("z"), V8PxExtendedVec3::getZ, V8PxExtendedVec3::setZ);
-				objTemp->SetIndexedPropertyHandler(V8PxExtendedVec3::elementGet, V8PxExtendedVec3::elementSet);
+				V8PxExtendedVec3::getTemplate()->InstanceTemplate()->SetAccessor(String::New("x"), V8PxExtendedVec3::getX, V8PxExtendedVec3::setX);
+				V8PxExtendedVec3::getTemplate()->InstanceTemplate()->SetAccessor(String::New("y"), V8PxExtendedVec3::getY, V8PxExtendedVec3::setY);
+				V8PxExtendedVec3::getTemplate()->InstanceTemplate()->SetAccessor(String::New("z"), V8PxExtendedVec3::getZ, V8PxExtendedVec3::setZ);
+				V8PxExtendedVec3::getTemplate()->InstanceTemplate()->SetIndexedPropertyHandler(V8PxExtendedVec3::elementGet, V8PxExtendedVec3::elementSet);
 
 				objTemp->Set(String::New("isZero"), FunctionTemplate::New(InvocationCallback( V8PxExtendedVec3::isZero )));
 				objTemp->Set(String::New("isFinite"), FunctionTemplate::New(InvocationCallback( V8PxExtendedVec3::isFinite )));
@@ -292,14 +222,14 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxVec4::getTemplate()->SetClassName(String::New("PxVec4"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxVec4"), V8PxVec4::getTemplate());
 
-				objTemp = V8PxVec4::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxVec4::getTemplate()->PrototypeTemplate();
+				V8PxVec4::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("x"), V8PxVec4::getX, V8PxVec4::setX);
-				objTemp->SetAccessor(String::New("y"), V8PxVec4::getY, V8PxVec4::setY);
-				objTemp->SetAccessor(String::New("z"), V8PxVec4::getZ, V8PxVec4::setZ);
-				objTemp->SetAccessor(String::New("w"), V8PxVec4::getW, V8PxVec4::setW);
-				objTemp->SetIndexedPropertyHandler(V8PxVec4::elementGet, V8PxVec4::elementSet);
+				V8PxVec4::getTemplate()->InstanceTemplate()->SetAccessor(String::New("x"), V8PxVec4::getX, V8PxVec4::setX);
+				V8PxVec4::getTemplate()->InstanceTemplate()->SetAccessor(String::New("y"), V8PxVec4::getY, V8PxVec4::setY);
+				V8PxVec4::getTemplate()->InstanceTemplate()->SetAccessor(String::New("z"), V8PxVec4::getZ, V8PxVec4::setZ);
+				V8PxVec4::getTemplate()->InstanceTemplate()->SetAccessor(String::New("w"), V8PxVec4::getW, V8PxVec4::setW);
+				V8PxVec4::getTemplate()->InstanceTemplate()->SetIndexedPropertyHandler(V8PxVec4::elementGet, V8PxVec4::elementSet);
 
 				objTemp->Set(String::New("compare"), FunctionTemplate::New(InvocationCallback( V8PxVec4::compare )));
 				objTemp->Set(String::New("acompare"), FunctionTemplate::New(InvocationCallback( V8PxVec4::acompare )));
@@ -335,13 +265,13 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxQuat::getTemplate()->SetClassName(String::New("PxQuat"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxQuat"), V8PxQuat::getTemplate());
 
-				objTemp = V8PxQuat::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxQuat::getTemplate()->PrototypeTemplate();
+				V8PxQuat::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("x"), V8PxQuat::getX, V8PxQuat::setX);
-				objTemp->SetAccessor(String::New("y"), V8PxQuat::getY, V8PxQuat::setY);
-				objTemp->SetAccessor(String::New("z"), V8PxQuat::getZ, V8PxQuat::setZ);
-				objTemp->SetAccessor(String::New("w"), V8PxQuat::getW, V8PxQuat::setW);
+				V8PxQuat::getTemplate()->InstanceTemplate()->SetAccessor(String::New("x"), V8PxQuat::getX, V8PxQuat::setX);
+				V8PxQuat::getTemplate()->InstanceTemplate()->SetAccessor(String::New("y"), V8PxQuat::getY, V8PxQuat::setY);
+				V8PxQuat::getTemplate()->InstanceTemplate()->SetAccessor(String::New("z"), V8PxQuat::getZ, V8PxQuat::setZ);
+				V8PxQuat::getTemplate()->InstanceTemplate()->SetAccessor(String::New("w"), V8PxQuat::getW, V8PxQuat::setW);
 				objTemp->Set(String::New("isFinite"), FunctionTemplate::New(InvocationCallback( V8PxQuat::isFinite )));
 				//objTemp->Set(String::New("isValid"), FunctionTemplate::New(InvocationCallback( V8PxQuat::isValid )));
 				objTemp->Set(String::New("isSane"), FunctionTemplate::New(InvocationCallback( V8PxQuat::isSane )));
@@ -376,8 +306,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxMat33::getTemplate()->SetClassName(String::New("PxMat33"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxMat33"), V8PxMat33::getTemplate());
 
-				objTemp = V8PxMat33::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxMat33::getTemplate()->PrototypeTemplate();
+				V8PxMat33::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->SetIndexedPropertyHandler(V8PxMat33::elementGet, V8PxMat33::elementSet);
 
@@ -404,8 +334,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxMat44::getTemplate()->SetClassName(String::New("PxMat44"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxMat44"), V8PxMat44::getTemplate());
 
-				objTemp = V8PxMat44::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxMat44::getTemplate()->PrototypeTemplate();
+				V8PxMat44::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->SetIndexedPropertyHandler(V8PxMat44::elementGet, V8PxMat44::elementSet);
 
@@ -435,11 +365,11 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxTransform::getTemplate()->SetClassName(String::New("PxTransform"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxTransform"), V8PxTransform::getTemplate());
 
-				objTemp = V8PxTransform::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxTransform::getTemplate()->PrototypeTemplate();
+				V8PxTransform::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("q"), V8PxTransform::getQ, V8PxTransform::setQ);
-				objTemp->SetAccessor(String::New("p"), V8PxTransform::getP, V8PxTransform::setP);
+				V8PxTransform::getTemplate()->InstanceTemplate()->SetAccessor(String::New("q"), V8PxTransform::getQ, V8PxTransform::setQ);
+				V8PxTransform::getTemplate()->InstanceTemplate()->SetAccessor(String::New("p"), V8PxTransform::getP, V8PxTransform::setP);
 
 				V8PxTransform::getTemplate()->Set(String::New("createIdentity"), FunctionTemplate::New(InvocationCallback( V8PxTransform::createIdentity )));
 
@@ -459,11 +389,11 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxBounds3::getTemplate()->SetClassName(String::New("PxBounds3"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxBounds3"), V8PxBounds3::getTemplate());
 
-				objTemp = V8PxBounds3::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxBounds3::getTemplate()->PrototypeTemplate();
+				V8PxBounds3::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("minimum"), V8PxBounds3::getMin, V8PxBounds3::setMin);
-				objTemp->SetAccessor(String::New("maximum"), V8PxBounds3::getMax, V8PxBounds3::setMax);
+				V8PxBounds3::getTemplate()->InstanceTemplate()->SetAccessor(String::New("minimum"), V8PxBounds3::getMin, V8PxBounds3::setMin);
+				V8PxBounds3::getTemplate()->InstanceTemplate()->SetAccessor(String::New("maximum"), V8PxBounds3::getMax, V8PxBounds3::setMax);
 
 				V8PxBounds3::getTemplate()->Set(String::New("empty"), FunctionTemplate::New(InvocationCallback( V8PxBounds3::empty )));
 				V8PxBounds3::getTemplate()->Set(String::New("boundsOfPoints"), FunctionTemplate::New(InvocationCallback( V8PxBounds3::boundsOfPoints )));
@@ -492,10 +422,10 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxShape::getTemplate()->SetClassName(String::New("PxShape"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxShape"), V8PxShape::getTemplate());
 
-				objTemp = V8PxShape::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxShape::getTemplate()->PrototypeTemplate();
+				V8PxShape::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("userData"), V8PxShape::getUserData, V8PxShape::setUserData);
+				V8PxShape::getTemplate()->InstanceTemplate()->SetAccessor(String::New("userData"), V8PxShape::getUserData, V8PxShape::setUserData);
 
 				objTemp->Set(String::New("release"), FunctionTemplate::New(InvocationCallback( V8PxShape::release)));
 				objTemp->Set(String::New("getGeometryType"), FunctionTemplate::New(InvocationCallback( V8PxShape::getGeometryType)));
@@ -535,8 +465,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxControllerShapeHit::getTemplate()->SetClassName(String::New("PxControllerShapeHit"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxControllerShapeHit"), V8PxControllerShapeHit::getTemplate());
 
-				objTemp = V8PxControllerShapeHit::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxControllerShapeHit::getTemplate()->PrototypeTemplate();
+				V8PxControllerShapeHit::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("getController"), FunctionTemplate::New(InvocationCallback(V8PxControllerShapeHit::getController)), ReadOnly);
 				objTemp->Set(String::New("getShape"), FunctionTemplate::New(InvocationCallback(V8PxControllerShapeHit::getShape)), ReadOnly);
@@ -550,8 +480,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxControllersHit::getTemplate()->SetClassName(String::New("PxControllersHit"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxControllersHit"), V8PxControllersHit::getTemplate());
 
-				objTemp = V8PxControllersHit::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxControllersHit::getTemplate()->PrototypeTemplate();
+				V8PxControllersHit::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("controller"), FunctionTemplate::New(InvocationCallback(V8PxControllersHit::getController)), ReadOnly);
 				objTemp->Set(String::New("other"), FunctionTemplate::New(InvocationCallback(V8PxControllersHit::getOther)), ReadOnly);
@@ -561,52 +491,52 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxPadding<0>::getTemplate()->SetClassName(String::New("PxPadding1"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxPadding1"), V8PxPadding<0>::getTemplate());
 
-				objTemp = V8PxPadding<0>::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxPadding<0>::getTemplate()->PrototypeTemplate();
+				V8PxPadding<0>::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("size"), V8PxPadding<1>::getSize);
-				objTemp->SetIndexedPropertyHandler(V8PxPadding<1>::elementGet, V8PxPadding<1>::elementSet);
+				V8PxPadding<0>::getTemplate()->InstanceTemplate()->SetAccessor(String::New("size"), V8PxPadding<1>::getSize);
+				V8PxPadding<0>::getTemplate()->InstanceTemplate()->SetIndexedPropertyHandler(V8PxPadding<1>::elementGet, V8PxPadding<1>::elementSet);
 
 			//PxPadding2
 				V8PxPadding<1>::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New(V8PxPadding<2>::PxPaddingConstructor));
 				V8PxPadding<1>::getTemplate()->SetClassName(String::New("PxPadding2"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxPadding2"), V8PxPadding<1>::getTemplate());
 
-				objTemp = V8PxPadding<1>::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(2);
+				objTemp = V8PxPadding<1>::getTemplate()->PrototypeTemplate();
+				V8PxPadding<1>::getTemplate()->InstanceTemplate()->SetInternalFieldCount(2);
 
-				objTemp->SetAccessor(String::New("size"), V8PxPadding<2>::getSize);
-				objTemp->SetIndexedPropertyHandler(V8PxPadding<2>::elementGet, V8PxPadding<2>::elementSet);
+				V8PxPadding<1>::getTemplate()->InstanceTemplate()->SetAccessor(String::New("size"), V8PxPadding<2>::getSize);
+				V8PxPadding<1>::getTemplate()->InstanceTemplate()->SetIndexedPropertyHandler(V8PxPadding<2>::elementGet, V8PxPadding<2>::elementSet);
 
 			//PxPadding3
 				V8PxPadding<2>::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New(V8PxPadding<3>::PxPaddingConstructor));
 				V8PxPadding<2>::getTemplate()->SetClassName(String::New("PxPadding3"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxPadding3"), V8PxPadding<2>::getTemplate());
 
-				objTemp = V8PxPadding<2>::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxPadding<2>::getTemplate()->PrototypeTemplate();
+				V8PxPadding<2>::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("size"), V8PxPadding<3>::getSize);
-				objTemp->SetIndexedPropertyHandler(V8PxPadding<3>::elementGet, V8PxPadding<3>::elementSet);
+				V8PxPadding<2>::getTemplate()->InstanceTemplate()->SetAccessor(String::New("size"), V8PxPadding<3>::getSize);
+				V8PxPadding<2>::getTemplate()->InstanceTemplate()->SetIndexedPropertyHandler(V8PxPadding<3>::elementGet, V8PxPadding<3>::elementSet);
 
 			//PxPadding4
 				V8PxPadding<3>::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New(V8PxPadding<4>::PxPaddingConstructor));
 				V8PxPadding<3>::getTemplate()->SetClassName(String::New("PxPadding4"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxPadding4"), V8PxPadding<3>::getTemplate());
 
-				objTemp = V8PxPadding<3>::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(4);
+				objTemp = V8PxPadding<3>::getTemplate()->PrototypeTemplate();
+				V8PxPadding<3>::getTemplate()->InstanceTemplate()->SetInternalFieldCount(4);
 
-				objTemp->SetAccessor(String::New("size"), V8PxPadding<4>::getSize);
-				objTemp->SetIndexedPropertyHandler(V8PxPadding<4>::elementGet, V8PxPadding<4>::elementSet);
+				V8PxPadding<3>::getTemplate()->InstanceTemplate()->SetAccessor(String::New("size"), V8PxPadding<4>::getSize);
+				V8PxPadding<3>::getTemplate()->InstanceTemplate()->SetIndexedPropertyHandler(V8PxPadding<4>::elementGet, V8PxPadding<4>::elementSet);
 
 			//PxGeometry
 				V8PxGeometry::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New());
 				V8PxGeometry::getTemplate()->SetClassName(String::New("PxGeometry"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxGeometry"), V8PxGeometry::getTemplate());
 
-				objTemp = V8PxGeometry::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxGeometry::getTemplate()->PrototypeTemplate();
+				V8PxGeometry::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("getType"), FunctionTemplate::New(InvocationCallback( V8PxGeometry::getType)));
 
@@ -617,8 +547,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxBoxGeometry::getTemplate()->Inherit(V8PxGeometry::getTemplate());
 
-				objTemp = V8PxBoxGeometry::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxBoxGeometry::getTemplate()->PrototypeTemplate();
+				V8PxBoxGeometry::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->SetAccessor(String::New("halfExtents"), V8PxBoxGeometry::getHalfExtents, V8PxBoxGeometry::setHalfExtents);
 
@@ -631,11 +561,11 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxCapsuleGeometry::getTemplate()->Inherit(V8PxGeometry::getTemplate());
 
-				objTemp = V8PxCapsuleGeometry::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxCapsuleGeometry::getTemplate()->PrototypeTemplate();
+				V8PxCapsuleGeometry::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("radius"), V8PxCapsuleGeometry::getRadius, V8PxCapsuleGeometry::setRadius);
-				objTemp->SetAccessor(String::New("halfHeight"), V8PxCapsuleGeometry::getHalfHeight, V8PxCapsuleGeometry::setHalfHeight);
+				V8PxCapsuleGeometry::getTemplate()->InstanceTemplate()->SetAccessor(String::New("radius"), V8PxCapsuleGeometry::getRadius, V8PxCapsuleGeometry::setRadius);
+				V8PxCapsuleGeometry::getTemplate()->InstanceTemplate()->SetAccessor(String::New("halfHeight"), V8PxCapsuleGeometry::getHalfHeight, V8PxCapsuleGeometry::setHalfHeight);
 
 				objTemp->Set(String::New("isValid"), FunctionTemplate::New(InvocationCallback(V8PxCapsuleGeometry::isValid)));
 
@@ -646,11 +576,11 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxConvexMeshGeometry::getTemplate()->Inherit(V8PxGeometry::getTemplate());
 
-				objTemp = V8PxConvexMeshGeometry::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxConvexMeshGeometry::getTemplate()->PrototypeTemplate();
+				V8PxConvexMeshGeometry::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("scale"), V8PxConvexMeshGeometry::getScale, V8PxConvexMeshGeometry::setScale);
-				objTemp->SetAccessor(String::New("convexMesh"), V8PxConvexMeshGeometry::getConvexMesh, V8PxConvexMeshGeometry::setConvexMesh);
+				V8PxConvexMeshGeometry::getTemplate()->InstanceTemplate()->SetAccessor(String::New("scale"), V8PxConvexMeshGeometry::getScale, V8PxConvexMeshGeometry::setScale);
+				V8PxConvexMeshGeometry::getTemplate()->InstanceTemplate()->SetAccessor(String::New("convexMesh"), V8PxConvexMeshGeometry::getConvexMesh, V8PxConvexMeshGeometry::setConvexMesh);
 
 				objTemp->Set(String::New("isValid"), FunctionTemplate::New(InvocationCallback(V8PxConvexMeshGeometry::isValid)));
 
@@ -661,15 +591,15 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxHeightFieldGeometry::getTemplate()->Inherit(V8PxGeometry::getTemplate());
 
-				objTemp = V8PxHeightFieldGeometry::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxHeightFieldGeometry::getTemplate()->PrototypeTemplate();
+				V8PxHeightFieldGeometry::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("heightField"), V8PxHeightFieldGeometry::getHeightField, V8PxHeightFieldGeometry::setHeightField);
-				objTemp->SetAccessor(String::New("heightScale"), V8PxHeightFieldGeometry::getHeightScale, V8PxHeightFieldGeometry::setHeightScale);
-				objTemp->SetAccessor(String::New("rowScale"), V8PxHeightFieldGeometry::getHeightField, V8PxHeightFieldGeometry::setHeightField);
-				objTemp->SetAccessor(String::New("columnScale"), V8PxHeightFieldGeometry::getColumnScale, V8PxHeightFieldGeometry::setColumnScale);
-				objTemp->SetAccessor(String::New("heightFieldFlags"), V8PxHeightFieldGeometry::getHeightFeildFlags, V8PxHeightFieldGeometry::setHeightFieldFlags);
-				objTemp->SetAccessor(String::New("paddingFromFlags"), V8PxHeightFieldGeometry::getPaddingFromFlags, V8PxHeightFieldGeometry::setPaddingFromFlags);
+				V8PxHeightFieldGeometry::getTemplate()->InstanceTemplate()->SetAccessor(String::New("heightField"), V8PxHeightFieldGeometry::getHeightField, V8PxHeightFieldGeometry::setHeightField);
+				V8PxHeightFieldGeometry::getTemplate()->InstanceTemplate()->SetAccessor(String::New("heightScale"), V8PxHeightFieldGeometry::getHeightScale, V8PxHeightFieldGeometry::setHeightScale);
+				V8PxHeightFieldGeometry::getTemplate()->InstanceTemplate()->SetAccessor(String::New("rowScale"), V8PxHeightFieldGeometry::getHeightField, V8PxHeightFieldGeometry::setHeightField);
+				V8PxHeightFieldGeometry::getTemplate()->InstanceTemplate()->SetAccessor(String::New("columnScale"), V8PxHeightFieldGeometry::getColumnScale, V8PxHeightFieldGeometry::setColumnScale);
+				V8PxHeightFieldGeometry::getTemplate()->InstanceTemplate()->SetAccessor(String::New("heightFieldFlags"), V8PxHeightFieldGeometry::getHeightFeildFlags, V8PxHeightFieldGeometry::setHeightFieldFlags);
+				V8PxHeightFieldGeometry::getTemplate()->InstanceTemplate()->SetAccessor(String::New("paddingFromFlags"), V8PxHeightFieldGeometry::getPaddingFromFlags, V8PxHeightFieldGeometry::setPaddingFromFlags);
 
 				objTemp->Set(String::New("isValid"), FunctionTemplate::New(InvocationCallback(V8PxHeightFieldGeometry::isValid)));
 			
@@ -680,10 +610,10 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxSphereGeometry::getTemplate()->Inherit(V8PxGeometry::getTemplate());
 
-				objTemp = V8PxSphereGeometry::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxSphereGeometry::getTemplate()->PrototypeTemplate();
+				V8PxSphereGeometry::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("radius"), V8PxSphereGeometry::getRadius, V8PxSphereGeometry::setRadius);
+				V8PxSphereGeometry::getTemplate()->InstanceTemplate()->SetAccessor(String::New("radius"), V8PxSphereGeometry::getRadius, V8PxSphereGeometry::setRadius);
 
 				objTemp->Set(String::New("isValid"), FunctionTemplate::New(InvocationCallback(V8PxSphereGeometry::isValid)));
 
@@ -694,8 +624,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxPlaneGeometry::getTemplate()->Inherit(V8PxGeometry::getTemplate());
 
-				objTemp = V8PxPlaneGeometry::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxPlaneGeometry::getTemplate()->PrototypeTemplate();
+				V8PxPlaneGeometry::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("isValid"), FunctionTemplate::New(InvocationCallback(V8PxPlaneGeometry::isValid)));
 
@@ -706,13 +636,13 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxTriangleMeshGeometry::getTemplate()->Inherit(V8PxGeometry::getTemplate());
 
-				objTemp = V8PxTriangleMeshGeometry::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxTriangleMeshGeometry::getTemplate()->PrototypeTemplate();
+				V8PxTriangleMeshGeometry::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("scale"), V8PxTriangleMeshGeometry::getScale, V8PxTriangleMeshGeometry::setScale);
-				objTemp->SetAccessor(String::New("meshFlags"), V8PxTriangleMeshGeometry::getMeshFlags, V8PxTriangleMeshGeometry::setMeshFlags);
-				objTemp->SetAccessor(String::New("paddingFromFlags"), V8PxTriangleMeshGeometry::getPaddingFromFlags, V8PxTriangleMeshGeometry::setPaddingFromFlags);
-				objTemp->SetAccessor(String::New("triangleMesh"), V8PxTriangleMeshGeometry::getTriangleMesh, V8PxTriangleMeshGeometry::setTriangleMesh);
+				V8PxTriangleMeshGeometry::getTemplate()->InstanceTemplate()->SetAccessor(String::New("scale"), V8PxTriangleMeshGeometry::getScale, V8PxTriangleMeshGeometry::setScale);
+				V8PxTriangleMeshGeometry::getTemplate()->InstanceTemplate()->SetAccessor(String::New("meshFlags"), V8PxTriangleMeshGeometry::getMeshFlags, V8PxTriangleMeshGeometry::setMeshFlags);
+				V8PxTriangleMeshGeometry::getTemplate()->InstanceTemplate()->SetAccessor(String::New("paddingFromFlags"), V8PxTriangleMeshGeometry::getPaddingFromFlags, V8PxTriangleMeshGeometry::setPaddingFromFlags);
+				V8PxTriangleMeshGeometry::getTemplate()->InstanceTemplate()->SetAccessor(String::New("triangleMesh"), V8PxTriangleMeshGeometry::getTriangleMesh, V8PxTriangleMeshGeometry::setTriangleMesh);
 
 				objTemp->Set(String::New("isValid"), FunctionTemplate::New(InvocationCallback(V8PxTriangleMeshGeometry::isValid)));
 
@@ -723,8 +653,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxTriangleMesh::getTemplate()->Inherit(V8PxSerializable::getTemplate());
 
-				objTemp = V8PxTriangleMesh::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxTriangleMesh::getTemplate()->PrototypeTemplate();
+				V8PxTriangleMesh::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("getNbVertices"), FunctionTemplate::New(InvocationCallback(V8PxTriangleMesh::getNbVertices)));
 				objTemp->Set(String::New("getVertices"), FunctionTemplate::New(InvocationCallback(V8PxTriangleMesh::getVertices)));
@@ -741,16 +671,16 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxFieldDescriptor::getTemplate()->SetClassName(String::New("PxFieldDescriptor"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxFieldDescriptor"), V8PxFieldDescriptor::getTemplate());
 
-				objTemp = V8PxFieldDescriptor::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxFieldDescriptor::getTemplate()->PrototypeTemplate();
+				V8PxFieldDescriptor::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("type"), V8PxFieldDescriptor::getType, V8PxFieldDescriptor::setType);
-				objTemp->SetAccessor(String::New("name"), V8PxFieldDescriptor::getName);
-				objTemp->SetAccessor(String::New("offset"), V8PxFieldDescriptor::getOffset, V8PxFieldDescriptor::setOffset);
-				objTemp->SetAccessor(String::New("size"), V8PxFieldDescriptor::getSize, V8PxFieldDescriptor::setSize);
-				objTemp->SetAccessor(String::New("count"), V8PxFieldDescriptor::getCount, V8PxFieldDescriptor::setCount);
-				objTemp->SetAccessor(String::New("offsetSize"), V8PxFieldDescriptor::getOffsetSize, V8PxFieldDescriptor::setOffsetSize);
-				objTemp->SetAccessor(String::New("flags"), V8PxFieldDescriptor::getFlags, V8PxFieldDescriptor::setFlags);
+				V8PxFieldDescriptor::getTemplate()->InstanceTemplate()->SetAccessor(String::New("type"), V8PxFieldDescriptor::getType, V8PxFieldDescriptor::setType);
+				V8PxFieldDescriptor::getTemplate()->InstanceTemplate()->SetAccessor(String::New("name"), V8PxFieldDescriptor::getName);
+				V8PxFieldDescriptor::getTemplate()->InstanceTemplate()->SetAccessor(String::New("offset"), V8PxFieldDescriptor::getOffset, V8PxFieldDescriptor::setOffset);
+				V8PxFieldDescriptor::getTemplate()->InstanceTemplate()->SetAccessor(String::New("size"), V8PxFieldDescriptor::getSize, V8PxFieldDescriptor::setSize);
+				V8PxFieldDescriptor::getTemplate()->InstanceTemplate()->SetAccessor(String::New("count"), V8PxFieldDescriptor::getCount, V8PxFieldDescriptor::setCount);
+				V8PxFieldDescriptor::getTemplate()->InstanceTemplate()->SetAccessor(String::New("offsetSize"), V8PxFieldDescriptor::getOffsetSize, V8PxFieldDescriptor::setOffsetSize);
+				V8PxFieldDescriptor::getTemplate()->InstanceTemplate()->SetAccessor(String::New("flags"), V8PxFieldDescriptor::getFlags, V8PxFieldDescriptor::setFlags);
 
 				//objTemp->Set(String::New("fieldSize"), FunctionTemplate::New(InvocationCallback(V8PxFieldDescriptor::FieldSize)));
 				objTemp->Set(String::New("address"), FunctionTemplate::New(InvocationCallback(V8PxFieldDescriptor::Address)));
@@ -765,8 +695,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxSerialStream::getTemplate()->SetClassName(String::New("PxSerialStream"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxSerialStream"), V8PxSerialStream::getTemplate());
 
-				objTemp = V8PxSerialStream::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxSerialStream::getTemplate()->PrototypeTemplate();
+				V8PxSerialStream::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				//objTemp->Set(String::New("storeBuffer"), FunctionTemplate::New(InvocationCallback(V8PxSerialStream::storeBuffer)));
 				//objTemp->Set(String::New("getTotalStoredSize"), FunctionTemplate::New(InvocationCallback(V8PxSerialStream::getTotalStoredSize)));
@@ -776,13 +706,13 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxMeshScale::getTemplate()->SetClassName(String::New("PxMeshScale"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxMeshScale"), V8PxMeshScale::getTemplate());
 
-				objTemp = V8PxMeshScale::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxMeshScale::getTemplate()->PrototypeTemplate();
+				V8PxMeshScale::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				V8PxMeshScale::getTemplate()->Set(String::New("createIdentity"), FunctionTemplate::New(InvocationCallback( V8PxMeshScale::createIdentity )));
 
-				objTemp->SetAccessor(String::New("scale"), V8PxMeshScale::getScale, V8PxMeshScale::setScale);
-				objTemp->SetAccessor(String::New("rotation"), V8PxMeshScale::getRotation, V8PxMeshScale::setRotation);
+				V8PxMeshScale::getTemplate()->InstanceTemplate()->SetAccessor(String::New("scale"), V8PxMeshScale::getScale, V8PxMeshScale::setScale);
+				V8PxMeshScale::getTemplate()->InstanceTemplate()->SetAccessor(String::New("rotation"), V8PxMeshScale::getRotation, V8PxMeshScale::setRotation);
 
 				objTemp->Set(String::New("isIdentity"), FunctionTemplate::New(InvocationCallback(V8PxMeshScale::isIdentity)));
 				objTemp->Set(String::New("getInverse"), FunctionTemplate::New(InvocationCallback(V8PxMeshScale::getInverse)));
@@ -796,8 +726,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxConvexMesh::getTemplate()->Inherit(V8PxSerializable::getTemplate());
 
-				objTemp = V8PxConvexMesh::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxConvexMesh::getTemplate()->PrototypeTemplate();
+				V8PxConvexMesh::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("getNbVertices"), FunctionTemplate::New(InvocationCallback(V8PxConvexMesh::getNbVertices)));
 				objTemp->Set(String::New("getVertices"), FunctionTemplate::New(InvocationCallback(V8PxConvexMesh::getVertices)));
@@ -815,8 +745,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxHeightField::getTemplate()->Inherit(V8PxSerializable::getTemplate());
 
-				objTemp = V8PxHeightField::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxHeightField::getTemplate()->PrototypeTemplate();
+				V8PxHeightField::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("release"), FunctionTemplate::New(InvocationCallback(V8PxHeightField::release)));
 				objTemp->Set(String::New("saveCells"), FunctionTemplate::New(InvocationCallback(V8PxHeightField::release)));
@@ -836,13 +766,13 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxFilterData::getTemplate()->SetClassName(String::New("PxFilterData"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxFilterData"), V8PxFilterData::getTemplate());
 
-				objTemp = V8PxFilterData::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxFilterData::getTemplate()->PrototypeTemplate();
+				V8PxFilterData::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("word0"), V8PxFilterData::getword0, V8PxFilterData::setword0);
-				objTemp->SetAccessor(String::New("word1"), V8PxFilterData::getword1, V8PxFilterData::setword1);
-				objTemp->SetAccessor(String::New("word2"), V8PxFilterData::getword2, V8PxFilterData::setword2);
-				objTemp->SetAccessor(String::New("word3"), V8PxFilterData::getword3, V8PxFilterData::setword3);
+				V8PxFilterData::getTemplate()->InstanceTemplate()->SetAccessor(String::New("word0"), V8PxFilterData::getword0, V8PxFilterData::setword0);
+				V8PxFilterData::getTemplate()->InstanceTemplate()->SetAccessor(String::New("word1"), V8PxFilterData::getword1, V8PxFilterData::setword1);
+				V8PxFilterData::getTemplate()->InstanceTemplate()->SetAccessor(String::New("word2"), V8PxFilterData::getword2, V8PxFilterData::setword2);
+				V8PxFilterData::getTemplate()->InstanceTemplate()->SetAccessor(String::New("word3"), V8PxFilterData::getword3, V8PxFilterData::setword3);
 
 				objTemp->Set(String::New("setToDefault"), FunctionTemplate::New(InvocationCallback(V8PxFilterData::setToDefault)));
 
@@ -851,12 +781,12 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxHullPolygon::getTemplate()->SetClassName(String::New("PxHullPolygon"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxHullPolygon"), V8PxHullPolygon::getTemplate());
 
-				objTemp = V8PxHullPolygon::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxHullPolygon::getTemplate()->PrototypeTemplate();
+				V8PxHullPolygon::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				//objTemp->SetAccessor(String::New("mPlane"), V8PxHullPolygon::getmPlane); //set in constructor
-				objTemp->SetAccessor(String::New("mNbVerts"), V8PxHullPolygon::getmNbVerts, V8PxHullPolygon::setmNbVerts);
-				objTemp->SetAccessor(String::New("mIndexBase"), V8PxHullPolygon::getmIndexBase, V8PxHullPolygon::setmIndexBase);
+				V8PxHullPolygon::getTemplate()->InstanceTemplate()->SetAccessor(String::New("mNbVerts"), V8PxHullPolygon::getmNbVerts, V8PxHullPolygon::setmNbVerts);
+				V8PxHullPolygon::getTemplate()->InstanceTemplate()->SetAccessor(String::New("mIndexBase"), V8PxHullPolygon::getmIndexBase, V8PxHullPolygon::setmIndexBase);
 
 			//PxMaterial
 				V8PxMaterial::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New());
@@ -865,10 +795,10 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxMaterial::getTemplate()->Inherit(V8PxSerializable::getTemplate());
 
-				objTemp = V8PxMaterial::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxMaterial::getTemplate()->PrototypeTemplate();
+				V8PxMaterial::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("userData"), V8PxMaterial::getUserData, V8PxMaterial::setUserData);
+				V8PxMaterial::getTemplate()->InstanceTemplate()->SetAccessor(String::New("userData"), V8PxMaterial::getUserData, V8PxMaterial::setUserData);
 
 				objTemp->Set(String::New("release"), FunctionTemplate::New(InvocationCallback(V8PxMaterial::release)));
 				objTemp->Set(String::New("setDynamicFriction"), FunctionTemplate::New(InvocationCallback(V8PxMaterial::setDynamicFriction)));
@@ -898,8 +828,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxObserver::getTemplate()->Inherit(V8PxSerializable::getTemplate());
 
-				objTemp = V8PxObserver::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxObserver::getTemplate()->PrototypeTemplate();
+				V8PxObserver::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("onRelease"), FunctionTemplate::New(InvocationCallback(V8PxObserver::onRelease)));
 			
@@ -908,7 +838,7 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxObservable::getTemplate()->SetClassName(String::New("PxObservable"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxObservable"), V8PxObservable::getTemplate());
 
-				objTemp = V8PxObservable::getTemplate()->InstanceTemplate();
+				objTemp = V8PxObservable::getTemplate()->PrototypeTemplate();
 				objTemp->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("getObservableType"), FunctionTemplate::New(InvocationCallback(V8PxObservable::getObservableType)));
@@ -926,10 +856,10 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxActor::getTemplate()->Inherit(V8PxSerializable::getTemplate());
 				V8PxActor::getTemplate()->Inherit(V8PxObservable::getTemplate());
 
-				objTemp = V8PxActor::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxActor::getTemplate()->PrototypeTemplate();
+				V8PxActor::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("userData"), V8PxActor::getUserData, V8PxActor::setUserData);
+				V8PxActor::getTemplate()->InstanceTemplate()->SetAccessor(String::New("userData"), V8PxActor::getUserData, V8PxActor::setUserData);
 
 				objTemp->Set(String::New("release"), FunctionTemplate::New(InvocationCallback(V8PxActor::release)));
 				objTemp->Set(String::New("getType"), FunctionTemplate::New(InvocationCallback(V8PxActor::getType)));
@@ -968,8 +898,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				
 
-				objTemp = V8PxRigidActor::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxRigidActor::getTemplate()->PrototypeTemplate();
+				V8PxRigidActor::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("release"), FunctionTemplate::New(InvocationCallback(V8PxRigidActor::release)));
 				objTemp->Set(String::New("getGlobalPose"), FunctionTemplate::New(InvocationCallback(V8PxRigidActor::getGlobalPose)));
@@ -988,8 +918,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxRigidBody::getTemplate()->Inherit(V8PxRigidActor::getTemplate());
 
-				objTemp = V8PxRigidBody::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxRigidBody::getTemplate()->PrototypeTemplate();
+				V8PxRigidBody::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("setCMassLocalPose"), FunctionTemplate::New(InvocationCallback(V8PxRigidBody::setCMassLocalPose)));
 				objTemp->Set(String::New("getCMassLocalPose"), FunctionTemplate::New(InvocationCallback(V8PxRigidBody::getCMassLocalPose)));
@@ -1014,8 +944,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxParticleBase::getTemplate()->Inherit(V8PxActor::getTemplate());
 
-				objTemp = V8PxParticleBase::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxParticleBase::getTemplate()->PrototypeTemplate();
+				V8PxParticleBase::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("lockParticleReadData"), FunctionTemplate::New(InvocationCallback(V8PxParticleBase::lockParticleReadData)));
 				objTemp->Set(String::New("createParticles"), FunctionTemplate::New(InvocationCallback(V8PxParticleBase::createParticles)));
@@ -1056,8 +986,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxLockedData::getTemplate()->SetClassName(String::New("PxLockedData"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxLockedData"), V8PxLockedData::getTemplate());
 
-				objTemp = V8PxLockedData::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxLockedData::getTemplate()->PrototypeTemplate();
+				V8PxLockedData::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("getDataAccessFlags"), FunctionTemplate::New(InvocationCallback(V8PxLockedData::getDataAccessFlags)));
 				objTemp->Set(String::New("unlock"), FunctionTemplate::New(InvocationCallback(V8PxLockedData::unlock)));
@@ -1074,18 +1004,18 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxParticleReadData::getTemplate()->Inherit(V8PxLockedData::getTemplate());
 
-				objTemp = V8PxParticleReadData::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxParticleReadData::getTemplate()->PrototypeTemplate();
+				V8PxParticleReadData::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				objTemp->SetAccessor(String::New("numValidParticles"), V8PxParticleReadData::getNumValidParticles, V8PxParticleReadData::setNumValidParticles);
-				objTemp->SetAccessor(String::New("validParticleRange"), V8PxParticleReadData::getValidParticleRange, V8PxParticleReadData::setValidParticleRange);
-				//objTemp->SetAccessor(String::New("validParticleBitmap"), V8PxParticleReadData::getValidParticleBitmap, V8PxParticleReadData::setValidParticleBitmap);
-				objTemp->SetAccessor(String::New("validParticleBitmap"), V8PxParticleReadData::getValidParticleBitmap, NULL);
-				objTemp->SetAccessor(String::New("positionBuffer"), V8PxParticleReadData::getPositionBuffer, NULL);
-				objTemp->SetAccessor(String::New("velocityBuffer"), V8PxParticleReadData::getVelocityBuffer, NULL);
-				objTemp->SetAccessor(String::New("restOffsetBuffer"), V8PxParticleReadData::getRestOffsetBuffer, NULL);
-				objTemp->SetAccessor(String::New("flagsBuffer"), V8PxParticleReadData::getFlagsBuffer, NULL);
-				objTemp->SetAccessor(String::New("collisionNormalBuffer"), V8PxParticleReadData::getCollisionNormalBuffer, NULL);
+				V8PxParticleReadData::getTemplate()->InstanceTemplate()->SetAccessor(String::New("numValidParticles"), V8PxParticleReadData::getNumValidParticles, V8PxParticleReadData::setNumValidParticles);
+				V8PxParticleReadData::getTemplate()->InstanceTemplate()->SetAccessor(String::New("validParticleRange"), V8PxParticleReadData::getValidParticleRange, V8PxParticleReadData::setValidParticleRange);
+				//V8PxParticleReadData::getTemplate()->InstanceTemplate()->SetAccessor(String::New("validParticleBitmap"), V8PxParticleReadData::getValidParticleBitmap, V8PxParticleReadData::setValidParticleBitmap);
+				V8PxParticleReadData::getTemplate()->InstanceTemplate()->SetAccessor(String::New("validParticleBitmap"), V8PxParticleReadData::getValidParticleBitmap, NULL);
+				V8PxParticleReadData::getTemplate()->InstanceTemplate()->SetAccessor(String::New("positionBuffer"), V8PxParticleReadData::getPositionBuffer, NULL);
+				V8PxParticleReadData::getTemplate()->InstanceTemplate()->SetAccessor(String::New("velocityBuffer"), V8PxParticleReadData::getVelocityBuffer, NULL);
+				V8PxParticleReadData::getTemplate()->InstanceTemplate()->SetAccessor(String::New("restOffsetBuffer"), V8PxParticleReadData::getRestOffsetBuffer, NULL);
+				V8PxParticleReadData::getTemplate()->InstanceTemplate()->SetAccessor(String::New("flagsBuffer"), V8PxParticleReadData::getFlagsBuffer, NULL);
+				V8PxParticleReadData::getTemplate()->InstanceTemplate()->SetAccessor(String::New("collisionNormalBuffer"), V8PxParticleReadData::getCollisionNormalBuffer, NULL);
 
 				objTemp->Set(String::New("getDataAccessFlags"), FunctionTemplate::New(InvocationCallback(V8PxParticleReadData::getDataAccessFlags)));
 				objTemp->Set(String::New("unlock"), FunctionTemplate::New(InvocationCallback(V8PxParticleReadData::unlock)));
@@ -1097,8 +1027,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxRigidDynamic::getTemplate()->Inherit(V8PxRigidBody::getTemplate());
 
-				objTemp = V8PxRigidDynamic::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxRigidDynamic::getTemplate()->PrototypeTemplate();
+				V8PxRigidDynamic::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("setKinematicTarget"), FunctionTemplate::New(InvocationCallback(V8PxRigidDynamic::setKinematicTarget)));
 				objTemp->Set(String::New("getKinematicTarget"), FunctionTemplate::New(InvocationCallback(V8PxRigidDynamic::getKinematicTarget)));
@@ -1129,8 +1059,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxRigidStatic::getTemplate()->Inherit(V8PxRigidActor::getTemplate());
 
-				objTemp = V8PxRigidStatic::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxRigidStatic::getTemplate()->PrototypeTemplate();
+				V8PxRigidStatic::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("getConcreteTypeName"), FunctionTemplate::New(InvocationCallback(V8PxRigidStatic::getConcreteTypeName)));
 
@@ -1139,8 +1069,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxScene::getTemplate()->SetClassName(String::New("PxScene"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxScene"), V8PxScene::getTemplate());
 
-				objTemp = V8PxScene::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxScene::getTemplate()->PrototypeTemplate();
+				V8PxScene::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("release"), FunctionTemplate::New(InvocationCallback(V8PxScene::release)));
 				objTemp->Set(String::New("setFlag"), FunctionTemplate::New(InvocationCallback(V8PxScene::setFlag)));
@@ -1173,8 +1103,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				V8PxSceneQueryHit::getTemplate()->SetClassName(String::New("PxSceneQueryHit"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxSceneQueryHit"), V8PxSceneQueryHit::getTemplate());
 
-				objTemp = V8PxSceneQueryHit::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxSceneQueryHit::getTemplate()->PrototypeTemplate();
+				V8PxSceneQueryHit::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("getShape"), FunctionTemplate::New(InvocationCallback(V8PxSceneQueryHit::getShape)));
 				objTemp->Set(String::New("getFaceIndex"), FunctionTemplate::New(InvocationCallback(V8PxSceneQueryHit::getFaceIndex)));
@@ -1187,8 +1117,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxSceneQueryImpactHit::getTemplate()->Inherit(V8PxSceneQueryHit::getTemplate());
 
-				objTemp = V8PxSceneQueryImpactHit::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxSceneQueryImpactHit::getTemplate()->PrototypeTemplate();
+				V8PxSceneQueryImpactHit::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("getImpact"), FunctionTemplate::New(InvocationCallback(V8PxSceneQueryImpactHit::getImpact)));
 				objTemp->Set(String::New("getNormal"), FunctionTemplate::New(InvocationCallback(V8PxSceneQueryImpactHit::getNormal)));
@@ -1201,8 +1131,8 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 
 				V8PxRaycastHit::getTemplate()->Inherit(V8PxSceneQueryImpactHit::getTemplate());
 
-				objTemp = V8PxRaycastHit::getTemplate()->InstanceTemplate();
-				objTemp->SetInternalFieldCount(1);
+				objTemp = V8PxRaycastHit::getTemplate()->PrototypeTemplate();
+				V8PxRaycastHit::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
 				objTemp->Set(String::New("getU"), FunctionTemplate::New(InvocationCallback(V8PxRaycastHit::getU)));
 				objTemp->Set(String::New("getV"), FunctionTemplate::New(InvocationCallback(V8PxRaycastHit::getV)));
@@ -1214,18 +1144,18 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				//V8PxControllerDesc::getTemplate()->SetClassName(String::New("PxControllerDesc"));
 				//physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxControllerDesc"), V8PxControllerDesc::getTemplate());
 
-				//objTemp = V8PxControllerDesc::getTemplate()->InstanceTemplate();
-				//objTemp->SetInternalFieldCount(1);
+				//objTemp = V8PxControllerDesc::getTemplate()->PrototypeTemplate();
+				//V8PxControllerDesc::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 
-				//objTemp->SetAccessor(String::New("position"), V8PxControllerDesc::getPosition, V8PxControllerDesc::setPosition);
-				//objTemp->SetAccessor(String::New("upDirection"), V8PxControllerDesc::getUpDirection, V8PxControllerDesc::setUpDirection);
-				//objTemp->SetAccessor(String::New("slopeLimit"), V8PxControllerDesc::getSlopeLimit, V8PxControllerDesc::setSlopeLimit);
-				//objTemp->SetAccessor(String::New("contactOffset"), V8PxControllerDesc::getContactOffset, V8PxControllerDesc::setContactOffset);
-				//objTemp->SetAccessor(String::New("stepOffset"), V8PxControllerDesc::getStepOffset, V8PxControllerDesc::setStepOffset);
-				//objTemp->SetAccessor(String::New("callback"), V8PxControllerDesc::getCallback, V8PxControllerDesc::setCallback);
-				//objTemp->SetAccessor(String::New("interactionMode"), V8PxControllerDesc::getInteractionMode, V8PxControllerDesc::setInteractionMode);
-				//objTemp->SetAccessor(String::New("material"), V8PxControllerDesc::getMaterial, V8PxControllerDesc::setMaterial);
-				//objTemp->SetAccessor(String::New("userData"), V8PxControllerDesc::getUserData, V8PxControllerDesc::setUserData);
+				//V8PxControllerDesc::getTemplate()->InstanceTemplate()->SetAccessor(String::New("position"), V8PxControllerDesc::getPosition, V8PxControllerDesc::setPosition);
+				//V8PxControllerDesc::getTemplate()->InstanceTemplate()->SetAccessor(String::New("upDirection"), V8PxControllerDesc::getUpDirection, V8PxControllerDesc::setUpDirection);
+				//V8PxControllerDesc::getTemplate()->InstanceTemplate()->SetAccessor(String::New("slopeLimit"), V8PxControllerDesc::getSlopeLimit, V8PxControllerDesc::setSlopeLimit);
+				//V8PxControllerDesc::getTemplate()->InstanceTemplate()->SetAccessor(String::New("contactOffset"), V8PxControllerDesc::getContactOffset, V8PxControllerDesc::setContactOffset);
+				//V8PxControllerDesc::getTemplate()->InstanceTemplate()->SetAccessor(String::New("stepOffset"), V8PxControllerDesc::getStepOffset, V8PxControllerDesc::setStepOffset);
+				//V8PxControllerDesc::getTemplate()->InstanceTemplate()->SetAccessor(String::New("callback"), V8PxControllerDesc::getCallback, V8PxControllerDesc::setCallback);
+				//V8PxControllerDesc::getTemplate()->InstanceTemplate()->SetAccessor(String::New("interactionMode"), V8PxControllerDesc::getInteractionMode, V8PxControllerDesc::setInteractionMode);
+				//V8PxControllerDesc::getTemplate()->InstanceTemplate()->SetAccessor(String::New("material"), V8PxControllerDesc::getMaterial, V8PxControllerDesc::setMaterial);
+				//V8PxControllerDesc::getTemplate()->InstanceTemplate()->SetAccessor(String::New("userData"), V8PxControllerDesc::getUserData, V8PxControllerDesc::setUserData);
 
 				////objTemp->Set(String::New("isValid"), FunctionTemplate::New(InvocationCallback( V8PxControllerDesc::isValid)));
 				//objTemp->Set(String::New("getType"), FunctionTemplate::New(InvocationCallback( V8PxControllerDesc::getType)));
@@ -1572,6 +1502,7 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				
 
 		//Functions
+				physXFuncTemplate->PrototypeTemplate()->Set(String::New("toVec3"),			FunctionTemplate::New(func_toVec3));
 			//Math
 				temp = FunctionTemplate::New();
 				temp->SetClassName(String::New("PxMath"));
@@ -1602,6 +1533,19 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 		return physXFuncTemplateBase;
 	}
 
+Handle<Value> V8PhysX::func_toVec3(const Arguments& args){
+	//Locker locker;
+    HandleScope scope(Isolate::GetCurrent());
+
+    if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxExtendedVec3::getTemplate()->HasInstance(args[0])) 
+    {
+		return scope.Close( wrap<PxVec3, V8PxVec3>(toVec3(*unwrap<PxExtendedVec3>(args[0]->ToObject()))));
+	}
+
+	//ThrowException(Exception::SyntaxError(String::New("PhysX.Max takes 2 Number arguments")));
+
+	return scope.Close( Undefined() );
+}
 
 Handle<Value> V8PhysX::func_math_max(const Arguments& args){
 	//Locker locker;
@@ -2249,6 +2193,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
 
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
 		if(args.Length() == 0){
 			PxVec2* vecObject = new PxVec2();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
@@ -2827,6 +2774,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	Handle<Value>  V8PxVec3::PxVec3Constructor(const Arguments& args){
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
 
 		if(args.Length() == 0){
 			PxVec3* vecObject = new PxVec3();
@@ -3455,6 +3405,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
 
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
 		if(args.Length() == 0){
 			PxExtendedVec3* vecObject = new PxExtendedVec3();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
@@ -3946,6 +3899,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	Handle<Value>  V8PxVec4::PxVec4Constructor(const Arguments& args){
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
 
 
 		if(args.Length() == 0){
@@ -4614,6 +4570,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	Handle<Value>  V8PxQuat::PxQuatConstructor(const Arguments& args){
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
 
 		if(args.Length() == 0){
 			PxQuat* quatObject = new PxQuat();
@@ -5312,6 +5271,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
 
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
 		if(args.Length() == 0){
 			PxMat33* matObject = new PxMat33();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
@@ -5752,6 +5714,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	Handle<Value>  V8PxMat44::PxMat44Constructor(const Arguments& args){
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
 
 		if(args.Length() == 0){
 			PxMat44* matObject = new PxMat44();
@@ -6307,6 +6272,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
 
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
 		if(args.Length() == 0){
 			PxTransform* transfObject = new PxTransform();
 
@@ -6616,6 +6584,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	Handle<Value>  V8PxBounds3::PxBounds3Constructor(const Arguments& args){
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
 
 		if(args.Length() == 0){
 			PxBounds3* obj = new PxBounds3();
@@ -7847,6 +7818,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
 
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
 		if(args.Length() == 0){
 
 			PxPadding<SIZE>* obj = new PxPadding<SIZE>();
@@ -7926,6 +7900,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	Handle<Value>  V8PxBoxGeometry::PxBoxGeometryConstructor(const Arguments& args){
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
 
 		if(args.Length() == 0){
 			PxBoxGeometry* obj = new PxBoxGeometry();
@@ -8020,6 +7997,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
 
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
 		if(args.Length() == 0){
 			PxCapsuleGeometry* obj = new PxCapsuleGeometry();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
@@ -8113,6 +8093,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	Handle<Value>  V8PxConvexMeshGeometry::PxConvexMeshGeometryConstructor(const Arguments& args){
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
 
 		if(args.Length() == 0){
 			PxConvexMeshGeometry* obj = new PxConvexMeshGeometry();
@@ -8222,6 +8205,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	Handle<Value>  V8PxHeightFieldGeometry::PxHeightFieldGeometryConstructor(const Arguments& args){
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
 
 		if(args.Length() == 0){
 			PxHeightFieldGeometry* obj = new PxHeightFieldGeometry();
@@ -8407,6 +8393,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
 
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
 		if(args.Length() == 0){
 			PxSphereGeometry* obj = new PxSphereGeometry();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
@@ -8477,6 +8466,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
 
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
 		if(args.Length() == 0){
 			PxPlaneGeometry* obj = new PxPlaneGeometry();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
@@ -8516,6 +8508,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	Handle<Value>  V8PxTriangleMeshGeometry::PxTriangleMeshGeometryConstructor(const Arguments& args){
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
 
 		if(args.Length() == 0){
 			PxTriangleMeshGeometry* obj = new PxTriangleMeshGeometry();
@@ -9210,6 +9205,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
 
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
 		if(args.Length() == 0){
 			PxMeshScale* meshScaleObj = new PxMeshScale();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
@@ -9716,6 +9714,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
 
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
 		if(args.Length() == 0){
 			PxFilterData* filtDataObject = new PxFilterData();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
@@ -9856,6 +9857,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	Handle<Value>  V8PxHullPolygon::PxHullPolygonConstructor(const Arguments& args){
 		//Locker lock;
 		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
 
 		if(args.Length() == 0){
 			PxHullPolygon* filtDataObject = new PxHullPolygon();
@@ -13293,7 +13297,3 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //			//}
 //		}
 //	}
-
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxStrideIterator<PxVec3>>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxStrideIterator<PxF32>>::templ;
-//Persistent<FunctionTemplate> BaseV8TemplateObject<V8PxStrideIterator<PxParticleFlags>>::templ;

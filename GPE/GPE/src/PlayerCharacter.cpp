@@ -119,7 +119,7 @@ PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_
 	//bo.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 	//exposeObject("mGrounded", Number::New(23987234.234));
 
-	EXPOSE_TO_SCRIPTS(PlayerCharacter, V8PlayerCharacter, "PlayerCharacter");
+	exposeObject("Player", wrapPtr<PlayerCharacter, V8PlayerCharacter>(this));
 	//exposeObject("testVect", wrap<PxVec3, V8PxVec3>(PxVec3(1,2,3)));
 	//exposeObject("testFunc", FunctionTemplate::New( InvocationCallback( PlayerCharacter::get ) ));
 	loadScript("playerController.js");
@@ -600,9 +600,7 @@ void PlayerCharacter::getInput(Real deltaTime){
 void PlayerCharacter::onShapeHit(const PxControllerShapeHit & hit){
 	HandleScope handleScope(Isolate::GetCurrent());
 	Handle<Value> args[1];
-	//args[0] = v8::String::New("Testing lol");
-	args[0] = wrap<PxControllerShapeHit, V8PxControllerShapeHit>(const_cast<PxControllerShapeHit&>(hit));
-	//args[0] = wrap<PxVec3, V8PxVec3>(PxVec3(1,2,3));
+	args[0] = wrapByVal<PxControllerShapeHit, V8PxControllerShapeHit>(const_cast<PxControllerShapeHit&>(hit));
 	dispatchEvent("onShapeHit", 1, args);
 //	PxRigidDynamic* actor = hit.shape->getActor().is<PxRigidDynamic>();
 //	if(actor)
@@ -635,7 +633,7 @@ void PlayerCharacter::onShapeHit(const PxControllerShapeHit & hit){
 
 
 void PlayerCharacter::onControllerHit(const PxControllersHit& hit){
-	Util::dout << "OUCH, HIT CONTROLLER OWWWW" << std::endl;
+	
 }
 
 void PlayerCharacter::onObstacleHit(const PxControllerObstacleHit& hit){

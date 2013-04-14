@@ -133,37 +133,6 @@ bool GameObject::loadScript(std::string inScript){
 	return(false);
 }
 
-//bool GameObject::loadScript(std::string inScript, ScriptingObject*& retSO){
-//	Handle<Script> script = V8Scripting::getSingletonPtr()->scriptMgr->getCompiledScript(inScript);
-//
-//	if(!script.IsEmpty()){
-//		retSO = new ScriptingObject();
-//		attachedScripts.push_back(retSO);
-//
-//		//Locker locker;
-//		HandleScope handleScope;
-//
-//		v8::Local<v8::Object> global = retSO->context->Global();
-//
-//		global->SetHiddenValue(v8::String::New("GameObject"), External::New(this));
-//
-//		retSO->context->Enter();
-//
-//		TryCatch trycatch;
-//		Local<Value> v = script->Run();
-//
-//		if (v.IsEmpty()) {  
-//			V8Scripting::reportException(&trycatch);
-//		}
-//	
-//		retSO->context->Exit();
-//
-//		return(true);
-//	}
-//
-//	return(false);
-//}
-
 void GameObject::exposeObject(std::string name, Handle<Data> val){
 	HandleScope scope;
 

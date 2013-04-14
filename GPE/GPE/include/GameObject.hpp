@@ -26,7 +26,8 @@ public:
 	void dispatchEvent(std::string eventName);
 	void dispatchEvent(std::string eventName, int argc, v8::Handle<Value> argv[]);
 
-	//template<class T, typename... Args>
+	//Need compiler v120 for this. God fuck.
+	//template<class... Args>
 	//void dispatchEvent(std::string eventName, Args... args);
 
 	virtual void release();

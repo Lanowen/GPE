@@ -903,8 +903,7 @@ public:
 		getTemplate()->SetClassName(String::New(className.c_str()));
 		base->PrototypeTemplate()->Set(String::New(className.c_str()), getTemplate());
 
-		objTemp = getTemplate()->InstanceTemplate();
-		objTemp->SetInternalFieldCount(1);
+		getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
 	}
 
 	static void initObject(Handle<Object> &obj, Handle<Object> &data){
@@ -1163,6 +1162,8 @@ public:
 	//virtual ~V8PhysX();
 
 	static Local<FunctionTemplate> NewFunctionTemplate(InvocationCallback callback = 0, Handle<Value> data = Handle<Value>(), Handle<Signature> signature = Handle<Signature>());
+
+	static Handle<Value> func_toVec3(const Arguments& args);
 
 	static Handle<Value> func_math_max(const Arguments& args);
 	static Handle<Value> func_math_min(const Arguments& args);
