@@ -28,37 +28,41 @@ template<class T>
 Persistent<FunctionTemplate> BaseV8TemplateObject<T>::templ;
 
 template <class TYPE>
-static TYPE* unwrap( const Local<v8::Object>& wrapped ){
+static inline TYPE* unwrap( const Local<v8::Object>& wrapped ){
 	Local<External> external = Local<External>::Cast( wrapped->GetInternalField(0) );
 	TYPE* obj = reinterpret_cast<TYPE*>(external->Value());
 
 	return obj;
 }
 
-static void CleanupDelete(Isolate* isolate, Persistent<Value> object, void* parameter){
-	assert(object.IsNearDeath());
+static inline void CleanupDelete(Isolate* isolate, Persistent<Value> object, void* parameter){
+	//assert(object.IsNearDeath());
 	delete parameter;
-	object.Dispose();
+   	object.Dispose();
+	object.Clear();
 }
 
-static void CleanupDeleteArray(Isolate* isolate, Persistent<Value> object, void* parameter){
-	assert(object.IsNearDeath());
+static inline void CleanupDeleteArray(Isolate* isolate, Persistent<Value> object, void* parameter){
+	//assert(object.IsNearDeath());
 	delete[] parameter;
 	object.Dispose();
+	object.Clear();
 }
 
-static void CleanupFree(Isolate* isolate, Persistent<Value> object, void* parameter){
-	assert(object.IsNearDeath());
+static inline void CleanupFree(Isolate* isolate, Persistent<Value> object, void* parameter){
+	//assert(object.IsNearDeath());
 	free(parameter);
 	object.Dispose();
+	object.Clear();
 }
 
-static void CleanupHandleOnly(Isolate* isolate, Persistent<Value> object, void* parameter){
-	assert(object.IsNearDeath());
+static inline void CleanupHandleOnly(Isolate* isolate, Persistent<Value> object, void* parameter){
+	//assert(object.IsNearDeath());
 	object.Dispose();
+	object.Clear();
 }
 
-static Handle<v8::String> v8stringCreate(int len, ...){
+static inline Handle<v8::String> v8stringCreate(int len, ...){
 	va_list args;
 	va_start(args, len);
 
@@ -73,7 +77,7 @@ static Handle<v8::String> v8stringCreate(int len, ...){
 }
 
 template <class TYPE, class TEMPL>
-static Handle<Value> wrapPtrCleanup(TYPE* obj ){
+static inline Handle<Value> wrapPtrCleanup(TYPE* obj ){
 	HandleScope scope(Isolate::GetCurrent());
 
 	Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(),TEMPL::getTemplate()->InstanceTemplate()->NewInstance());
@@ -84,7 +88,7 @@ static Handle<Value> wrapPtrCleanup(TYPE* obj ){
 }
 
 template <class TYPE, class TEMPL>
-static Handle<Value> wrapPtr(TYPE* obj ){
+static inline Handle<Value> wrapPtr(TYPE* obj ){
 	HandleScope scope(Isolate::GetCurrent());
 
 	Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(),TEMPL::getTemplate()->InstanceTemplate()->NewInstance());
@@ -95,7 +99,7 @@ static Handle<Value> wrapPtr(TYPE* obj ){
 }
 
 template <class TYPE, class TEMPL>
-static Handle<Value> wrapByVal(TYPE& obj ){
+static inline Handle<Value> wrapByVal(TYPE& obj ){
 	HandleScope scope(Isolate::GetCurrent());
 
 	Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(),TEMPL::getTemplate()->InstanceTemplate()->NewInstance());
@@ -106,7 +110,7 @@ static Handle<Value> wrapByVal(TYPE& obj ){
 }
 
 template <class TYPE, class TEMPL>
-static Handle<Value> wrap(TYPE& obj ){
+static inline Handle<Value> wrap(TYPE& obj ){
 	HandleScope scope(Isolate::GetCurrent());
 
 	TYPE* newObj = new TYPE(obj);
@@ -121,7 +125,7 @@ static Handle<Value> wrap(TYPE& obj ){
 template<class T>
 class createArray{
 public:
-	static Handle<Value> makeArray(const Arguments& args);
+	static inline Handle<Value> makeArray(const Arguments& args);
 };
 
 template<class T>
@@ -143,7 +147,7 @@ Handle<Value> createArray<T>::makeArray(const Arguments& args){
 }
 
 template<class T, class templ>
-static Handle<Value> autoWrap(const Arguments& args){
+static inline Handle<Value> autoWrap(const Arguments& args){
 	//Locker lock(Isolate::GetCurrent());
 	HandleScope scope(Isolate::GetCurrent());
 

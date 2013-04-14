@@ -38,6 +38,6 @@ private:
 	PxController* mCCT;
 	PxScene* mPhysScene;
 	PxVec3 displacement;
-	//PxVec3 moveDir, castDir;
-	//PxQuat rotRight, rotLeft;
+	PxVec3 moveDir, castDir;
+	PxQuat rotRight, rotLeft;
 };

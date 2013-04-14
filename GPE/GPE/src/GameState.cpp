@@ -77,7 +77,7 @@ GameState::GameState()
 	//m_pPlayerChar		= 0;
 
     zoomState           = 0;
-	mNbThreads			= 1;
+	mNbThreads			= 4;
 	mCreateCudaCtxManager = false;
 	mControllerManager  = 0;
 	mCudaContextManager	= 0;
@@ -730,7 +730,7 @@ void GameState::advanceSimulation(float dtime)
 	{
 		const PxReal dt = dtime>=timestep ? timestep : dtime;
 		mPxScene->simulate(dt);
-		mPxScene->fetchResults(false);
+		mPxScene->fetchResults(true);
 		dtime -= dt;
 
 		if(toDelete.size() > 0){
@@ -767,7 +767,8 @@ bool GameState::frameRenderingQueued(const Ogre::FrameEvent& evt)
     update(evt.timeSinceLastFrame);
 
 	advanceSimulation(evt.timeSinceLastFrame);
-	v8::V8::IdleNotification();
+
+	//while(!V8::IdleNotification(1)) {};
 
 	if(!pxVisualDebuggerHidden)
 		mVisualDebugger->update(mPxScene->getRenderBuffer());

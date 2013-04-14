@@ -14,7 +14,9 @@ hit1 = new PxSceneQueryHit();
 hit2 = new PxSceneQueryHit();
 
 disp = new PxVec3(0);
-pxExt = new PxExtendedVec3(0);
+pxExt = new PxExtendedVec3();
+
+exit = false;
 
 function onContact() {
     print("Recieved Projectile_Hit event\n");
@@ -32,31 +34,26 @@ function onShapeHit(hit) {
 registerEventCallback("onShapeHit", onShapeHit);
 
 function AdvancePhysics(deltaTime) {
+
+    if (exit)
+        return;
+
     disp.x = 0;
     disp.y = 0;
     disp.z = 0;
-    //disp += castDir * 9.81;
 
-    //pos = Util::vec_from_to<PxExtendedVec3, Vector3>(Enemy.CCT.getPosition());
-   
-    if (!Enemy.physScene.raycastAny(PhysX.toVec3(Enemy.CCT.getPosition()).subtract(moveDir.multiply(HALFEXTENT)), castDir, 1 + HALFEXTENT, hit1, new PxSceneQueryFilterData(PhysX.PxSceneQueryFilterFlag.eSTATIC)) && !Enemy.physScene.raycastAny(PhysX.toVec3(Enemy.CCT.getPosition()).subtract(moveDir.multiply(HALFEXTENT)), castDir, 1 + HALFEXTENT, hit2, new PxSceneQueryFilterData(PhysX.PxSceneQueryFilterFlag.eSTATIC))) {
-        //print("Lol, off edge");
-        //
-        //disp.assignment_add(castDir.multiply(9.81));
+    if (!Enemy.physScene.raycastSingle(PhysX.toVec3(Enemy.CCT.getPosition()).subtract(moveDir.multiply(HALFEXTENT)), castDir, 1 + HALFEXTENT, hit1, new PxSceneQueryFilterData(PhysX.PxSceneQueryFilterFlag.eSTATIC)) && !Enemy.physScene.raycastSingle(PhysX.toVec3(Enemy.CCT.getPosition()).add(moveDir.multiply(HALFEXTENT)), castDir, 1 + HALFEXTENT, hit2, new PxSceneQueryFilterData(PhysX.PxSceneQueryFilterFlag.eSTATIC))) {
         moveDir = rotRight.rotate(moveDir);
         castDir = rotRight.rotate(castDir);
-        Enemy.CCT.move(moveDir.multiply(0.1), 0, deltaTime, PhysX.PxSceneQueryHitType.eBLOCK);
+        Enemy.CCT.move(moveDir.multiply(0.05), 0, deltaTime, PhysX.PxSceneQueryHitType.eBLOCK);
     }
 
     disp.assignment_add(moveDir.multiply(MOVESPEED));
 
     disp = disp.multiply(deltaTime);
 
-    //print(deltaTime, disp, disp.x, disp.y, disp.z);
-
     Enemy.CCT.move(disp, 0, deltaTime, PhysX.PxSceneQueryHitType.eBLOCK);
 
-    //tempPos = Enemy.CCT.getPosition();
     tempPos = Enemy.CCT.getPosition();
 
     Enemy.node.setPosition(new Vector3(tempPos.x, tempPos.y, tempPos.z));

@@ -1771,7 +1771,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxSerializable* thisPxSerializable = unwrap<PxSerializable>(args.Holder());
 			
 			Persistent<Object> newPxFieldDescriptor = Persistent<Object>::New(Isolate::GetCurrent(),V8PxFieldDescriptor::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxFieldDescriptor.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxFieldDescriptor.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 
 			//Don't know if this will work...
 			const PxFieldDescriptor* temp = thisPxSerializable->getFieldDescriptor( *String::Utf8Value(args[0]->ToString()) );
@@ -2085,7 +2085,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxSerializable* thisPxSerializable = unwrap<PxSerializable>(args.Holder());
 
 			Persistent<Object> newPxSerializable = Persistent<Object>::New(Isolate::GetCurrent(),V8PxSerializable::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxSerializable.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxSerializable.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxSerializable->SetInternalField(0, External::New( thisPxSerializable->getAddress() ));
 
 			return scope.Close( newPxSerializable );
@@ -2130,7 +2130,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxRefResolver* thisPxRefResolver = unwrap<PxRefResolver>(args.Holder());
 
 			Persistent<Object> newPxSerializable = Persistent<Object>::New(Isolate::GetCurrent(),V8PxSerializable::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxSerializable.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxSerializable.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxSerializable->SetInternalField(0, External::New( thisPxRefResolver->newAddress(  unwrap<PxSerializable>(args[0]->ToObject() ) ) ));
 
 			return scope.Close( newPxSerializable );
@@ -2167,7 +2167,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxUserReferences* thisPxUserReferences = unwrap<PxUserReferences>(args.Holder());
 
 			Persistent<Object> newPxSerializable = Persistent<Object>::New(Isolate::GetCurrent(),V8PxSerializable::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxSerializable.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxSerializable.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxSerializable->SetInternalField(0, External::New( thisPxUserReferences->getObjectFromID(  Local<External>::Cast(args[0])->Value() ) ) );
 
 			return scope.Close( newPxSerializable );
@@ -2287,7 +2287,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxCollection* thisPxCollection = unwrap<PxCollection>(args.Holder());
 
 			Persistent<Object> newPxSerializable = Persistent<Object>::New(Isolate::GetCurrent(),V8PxSerializable::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxSerializable.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxSerializable.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxSerializable->SetInternalField(0, External::New( thisPxCollection->getObject( args[0]->Uint32Value() ) ));
 
 			return scope.Close( newPxSerializable );
@@ -2307,7 +2307,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxVec2* vecObject = new PxVec2();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( vecObject ));
 
 			return scope.Close( self );
@@ -2324,7 +2324,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				return ThrowException( Exception::TypeError( String::New("PxVec2 constructor takes nothing, (Number), (Number, Number), or (PxVec2) as an argument.") ) );
 			}
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( vecObject ));
 
 			return scope.Close( self );
@@ -2335,7 +2335,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			{
 				PxVec2* vecObject = new PxVec2( args[0]->NumberValue(), args[1]->NumberValue());
 				Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-				self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
+//				self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
 				self->SetInternalField(0, External::New( vecObject ));
 
 				return scope.Close( self );
@@ -2553,7 +2553,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec2* obj = new PxVec2(-*thisPxVec2);
 			Persistent<Object> newPxVec2 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec2->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec2);
@@ -2575,7 +2575,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec2* obj = new PxVec2(*thisPxVec2 + *inPxVec2);
 			Persistent<Object> newPxVec2 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec2->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec2);
@@ -2597,7 +2597,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec2* obj = new PxVec2(*thisPxVec2 - *inPxVec2);
 			Persistent<Object> newPxVec2 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec2->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec2);
@@ -2618,7 +2618,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec2* obj = new PxVec2(*thisPxVec2 * args[0]->NumberValue());
 			Persistent<Object> newPxVec2 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec2->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec2);
@@ -2639,7 +2639,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec2* obj = new PxVec2(*thisPxVec2 / args[0]->NumberValue());
 			Persistent<Object> newPxVec2 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec2->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec2);
@@ -2749,7 +2749,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec2* obj = new PxVec2(thisPxVec2->getNormalized());
 			Persistent<Object> newPxVec2 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec2->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec2);
@@ -2823,7 +2823,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec2* obj = new PxVec2(thisPxVec2->multiply(*inPxVec2));
 			Persistent<Object> newPxVec2 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec2->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec2);
@@ -2845,7 +2845,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec2* obj = new PxVec2(thisPxVec2->minimum(*inPxVec2));
 			Persistent<Object> newPxVec2 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec2->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec2);
@@ -2867,7 +2867,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec2* obj = new PxVec2(thisPxVec2->maximum(*inPxVec2));
 			Persistent<Object> newPxVec2 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec2.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec2->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec2);
@@ -2889,7 +2889,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxVec3* vecObject = new PxVec3();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( vecObject ));
 
 			return scope.Close( self );
@@ -2906,7 +2906,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				return ThrowException( Exception::TypeError( String::New("PxVec3 constructor takes nothing, (Number), (Number, Number, Number), or (PxVec3) as an argument.") ) );
 			}
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( vecObject ));
 
 			return scope.Close( self );
@@ -2918,7 +2918,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			{
 				PxVec3* vecObject = new PxVec3( args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue() );
 				Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-				self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
+//				self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
 				self->SetInternalField(0, External::New( vecObject ));
 
 				return scope.Close( self );
@@ -3162,7 +3162,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(-*thisPxVec3);
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -3184,7 +3184,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(*thisPxVec3 + *inPxVec3);
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -3206,7 +3206,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(*thisPxVec3 - *inPxVec3);
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -3227,7 +3227,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(*thisPxVec3 * args[0]->NumberValue());
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -3248,7 +3248,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(*thisPxVec3 / args[0]->NumberValue());
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -3359,7 +3359,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(thisPxVec3->cross(*inPxVec3));
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -3380,7 +3380,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(thisPxVec3->getNormalized());
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -3454,7 +3454,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(thisPxVec3->multiply(*inPxVec3));
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -3476,7 +3476,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(thisPxVec3->minimum(*inPxVec3));
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -3498,7 +3498,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(thisPxVec3->maximum(*inPxVec3));
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -3519,7 +3519,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxExtendedVec3* vecObject = new PxExtendedVec3();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( vecObject ));
 
 			return scope.Close( self );
@@ -3528,7 +3528,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxExtendedVec3*	vecObject = new PxExtendedVec3(*unwrap<PxExtendedVec3>(args[0]->ToObject()));
 
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( vecObject ));
 
 			return scope.Close( self );
@@ -3540,7 +3540,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			{
 				PxExtendedVec3* vecObject = new PxExtendedVec3( args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue() );
 				Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-				self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
+//				self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
 				self->SetInternalField(0, External::New( vecObject ));
 
 				return scope.Close( self );
@@ -3734,7 +3734,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxExtendedVec3* obj = new PxExtendedVec3(-*thisPxExtendedVec3);
 			Persistent<Object> newPxExtendedVec3 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxExtendedVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxExtendedVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxExtendedVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxExtendedVec3);
@@ -3756,7 +3756,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxExtendedVec3* obj = new PxExtendedVec3(*thisPxExtendedVec3 + *inPxExtendedVec3);
 			Persistent<Object> newPxExtendedVec3 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxExtendedVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxExtendedVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxExtendedVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxExtendedVec3);
@@ -3778,7 +3778,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(*thisPxExtendedVec3 - *inPxExtendedVec3);
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -3870,7 +3870,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxExtendedVec3* obj = new PxExtendedVec3(thisPxExtendedVec3->cross(*inPxExtendedVec3));
 			Persistent<Object> newPxExtendedVec3 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxExtendedVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxExtendedVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxExtendedVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxExtendedVec3);
@@ -4015,7 +4015,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxVec4* vecObject = new PxVec4();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( vecObject ));
 
 			return scope.Close( self );
@@ -4053,7 +4053,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				return ThrowException( Exception::TypeError( String::New("PxVec4 constructor takes nothing, (Number), (Number, Number, Number, Number), (Array[4](Number)), (PxVec3, Number), or (PxVec4) as an argument.") ) );
 			}
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( vecObject ));
 
 			return scope.Close( self );
@@ -4062,7 +4062,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				!args[1].IsEmpty() && args[1]->IsNumber()){
 			PxVec4* vecObject = new PxVec4(*unwrap<PxVec3>(args[0]->ToObject()), args[1]->NumberValue());
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( vecObject ));
 
 			return scope.Close( self );
@@ -4075,7 +4075,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			{
 				PxVec4* vecObject = new PxVec4( args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue(), args[3]->NumberValue() );
 				Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-				self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
+//				self.MakeWeak(Isolate::GetCurrent(),vecObject, &CleanupDelete);
 				self->SetInternalField(0, External::New( vecObject ));
 
 				return scope.Close( self );
@@ -4345,7 +4345,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec4* obj = new PxVec4(-*thisPxVec4);
 			Persistent<Object> newPxVec4 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec4->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec4);
@@ -4367,7 +4367,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec4* obj = new PxVec4(*thisPxVec4 + *inPxVec4);
 			Persistent<Object> newPxVec4 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec4->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec4);
@@ -4389,7 +4389,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec4* obj = new PxVec4(*thisPxVec4 - *inPxVec4);
 			Persistent<Object> newPxVec4 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec4->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec4);
@@ -4410,7 +4410,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec4* obj = new PxVec4(*thisPxVec4 * args[0]->NumberValue());
 			Persistent<Object> newPxVec4 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec4->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec4);
@@ -4431,7 +4431,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec4* obj = new PxVec4(*thisPxVec4 / args[0]->NumberValue());
 			Persistent<Object> newPxVec4 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec4->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec4);
@@ -4541,7 +4541,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec4* obj = new PxVec4(thisPxVec4->getNormalized());
 			Persistent<Object> newPxVec4 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec4->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec4);
@@ -4580,7 +4580,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec4* obj = new PxVec4(thisPxVec4->multiply(*inPxVec4));
 			Persistent<Object> newPxVec4 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec4->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec4);
@@ -4602,7 +4602,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec4* obj = new PxVec4(thisPxVec4->minimum(*inPxVec4));
 			Persistent<Object> newPxVec4 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec4->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec4);
@@ -4624,7 +4624,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec4* obj = new PxVec4(thisPxVec4->maximum(*inPxVec4));
 			Persistent<Object> newPxVec4 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec4->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec4);
@@ -4645,7 +4645,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(thisPxVec4->getXYZ());
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -4685,7 +4685,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxQuat* quatObject = new PxQuat();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),quatObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),quatObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( quatObject ));
 
 			return scope.Close( self );
@@ -4702,7 +4702,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				return ThrowException( Exception::TypeError( String::New("PxQuat constructor takes nothing, (PxMat33), (Number, Number, Number, Number), (Number, PxVec3), or (PxQuat) as an argument.") ) );
 			}
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),quatObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),quatObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( quatObject ));
 
 			return scope.Close( self );
@@ -4711,7 +4711,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			!args[1].IsEmpty() && args[1]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[1])){
 			PxQuat* quatObject = new PxQuat(args[0]->NumberValue(),*unwrap<PxVec3>(args[1]->ToObject()));
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),quatObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),quatObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( quatObject ));
 
 			return scope.Close( self );
@@ -4724,7 +4724,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			{
 				PxQuat* quatObject = new PxQuat( args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue(), args[3]->NumberValue() );
 				Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-				self.MakeWeak(Isolate::GetCurrent(),quatObject, &CleanupDelete);
+//				self.MakeWeak(Isolate::GetCurrent(),quatObject, &CleanupDelete);
 				self->SetInternalField(0, External::New( quatObject ));
 
 				return scope.Close( self );
@@ -4899,7 +4899,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxVec3* obj = new PxVec3(axis);
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 
 			returnArray->Set(1, newPxVec3);
@@ -4982,7 +4982,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxQuat* obj = new PxQuat(thisPxQuat->getNormalized());
 			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxQuat);
@@ -5036,7 +5036,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxQuat* obj = new PxQuat(thisPxQuat->getConjugate());
 			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxQuat);
@@ -5057,7 +5057,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxVec3* imaginary = &thisPxQuat->getImaginaryPart();
 
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxVec3->SetInternalField(0, External::New(imaginary));
 
 			//if(thisPxQuat != NULL && inPxQuat != NULL) 
@@ -5079,7 +5079,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxVec3* obj = new PxVec3(thisPxQuat->getBasisVector0());
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 
 			//if(thisPxQuat != NULL && inPxQuat != NULL) 
@@ -5101,7 +5101,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxVec3* obj = new PxVec3(thisPxQuat->getBasisVector1());
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New(obj));
 
 			//if(thisPxQuat != NULL && inPxQuat != NULL) 
@@ -5123,7 +5123,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxVec3* obj = new PxVec3(thisPxQuat->getBasisVector2());
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 
 			//if(thisPxQuat != NULL && inPxQuat != NULL) 
@@ -5146,7 +5146,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxVec3* obj = new PxVec3(thisPxQuat->rotate(*inPxVec3));
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 
 			//if(thisPxQuat != NULL && inPxQuat != NULL) 
@@ -5169,7 +5169,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxVec3* obj = new PxVec3(thisPxQuat->rotateInv(*inPxVec3));
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 
 			//if(thisPxQuat != NULL && inPxQuat != NULL) 
@@ -5261,7 +5261,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxQuat* obj = new PxQuat(*thisPxQuat + *inPxQuat);
 			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxQuat);
@@ -5284,7 +5284,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxQuat* obj = new PxQuat(*thisPxQuat - *inPxQuat);
 			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxQuat);
@@ -5307,7 +5307,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 				PxQuat* obj = new PxQuat(*thisPxQuat * args[0]->NumberValue());
 				Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-				newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxQuat->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxQuat);
@@ -5321,7 +5321,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 				PxQuat* obj = new PxQuat(*thisPxQuat * *inPxQuat);
 				Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-				newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxQuat->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxQuat);
@@ -5343,7 +5343,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxQuat* obj = new PxQuat(-*thisPxQuat);
 			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxQuat);
@@ -5364,7 +5364,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxQuat* obj = new PxQuat(PxQuat::createIdentity());
 			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8PxQuat::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxQuat.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxQuat);
@@ -5385,7 +5385,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxMat33* matObject = new PxMat33();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( matObject ));
 
 			return scope.Close( self );
@@ -5416,7 +5416,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 					matObject = new PxMat33(vals);
 
 					Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-					self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
+//					self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
 					self->SetInternalField(0, External::New( matObject ));
 
 					return scope.Close( self );
@@ -5429,7 +5429,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				return ThrowException( Exception::TypeError( String::New("PxMat33 constructor takes nothing, (PxQuat), (Array[9](Number)), (PxVec3, PxVec3, PxVec3), or (PxMat33) as an argument.") ) );
 			}
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( matObject ));
 
 			return scope.Close( self );
@@ -5440,7 +5440,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxMat33* matObject = new PxMat33(*unwrap<PxVec3>(args[0]->ToObject()),*unwrap<PxVec3>(args[1]->ToObject()),*unwrap<PxVec3>(args[2]->ToObject()));
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( matObject ));
 
 			return scope.Close( self );
@@ -5458,7 +5458,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//if(thisPxMat33 != NULL) 
 			//{
 				Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxVec3->SetInternalField(0, External::New(&(*thisPxMat33)[index]));
 
 				return scope.Close(newPxVec3);
@@ -5497,7 +5497,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxMat33* obj = new PxMat33(PxMat33::createIdentity());
 			Persistent<Object> newPxMat33 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxMat33::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxMat33->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxMat33);
@@ -5517,7 +5517,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxMat33* obj = new PxMat33(PxMat33::createZero());
 			Persistent<Object> newPxMat33 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxMat33::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxMat33->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxMat33);
@@ -5539,7 +5539,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxMat33* obj = new PxMat33(PxMat33::createDiagonal(*inPxVec3));
 			Persistent<Object> newPxMat33 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxMat33::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxMat33->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxMat33);
@@ -5560,7 +5560,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxMat33* obj = new PxMat33(thisPxMat33->getTranspose());
 			Persistent<Object> newPxMat33 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxMat33::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxMat33->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxMat33);
@@ -5581,7 +5581,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxMat33* obj = new PxMat33(thisPxMat33->getInverse());
 			Persistent<Object> newPxMat33 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxMat33::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxMat33->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxMat33);
@@ -5619,7 +5619,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(thisPxMat33->transform(*inPxVec3));
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -5641,7 +5641,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(thisPxMat33->transformTranspose(*inPxVec3));
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -5718,7 +5718,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxMat33* obj = new PxMat33(*thisPxMat33 + *inPxMat33);
 			Persistent<Object> newPxMat33 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxMat33->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxMat33);
@@ -5740,7 +5740,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxMat33* obj = new PxMat33(*thisPxMat33 - *inPxMat33);
 			Persistent<Object> newPxMat33 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxMat33->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxMat33);
@@ -5762,7 +5762,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				//{
 				PxMat33* obj = new PxMat33(*thisPxMat33 * args[0]->NumberValue());
 				Persistent<Object> newPxMat33 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-				newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxMat33->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxMat33);
@@ -5775,7 +5775,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				//{
 				PxVec3* obj = new PxVec3(*thisPxMat33 * *inPxVec3);
 				Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-				newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxVec3->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxVec3);
@@ -5787,7 +5787,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				//{
 				PxMat33* obj = new PxMat33(*thisPxMat33 * *inPxMat33);
 				Persistent<Object> newPxMat33 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-				newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxMat33->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxMat33);
@@ -5808,7 +5808,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxMat33* obj = new PxMat33(-*thisPxMat33);
 			Persistent<Object> newPxMat33 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxMat33.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxMat33->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxMat33);
@@ -5829,7 +5829,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxMat44* matObject = new PxMat44();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( matObject ));
 
 			return scope.Close( self );
@@ -5864,7 +5864,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 					matObject = new PxMat44(vals);
 
 					Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-					self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
+//					self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
 					self->SetInternalField(0, External::New( matObject ));
 
 					return scope.Close( self );
@@ -5877,7 +5877,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				return ThrowException( Exception::TypeError( String::New("PxMat44 constructor takes nothing, (PxQuat), (PxVec4), (Array[16](Number)), (Mat33, PxVec3), (PxVec4, PxVec4, PxVec4, PxVec4), (PxVec3, PxVec3, PxVec3, PxVec3), or (PxMat44) as an argument.") ) );
 			}
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( matObject ));
 
 			return scope.Close( self );
@@ -5887,7 +5887,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxMat44* matObject = new PxMat44(*unwrap<PxMat33>(args[0]->ToObject()),*unwrap<PxVec3>(args[1]->ToObject()));
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( matObject ));
 
 			return scope.Close( self );
@@ -5916,7 +5916,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			}
 
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),matObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( matObject ));
 
 			return scope.Close( self );
@@ -5934,7 +5934,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//if(thisPxMat44 != NULL) 
 			//{
 				Persistent<Object> newPxVec4 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec4::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxVec4.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxVec4.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxVec4->SetInternalField(0, External::New(&(*thisPxMat44)[index]));
 
 				return scope.Close(newPxVec4);
@@ -5973,7 +5973,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxMat44* obj = new PxMat44(PxMat44::createIdentity());
 			Persistent<Object> newPxMat44 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxMat44::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxMat44->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxMat44);
@@ -5993,7 +5993,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxMat44* obj = new PxMat44(PxMat44::createZero());
 			Persistent<Object> newPxMat44 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxMat44::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxMat44->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxMat44);
@@ -6014,7 +6014,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxMat44* obj = new PxMat44(thisPxMat44->getTranspose());
 			Persistent<Object> newPxMat44 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxMat44::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxMat44->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxMat44);
@@ -6038,7 +6038,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				//{
 				PxVec3* obj = new PxVec3(thisPxMat44->transform(*inPxVec3));
 				Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxVec3->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxVec3);
@@ -6052,7 +6052,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				//{
 				PxVec4* obj = new PxVec4(thisPxMat44->transform(*inPxVec4));
 				Persistent<Object> newPxVec4 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec4::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxVec4->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxVec4);
@@ -6077,7 +6077,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				//{
 				PxVec3* obj = new PxVec3(thisPxMat44->rotate(*inPxVec3));
 				Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxVec3->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxVec3);
@@ -6091,7 +6091,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				//{
 				PxVec4* obj = new PxVec4(thisPxMat44->rotate(*inPxVec4));
 				Persistent<Object> newPxVec4 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec4::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxVec4.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxVec4->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxVec4);
@@ -6113,7 +6113,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				//{
 				PxVec3* obj = new PxVec3(thisPxMat44->getBasis(args[0]->Int32Value()));
 				Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxVec3->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxVec3);
@@ -6134,7 +6134,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				//{
 				PxVec3* obj = new PxVec3(thisPxMat44->getPosition());
 				Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxVec3->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxVec3);
@@ -6193,7 +6193,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				//{
 				PxMat44* obj = new PxMat44(thisPxMat44->inverseRT());
 				Persistent<Object> newPxMat44 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxMat44::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxMat44->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxMat44);
@@ -6286,7 +6286,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxMat44* obj = new PxMat44(*thisPxMat44 + *inPxMat44);
 			Persistent<Object> newPxMat44 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxMat44->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxMat44);
@@ -6308,7 +6308,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxMat44* obj = new PxMat44(*thisPxMat44 - *inPxMat44);
 			Persistent<Object> newPxMat44 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxMat44->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxMat44);
@@ -6330,7 +6330,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				//{
 				PxMat44* obj = new PxMat44(*thisPxMat44 * args[0]->NumberValue());
 				Persistent<Object> newPxMat44 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-				newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxMat44->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxMat44);
@@ -6343,7 +6343,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				//{
 				PxMat44* obj = new PxMat44(*thisPxMat44 * *inPxMat44);
 				Persistent<Object> newPxMat44 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-				newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxMat44->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxMat44);
@@ -6364,7 +6364,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxMat44* obj = new PxMat44(-*thisPxMat44);
 			Persistent<Object> newPxMat44 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxMat44.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxMat44->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxMat44);
@@ -6387,7 +6387,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxTransform* transfObject = new PxTransform();
 
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),transfObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),transfObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( transfObject ));
 
 			return scope.Close( self );
@@ -6407,7 +6407,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				return ThrowException( Exception::TypeError( String::New("PxTransform constructor takes nothing, (PxQuat), (PxVec3), (PxVec3, PxQuat), or (PxTransform) as an argument.") ) );
 			}
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),transfObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),transfObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( transfObject ));
 
 			return scope.Close( self );
@@ -6417,7 +6417,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxTransform* transfObject = new PxTransform(*unwrap<PxVec3>(args[0]->ToObject()),*unwrap<PxQuat>(args[1]->ToObject()));
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),transfObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),transfObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( transfObject ));
 
 			return scope.Close( self );
@@ -6434,7 +6434,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//if(thisPxVec2 != NULL) 
 		//{
 			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8PxQuat::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxQuat.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxQuat.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxQuat->SetInternalField(0, External::New(&thisPxTransform->q));
 
 			return scope.Close(newPxQuat);
@@ -6465,7 +6465,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//if(thisPxVec2 != NULL) 
 		//{
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxVec3->SetInternalField(0, External::New(&thisPxTransform->p));
 
 			return scope.Close(newPxVec3);
@@ -6498,7 +6498,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxTransform* obj = new PxTransform(PxTransform::createIdentity());
 			Persistent<Object> newPxTransform = Persistent<Object>::New(Isolate::GetCurrent(),V8PxTransform::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxTransform.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxTransform.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxTransform->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxTransform);
@@ -6519,7 +6519,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxTransform* obj = new PxTransform(thisPxTransform->getInverse());
 			Persistent<Object> newPxTransform = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxTransform.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxTransform.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxTransform->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxTransform);
@@ -6541,7 +6541,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(thisPxTransform->transform(*inPxVec3));
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -6563,7 +6563,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(thisPxTransform->transformInv(*inPxVec3));
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -6585,7 +6585,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(thisPxTransform->rotate(*inPxVec3));
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -6607,7 +6607,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxVec3* obj = new PxVec3(thisPxTransform->rotateInv(*inPxVec3));
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -6677,7 +6677,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxTransform* obj = new PxTransform(*thisPxTransform * *inPxTransform);
 			Persistent<Object> newPxTransform = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-			newPxTransform.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxTransform.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxTransform->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxTransform);
@@ -6700,7 +6700,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxBounds3* obj = new PxBounds3();
 
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -6708,7 +6708,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		else if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxBounds3::getTemplate()->HasInstance(args[0])){
 			PxBounds3* obj = new PxBounds3(*unwrap<PxBounds3>(args[0]->ToObject()));
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -6718,7 +6718,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			
 			PxBounds3* obj = new PxBounds3(*unwrap<PxVec3>(args[0]->ToObject()),*unwrap<PxVec3>(args[1]->ToObject()));
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -6735,7 +6735,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//if(thisPxVec2 != NULL) 
 		//{
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxVec3->SetInternalField(0, External::New(&thisPxBounds3->minimum));
 
 			return scope.Close(newPxVec3);
@@ -6766,7 +6766,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//if(thisPxVec2 != NULL) 
 		//{
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxVec3->SetInternalField(0, External::New(&thisPxBounds3->maximum));
 
 			return scope.Close(newPxVec3);
@@ -6799,7 +6799,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxBounds3* obj = new PxBounds3(PxBounds3::empty());
 			Persistent<Object> newPxBounds3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxBounds3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxBounds3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxBounds3);
@@ -6820,7 +6820,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxBounds3* obj = new PxBounds3(PxBounds3::boundsOfPoints(*unwrap<PxVec3>(args[0]->ToObject()),*unwrap<PxVec3>(args[1]->ToObject())));
 			Persistent<Object> newPxBounds3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxBounds3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxBounds3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxBounds3);
@@ -6841,7 +6841,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxBounds3* obj = new PxBounds3(PxBounds3::centerExtents(*unwrap<PxVec3>(args[0]->ToObject()),*unwrap<PxVec3>(args[1]->ToObject())));
 			Persistent<Object> newPxBounds3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxBounds3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxBounds3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxBounds3);
@@ -6863,7 +6863,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxBounds3* obj = new PxBounds3(PxBounds3::basisExtent(*unwrap<PxVec3>(args[0]->ToObject()),*unwrap<PxMat33>(args[0]->ToObject()),*unwrap<PxVec3>(args[2]->ToObject())));
 			Persistent<Object> newPxBounds3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxBounds3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxBounds3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxBounds3);
@@ -6884,7 +6884,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			//{
 			PxBounds3* obj = new PxBounds3(PxBounds3::poseExtent(*unwrap<PxTransform>(args[0]->ToObject()),*unwrap<PxVec3>(args[0]->ToObject())));
 			Persistent<Object> newPxBounds3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxBounds3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxBounds3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxBounds3);
@@ -6905,7 +6905,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			if(V8PxMat33::getTemplate()->HasInstance(args[0])){
 				PxBounds3* obj = new PxBounds3(PxBounds3::transform(*unwrap<PxMat33>(args[0]->ToObject()),*unwrap<PxBounds3>(args[0]->ToObject())));
 				Persistent<Object> newPxBounds3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxBounds3::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxBounds3->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxBounds3);
@@ -6913,7 +6913,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			else if(V8PxTransform::getTemplate()->HasInstance(args[0])){
 				PxBounds3* obj = new PxBounds3(PxBounds3::transform(*unwrap<PxTransform>(args[0]->ToObject()),*unwrap<PxBounds3>(args[0]->ToObject())));
 				Persistent<Object> newPxBounds3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxBounds3::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxBounds3->SetInternalField(0, External::New( obj ));
 			
 				return scope.Close(newPxBounds3);
@@ -7061,7 +7061,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxVec3* obj = new PxVec3(thisPxBounds3->getCenter());
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxBounds3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -7085,7 +7085,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxVec3* obj = new PxVec3(thisPxBounds3->getExtents());
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxBounds3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -7109,7 +7109,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxVec3* obj = new PxVec3(thisPxBounds3->getDimensions());
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxBounds3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxVec3);
@@ -7175,10 +7175,10 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//	//if(thisPxVec2 != NULL) 
 	//	//{
 	//		//Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8PxQuat::getTemplate()->InstanceTemplate()->NewInstance());			
-	//		//newPxQuat.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//	//		//newPxQuat.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 	//		//newPxQuat->SetInternalField(0, External::New(&thisPxShape->q));
 	//	Persistent<External> newExternal = Persistent<External>::New(Isolate::GetCurrent(),External::New(thisPxShape->userData));
-	//	newExternal.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//	//	newExternal.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 
 	//	return scope.Close(newExternal);
 	//	//}
@@ -7398,7 +7398,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxShape* thisPxShape = unwrap<PxShape>(args.Holder());
 
 			Persistent<Object> newPxRigidActor = Persistent<Object>::New(Isolate::GetCurrent(),V8PxRigidActor::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxRigidActor.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxRigidActor.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxRigidActor->SetInternalField(0, External::New(&thisPxShape->getActor()));
 			
 			return scope.Close(newPxRigidActor);
@@ -7417,7 +7417,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxBounds3* obj = new PxBounds3(thisPxShape->getWorldBounds());
 			Persistent<Object> newPxBounds3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxBounds3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxBounds3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxBounds3->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxBounds3);
@@ -7453,7 +7453,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxTransform* obj = new PxTransform(thisPxShape->getLocalPose());
 			Persistent<Object> newPxTransform = Persistent<Object>::New(Isolate::GetCurrent(),V8PxTransform::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxTransform.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxTransform.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxTransform->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxTransform);
@@ -7489,7 +7489,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxFilterData* obj = new PxFilterData(thisPxShape->getSimulationFilterData());
 			Persistent<Object> newPxFilterData = Persistent<Object>::New(Isolate::GetCurrent(),V8PxFilterData::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxFilterData.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxFilterData.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxFilterData->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxFilterData);
@@ -7541,7 +7541,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxFilterData* obj = new PxFilterData(thisPxShape->getQueryFilterData());
 			Persistent<Object> newPxFilterData = Persistent<Object>::New(Isolate::GetCurrent(),V8PxFilterData::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxFilterData.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			newPxFilterData.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			newPxFilterData->SetInternalField(0, External::New( obj ));
 			
 			return scope.Close(newPxFilterData);
@@ -7604,11 +7604,11 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			int numMats = thisPxShape->getMaterials(newMats, thisPxShape->getNbMaterials());
 
 			Persistent<Array> newArray = Persistent<Array>::New(Isolate::GetCurrent(),Array::New(numMats));
-			newArray.MakeWeak(Isolate::GetCurrent(),newMats, &CleanupFree);
+//			newArray.MakeWeak(Isolate::GetCurrent(),newMats, &CleanupFree);
 			
 			for(int i = 0; i < numMats; i++){
 				Persistent<Object> newPxMaterial = Persistent<Object>::New(Isolate::GetCurrent(),V8PxMaterial::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxMaterial.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxMaterial.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxMaterial->SetInternalField(0, External::New( newMats[i] ));
 
 				newArray->SetInternalField(i, newPxMaterial); 
@@ -7630,7 +7630,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxShape* thisPxShape = unwrap<PxShape>(args.Holder());
 
 			Persistent<Object> newPxMaterial = Persistent<Object>::New(Isolate::GetCurrent(),V8PxMaterial::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxMaterial.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxMaterial.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxMaterial->SetInternalField(0, External::New(thisPxShape->getMaterialFromInternalFaceIndex(args[0]->Int32Value()) ) );
 
 			return scope.Close(newPxMaterial);
@@ -7786,7 +7786,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxControllerShapeHit* thisPxControllerShapeHit = unwrap<PxControllerShapeHit>(args.Holder());
 
 			Persistent<Object> newPxController = Persistent<Object>::New(Isolate::GetCurrent(),V8PxController::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxController.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxController.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxController->SetInternalField(0, External::New(&*thisPxControllerShapeHit->controller));
 			
 			return scope.Close(newPxController);
@@ -7804,7 +7804,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxControllerShapeHit* thisPxControllerShapeHit = unwrap<PxControllerShapeHit>(args.Holder());
 
 			Persistent<Object> newPxShape = Persistent<Object>::New(Isolate::GetCurrent(),V8PxShape::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxShape->SetInternalField(0, External::New(&*thisPxControllerShapeHit->shape));
 			
 			return scope.Close(newPxShape);
@@ -7822,7 +7822,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxControllerShapeHit* thisPxControllerShapeHit = unwrap<PxControllerShapeHit>(args.Holder());
 
 			Persistent<Object> newPxExtendedVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxExtendedVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxExtendedVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxExtendedVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxExtendedVec3->SetInternalField(0, External::New(&thisPxControllerShapeHit->worldPos));
 			
 			return scope.Close(newPxExtendedVec3);
@@ -7840,7 +7840,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxControllerShapeHit* thisPxControllerShapeHit = unwrap<PxControllerShapeHit>(args.Holder());
 
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxVec3->SetInternalField(0, External::New(&thisPxControllerShapeHit->worldNormal));
 			
 			return scope.Close(newPxVec3);
@@ -7858,7 +7858,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxControllerShapeHit* thisPxControllerShapeHit = unwrap<PxControllerShapeHit>(args.Holder());
 
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxVec3->SetInternalField(0, External::New(&thisPxControllerShapeHit->dir));
 			
 			return scope.Close(newPxVec3);
@@ -7892,7 +7892,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxControllersHit* thisPxControllersHit = unwrap<PxControllersHit>(args.Holder());
 
 			Persistent<Object> newPxController = Persistent<Object>::New(Isolate::GetCurrent(),V8PxController::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxController.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxController.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxController->SetInternalField(0, External::New(&*thisPxControllersHit->controller));
 			
 			return scope.Close(newPxController);
@@ -7910,7 +7910,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxControllersHit* thisPxControllersHit = unwrap<PxControllersHit>(args.Holder());
 
 			Persistent<Object> newPxController = Persistent<Object>::New(Isolate::GetCurrent(),V8PxController::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxController.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxController.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxController->SetInternalField(0, External::New(&*thisPxControllersHit->other));
 			
 			return scope.Close(newPxController);
@@ -7933,7 +7933,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxPadding<SIZE>* obj = new PxPadding<SIZE>();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -7942,7 +7942,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxPadding<SIZE>* obj = new PxPadding<SIZE>(*unwrap<PxPadding<SIZE>>(args[0]->ToObject()));
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 			return scope.Close( self );
 		}
@@ -8015,7 +8015,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxBoxGeometry* obj = new PxBoxGeometry();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8025,7 +8025,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			if(V8PxBoxGeometry::getTemplate()->HasInstance(args[0])){
 				PxBoxGeometry* obj = new PxBoxGeometry(*unwrap<PxBoxGeometry>(args[0]->ToObject()));
 				Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				self->SetInternalField(0, External::New( obj ));
 
 				return scope.Close( self );
@@ -8033,7 +8033,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			else if(V8PxVec3::getTemplate()->HasInstance(args[0])){
 				PxBoxGeometry* obj = new PxBoxGeometry(*unwrap<PxVec3>(args[0]->ToObject()));
 				Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				self->SetInternalField(0, External::New( obj ));
 
 				return scope.Close( self );
@@ -8045,7 +8045,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxBoxGeometry* obj = new PxBoxGeometry(args[0]->NumberValue(), args[1]->NumberValue(),args[2]->NumberValue());
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8062,7 +8062,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//if(thisPxVec2 != NULL) 
 		//{
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxVec3->SetInternalField(0, External::New(&thisPxBoxGeometry->halfExtents));
 
 			return scope.Close(newPxVec3);
@@ -8111,7 +8111,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxCapsuleGeometry* obj = new PxCapsuleGeometry();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8119,7 +8119,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		else if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxCapsuleGeometry::getTemplate()->HasInstance(args[0])){
 			PxCapsuleGeometry* obj = new PxCapsuleGeometry(*unwrap<PxCapsuleGeometry>(args[0]->ToObject()));
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8129,7 +8129,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxCapsuleGeometry* obj = new PxCapsuleGeometry(args[0]->NumberValue(), args[1]->NumberValue());
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8208,7 +8208,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxConvexMeshGeometry* obj = new PxConvexMeshGeometry();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8218,7 +8218,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			if(V8PxConvexMeshGeometry::getTemplate()->HasInstance(args[0])){
 				PxConvexMeshGeometry* obj = new PxConvexMeshGeometry(*unwrap<PxConvexMeshGeometry>(args[0]->ToObject()));
 				Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				self->SetInternalField(0, External::New( obj ));
 
 				return scope.Close( self );
@@ -8226,7 +8226,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			else if(V8PxConvexMesh::getTemplate()->HasInstance(args[0])){
 				PxConvexMeshGeometry* obj = new PxConvexMeshGeometry(&*unwrap<PxConvexMesh>(args[0]->ToObject()));
 				Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				self->SetInternalField(0, External::New( obj ));
 
 				return scope.Close( self );
@@ -8237,7 +8237,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxConvexMeshGeometry* obj = new PxConvexMeshGeometry(&*unwrap<PxConvexMesh>(args[0]->ToObject()), *unwrap<PxMeshScale>(args[1]->ToObject()));
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8253,7 +8253,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		PxConvexMeshGeometry* thisPxConvexMeshGeometry = unwrap<PxConvexMeshGeometry>(info.Holder());
 
 		Persistent<Object> newPxMeshScale = Persistent<Object>::New(Isolate::GetCurrent(),V8PxMeshScale::getTemplate()->InstanceTemplate()->NewInstance());			
-		newPxMeshScale.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//		newPxMeshScale.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 		newPxMeshScale->SetInternalField(0, External::New(&thisPxConvexMeshGeometry->scale));
 
 		return scope.Close(newPxMeshScale);
@@ -8277,7 +8277,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		PxConvexMeshGeometry* thisPxConvexMeshGeometry = unwrap<PxConvexMeshGeometry>(info.Holder());
 
 		Persistent<Object> newPxConvexMesh = Persistent<Object>::New(Isolate::GetCurrent(),V8PxConvexMesh::getTemplate()->InstanceTemplate()->NewInstance());			
-		newPxConvexMesh.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//		newPxConvexMesh.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 		newPxConvexMesh->SetInternalField(0, External::New(&thisPxConvexMeshGeometry->convexMesh));
 
 		return scope.Close(newPxConvexMesh);
@@ -8320,7 +8320,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxHeightFieldGeometry* obj = new PxHeightFieldGeometry();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8328,7 +8328,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		else if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxHeightFieldGeometry::getTemplate()->HasInstance(args[0])){
 			PxHeightFieldGeometry* obj = new PxHeightFieldGeometry(*unwrap<PxHeightFieldGeometry>(args[0]->ToObject()));
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8341,7 +8341,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxHeightFieldGeometry* obj = new PxHeightFieldGeometry(&*unwrap<PxHeightField>(args[0]->ToObject()), PxMeshGeometryFlags(args[1]->Int32Value()),args[2]->NumberValue(),args[3]->NumberValue(),args[4]->NumberValue());
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8357,7 +8357,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		PxHeightFieldGeometry* thisPxHeightFieldGeometry = unwrap<PxHeightFieldGeometry>(info.Holder());
 
 		Persistent<Object> newPxHeightField = Persistent<Object>::New(Isolate::GetCurrent(),V8PxHeightField::getTemplate()->InstanceTemplate()->NewInstance());			
-		newPxHeightField.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//		newPxHeightField.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 		newPxHeightField->SetInternalField(0, External::New(&thisPxHeightFieldGeometry->heightField));
 
 		return scope.Close(newPxHeightField);
@@ -8462,7 +8462,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 		PxPadding<3>* obj = new PxPadding<3>(thisPxHeightFieldGeometry->paddingFromFlags);
 		Persistent<Object> newPxPadding3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxPadding<2>::getTemplate()->InstanceTemplate()->NewInstance());			
-		newPxPadding3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//		newPxPadding3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 		newPxPadding3->SetInternalField(0, External::New( obj ));
 
 		return scope.Close(newPxPadding3);
@@ -8507,7 +8507,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxSphereGeometry* obj = new PxSphereGeometry();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8516,7 +8516,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			if(args[0]->IsObject() && V8PxSphereGeometry::getTemplate()->HasInstance(args[0])){
 				PxSphereGeometry* obj = new PxSphereGeometry(*unwrap<PxSphereGeometry>(args[0]->ToObject()));
 				Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				self->SetInternalField(0, External::New( obj ));
 
 				return scope.Close( self );
@@ -8524,7 +8524,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			else if(args[0]->IsNumber()){
 				PxSphereGeometry* obj = new PxSphereGeometry(args[0]->NumberValue());
 				Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				self->SetInternalField(0, External::New( obj ));
 
 				return scope.Close( self );
@@ -8580,7 +8580,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxPlaneGeometry* obj = new PxPlaneGeometry();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8588,7 +8588,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		else if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxPlaneGeometry::getTemplate()->HasInstance(args[0])){
 			PxPlaneGeometry* obj = new PxPlaneGeometry(*unwrap<PxPlaneGeometry>(args[0]->ToObject()));
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8623,7 +8623,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxTriangleMeshGeometry* obj = new PxTriangleMeshGeometry();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8633,7 +8633,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			if(V8PxTriangleMeshGeometry::getTemplate()->HasInstance(args[0])){
 				PxTriangleMeshGeometry* obj = new PxTriangleMeshGeometry(*unwrap<PxTriangleMeshGeometry>(args[0]->ToObject()));
 				Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				self->SetInternalField(0, External::New( obj ));
 
 				return scope.Close( self );
@@ -8641,7 +8641,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			else if(V8PxTriangleMesh::getTemplate()->HasInstance(args[0])){
 				PxTriangleMeshGeometry* obj = new PxTriangleMeshGeometry(unwrap<PxTriangleMesh>(args[0]->ToObject()));
 				Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				self->SetInternalField(0, External::New( obj ));
 
 				return scope.Close( self );
@@ -8652,7 +8652,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			
 			PxTriangleMeshGeometry* obj = new PxTriangleMeshGeometry( unwrap<PxTriangleMesh>(args[0]->ToObject()), *unwrap<PxMeshScale>(args[1]->ToObject()) );
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8663,7 +8663,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxTriangleMeshGeometry* obj = new PxTriangleMeshGeometry( unwrap<PxTriangleMesh>(args[0]->ToObject()), *unwrap<PxMeshScale>(args[1]->ToObject()), PxMeshGeometryFlags(args[2]->Int32Value()) );
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 			self->SetInternalField(0, External::New( obj ));
 
 			return scope.Close( self );
@@ -8680,7 +8680,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 		PxMeshScale* obj = new PxMeshScale(thisPxTriangleMeshGeometry->scale);
 		Persistent<Object> newPxMeshScale = Persistent<Object>::New(Isolate::GetCurrent(),V8PxMeshScale::getTemplate()->InstanceTemplate()->NewInstance());			
-		newPxMeshScale.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//		newPxMeshScale.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 		newPxMeshScale->SetInternalField(0, External::New( obj ));
 
 		return scope.Close(newPxMeshScale);
@@ -8727,7 +8727,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 		PxPadding<3>* obj = new PxPadding<3>(thisPxTriangleMeshGeometry->paddingFromFlags);
 		Persistent<Object> newPxPadding3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxPadding<2>::getTemplate()->InstanceTemplate()->NewInstance());			
-		newPxPadding3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//		newPxPadding3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 		newPxPadding3->SetInternalField(0, External::New( obj ));
 
 		return scope.Close(newPxPadding3);
@@ -8753,7 +8753,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		PxTriangleMeshGeometry* thisPxTriangleMeshGeometry = unwrap<PxTriangleMeshGeometry>(info.Holder());
 
 		Persistent<Object> newPxTriangleMesh = Persistent<Object>::New(Isolate::GetCurrent(),V8PxTriangleMesh::getTemplate()->InstanceTemplate()->NewInstance());			
-		newPxTriangleMesh.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//		newPxTriangleMesh.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 		newPxTriangleMesh->SetInternalField(0, External::New( thisPxTriangleMeshGeometry->triangleMesh ));
 
 		return scope.Close(newPxTriangleMesh);
@@ -8815,14 +8815,14 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			int numVerts = thisPxTriangleMesh->getNbVertices();
 
 			Persistent<Array> newArray = Persistent<Array>::New(Isolate::GetCurrent(),Array::New(numVerts));
-			newArray.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newArray.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 
 			const PxVec3* verts = thisPxTriangleMesh->getVertices();
 			
 			for(int i = 0; i < numVerts; i++){
 				PxVec3* obj = new PxVec3(verts[i]);
 				Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxVec3->SetInternalField(0, External::New( obj ));
 
 				newArray->SetInternalField(i, newPxVec3); 
@@ -8859,7 +8859,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			int numTris = thisPxTriangleMesh->getNbTriangles() * 3;
 
 			Persistent<Array> newArray = Persistent<Array>::New(Isolate::GetCurrent(),Array::New(numTris));
-			newArray.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newArray.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 
 			const void* indicies = thisPxTriangleMesh->getTriangles();
 			bool bit16 = thisPxTriangleMesh->has16BitTriangleIndices();
@@ -8913,7 +8913,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			int numTris = thisPxTriangleMesh->getNbTriangles() * 3;
 
 			Persistent<Array> newArray = Persistent<Array>::New(Isolate::GetCurrent(),Array::New(numTris));
-			newArray.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newArray.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 
 			const void* indicies = thisPxTriangleMesh->getTrianglesRemap();
 			bool bit16 = thisPxTriangleMesh->has16BitTriangleIndices();
@@ -9193,7 +9193,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxFieldDescriptor* thisPxFieldDescriptor = unwrap<PxFieldDescriptor>(args.Holder());
 
 			Persistent<External> newExternal = Persistent<External>::New(Isolate::GetCurrent(), External::New( thisPxFieldDescriptor->Address( Handle<External>::Cast(args[0])->Value() ) ) );
-			newExternal.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newExternal.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			
 			return scope.Close( newExternal );
 		}
@@ -9210,7 +9210,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxFieldDescriptor* thisPxFieldDescriptor = unwrap<PxFieldDescriptor>(args.Holder());
 
 			Persistent<External> newExternal = Persistent<External>::New(Isolate::GetCurrent(), External::New( thisPxFieldDescriptor->GetArrayAddress( Handle<External>::Cast(args[0])->Value() ) ) );
-			newExternal.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newExternal.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			
 			return scope.Close( newExternal );
 		}
@@ -9319,7 +9319,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxMeshScale* meshScaleObj = new PxMeshScale();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),meshScaleObj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),meshScaleObj, &CleanupDelete);
 			self->SetInternalField(0, External::New( meshScaleObj ));
 
 			return scope.Close( self );
@@ -9328,7 +9328,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxMeshScale* meshScaleObj = new PxMeshScale(*unwrap<PxMeshScale>(args[0]->ToObject()));
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),meshScaleObj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),meshScaleObj, &CleanupDelete);
 			self->SetInternalField(0, External::New( meshScaleObj ));
 
 			return scope.Close( self );
@@ -9339,7 +9339,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			PxMeshScale* meshScaleObj = new PxMeshScale(*unwrap<PxVec3>(args[0]->ToObject()), *unwrap<PxQuat>(args[1]->ToObject()));
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),meshScaleObj, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),meshScaleObj, &CleanupDelete);
 			self->SetInternalField(0, External::New( meshScaleObj ));
 
 			return scope.Close( self );
@@ -9358,7 +9358,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxMeshScale* meshScaleObj = new PxMeshScale(PxMeshScale::createIdentity());
 
 			Persistent<Object> newMeshScale = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			newMeshScale.MakeWeak(Isolate::GetCurrent(),meshScaleObj, &CleanupDelete);
+//			newMeshScale.MakeWeak(Isolate::GetCurrent(),meshScaleObj, &CleanupDelete);
 			newMeshScale->SetInternalField(0, External::New( meshScaleObj ));
 
 			return scope.Close( newMeshScale );
@@ -9374,7 +9374,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		PxMeshScale* thisPxMeshScale = unwrap<PxMeshScale>(info.Holder());
 
 		Persistent<Object> newMeshScale = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-		newMeshScale.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//		newMeshScale.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 		newMeshScale->SetInternalField(0, External::New( &thisPxMeshScale->scale ) );
 
 		return scope.Close( newMeshScale );
@@ -9400,7 +9400,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		PxMeshScale* thisPxMeshScale = unwrap<PxMeshScale>(info.Holder());
 
 		Persistent<Object> newMeshScale = Persistent<Object>::New(Isolate::GetCurrent(),V8PxQuat::getTemplate()->InstanceTemplate()->NewInstance());			
-		newMeshScale.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//		newMeshScale.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 		newMeshScale->SetInternalField(0, External::New( &thisPxMeshScale->rotation ) );
 
 		return scope.Close( newMeshScale );
@@ -9444,7 +9444,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxMeshScale* meshScaleObj = new PxMeshScale(thisMeshScale->getInverse());
 
 			Persistent<Object> newMeshScale = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			newMeshScale.MakeWeak(Isolate::GetCurrent(),meshScaleObj, &CleanupDelete);
+//			newMeshScale.MakeWeak(Isolate::GetCurrent(),meshScaleObj, &CleanupDelete);
 			newMeshScale->SetInternalField(0, External::New( meshScaleObj ));
 
 			return scope.Close( newMeshScale );
@@ -9464,7 +9464,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxMat33* mat33Obj = new PxMat33( thisMeshScale->toMat33() );
 
 			Persistent<Object> newMat33 = Persistent<Object>::New(Isolate::GetCurrent(), V8PxMat33::getTemplate()->InstanceTemplate()->NewInstance() );
-			newMat33.MakeWeak(Isolate::GetCurrent(),mat33Obj, &CleanupDelete);
+//			newMat33.MakeWeak(Isolate::GetCurrent(),mat33Obj, &CleanupDelete);
 			newMat33->SetInternalField(0, External::New( mat33Obj ));
 
 			return scope.Close( newMat33 );
@@ -9500,14 +9500,14 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			int numVerts = thisPxConvexMesh->getNbVertices();
 
 			Persistent<Array> newArray = Persistent<Array>::New(Isolate::GetCurrent(),Array::New(numVerts));
-			newArray.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newArray.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 
 			const PxVec3* verts = thisPxConvexMesh->getVertices();
 			
 			for(int i = 0; i < numVerts; i++){
 				PxVec3* obj = new PxVec3(verts[i]);
 				Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//				newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 				newPxVec3->SetInternalField(0, External::New( obj ));
 
 				newArray->SetInternalField(i, newPxVec3); 
@@ -9530,7 +9530,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			int numPoly = thisPxConvexMesh->getNbPolygons();
 
 			Persistent<Array> newArray = Persistent<Array>::New(Isolate::GetCurrent(),Array::New(numPoly));
-			newArray.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newArray.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 
 			const PxU8* indicies = thisPxConvexMesh->getIndexBuffer();
 			
@@ -9570,7 +9570,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			if(thisPxConvexMesh->getPolygonData(args[0]->Uint32Value(), *data)){
 				Persistent<Object> newPxHullPolygon = Persistent<Object>::New(Isolate::GetCurrent(),V8PxHullPolygon::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxHullPolygon.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxHullPolygon.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxHullPolygon->SetInternalField(0, External::New( data ));
 			
 				return scope.Close( newPxHullPolygon );
@@ -9619,7 +9619,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxConvexMesh* thisPxConvexMesh = unwrap<PxConvexMesh>(args.Holder());
 			
 			Persistent<Array> newArray = Persistent<Array>::New(Isolate::GetCurrent(),Array::New(3));
-			newArray.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newArray.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 
 			PxReal* mass = NULL;
 			PxMat33* localInertia = NULL;
@@ -9628,11 +9628,11 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			thisPxConvexMesh->getMassInformation(*mass, *localInertia, *localCenterOfMass);
 
 			Persistent<Object> newPxMat33 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxMat33::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxMat33.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxMat33.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxMat33->SetInternalField(0, External::New( localInertia ));
 
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxVec3->SetInternalField(0, External::New( localCenterOfMass ));
 
 			newArray->SetInternalField(0, Number::New(*mass));
@@ -9828,7 +9828,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxFilterData* filtDataObject = new PxFilterData();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),filtDataObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),filtDataObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( filtDataObject ));
 
 			return scope.Close( self );
@@ -9840,7 +9840,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			
 			PxFilterData* filtDataObject = new PxFilterData(args[0]->Uint32Value(), args[1]->Uint32Value(), args[2]->Uint32Value(), args[3]->Uint32Value());
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),filtDataObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),filtDataObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( filtDataObject ));
 
 			return scope.Close( self );
@@ -9972,11 +9972,11 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0){
 			PxHullPolygon* filtDataObject = new PxHullPolygon();
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			self.MakeWeak(Isolate::GetCurrent(),filtDataObject, &CleanupDelete);
+//			self.MakeWeak(Isolate::GetCurrent(),filtDataObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( filtDataObject ));
 
 			Persistent<Object> planeEqn = Persistent<Object>::New(Isolate::GetCurrent(),Object::New());
-			planeEqn.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			planeEqn.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			planeEqn->SetIndexedPropertiesToExternalArrayData(filtDataObject->mPlane, v8::kExternalFloatArray, 4);
 
 			self->SetAccessor(String::New("mPlane"), getmPlane, NULL, planeEqn);
@@ -10280,7 +10280,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 	//		PxVec3* obj = new PxVec3(thisPxMaterial->getDirOfAnisotropy());
 	//		Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),args.Holder()->Clone());			
-	//		newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
+//	//		newPxVec3.MakeWeak(Isolate::GetCurrent(),obj, &CleanupDelete);
 	//		newPxVec3->SetInternalField(0, External::New( obj ));
 	//		
 	//		return scope.Close(newPxVec3);
@@ -10411,7 +10411,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			thisPxObserver->onRelease(*observable);
 
 			Persistent<Object> newPxObservable = Persistent<Object>::New(Isolate::GetCurrent(),V8PxObservable::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxObservable.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxObservable.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxObservable->SetInternalField(0, External::New( observable ));
 			
 			return scope.Close( newPxObservable );
@@ -10499,11 +10499,11 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			int numObs = thisPxObservable->getObservers(newObs, thisPxObservable->getNbObservers());
 
 			Persistent<Array> newArray = Persistent<Array>::New(Isolate::GetCurrent(),Array::New(numObs));
-			newArray.MakeWeak(Isolate::GetCurrent(),newObs, &CleanupFree);
+//			newArray.MakeWeak(Isolate::GetCurrent(),newObs, &CleanupFree);
 			
 			for(int i = 0; i < numObs; i++){
 				Persistent<Object> newPxObserver = Persistent<Object>::New(Isolate::GetCurrent(),V8PxObserver::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxObserver.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxObserver.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxObserver->SetInternalField(0, External::New( newObs[i] ));
 
 				newArray->SetInternalField(i, newPxObserver); 
@@ -10593,7 +10593,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			if(newObj){
 				Persistent<Object> newPxRigidStatic = Persistent<Object>::New(Isolate::GetCurrent(),V8PxRigidStatic::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxRigidStatic.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxRigidStatic.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxRigidStatic->SetInternalField(0, External::New( newObj ));
 
 				return scope.Close( newPxRigidStatic );
@@ -10615,7 +10615,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			if(newObj){
 				Persistent<Object> newPxRigidDynamic = Persistent<Object>::New(Isolate::GetCurrent(),V8PxRigidDynamic::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxRigidDynamic.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxRigidDynamic.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxRigidDynamic->SetInternalField(0, External::New( newObj ));
 
 				return scope.Close( newPxRigidDynamic );
@@ -10637,7 +10637,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			if(newObj){
 				Persistent<Object> newPxParticleSystem = Persistent<Object>::New(Isolate::GetCurrent(),V8PxParticleSystem::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxParticleSystem.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxParticleSystem.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxParticleSystem->SetInternalField(0, External::New( newObj ));
 
 				return scope.Close( newPxParticleSystem );
@@ -10659,7 +10659,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			if(newObj){
 				Persistent<Object> newPxParticleFluid = Persistent<Object>::New(Isolate::GetCurrent(),V8PxParticleFluid::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxParticleFluid.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxParticleFluid.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxParticleFluid->SetInternalField(0, External::New( newObj ));
 
 				return scope.Close( newPxParticleFluid );
@@ -10681,7 +10681,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 	//		if(newObj){
 	//			Persistent<Object> newPxDeformable = Persistent<Object>::New(Isolate::GetCurrent(),V8PxDeformable::getTemplate()->InstanceTemplate()->NewInstance());			
-	//			newPxDeformable.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//	//			newPxDeformable.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 	//			newPxDeformable->SetInternalField(0, External::New( newObj ));
 
 	//			return scope.Close( newPxDeformable );
@@ -10703,7 +10703,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			if(newObj){
 				Persistent<Object> newPxArticulationLink = Persistent<Object>::New(Isolate::GetCurrent(),V8PxArticulationLink::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxArticulationLink.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxArticulationLink.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxArticulationLink->SetInternalField(0, External::New( newObj ));
 
 				return scope.Close( newPxArticulationLink );
@@ -10725,7 +10725,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			if(newObj){
 				Persistent<Object> newPxRigidActor = Persistent<Object>::New(Isolate::GetCurrent(),V8PxRigidActor::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxRigidActor.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxRigidActor.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxRigidActor->SetInternalField(0, External::New( newObj ));
 
 				return scope.Close( newPxRigidActor );
@@ -10747,7 +10747,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			if(newObj){
 				Persistent<Object> newPxRigidBody = Persistent<Object>::New(Isolate::GetCurrent(),V8PxRigidBody::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxRigidBody.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxRigidBody.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxRigidBody->SetInternalField(0, External::New( newObj ));
 
 				return scope.Close( newPxRigidBody );
@@ -10769,7 +10769,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			if(newObj){
 				Persistent<Object> newPxParticleBase = Persistent<Object>::New(Isolate::GetCurrent(),V8PxParticleBase::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxParticleBase.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxParticleBase.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxParticleBase->SetInternalField(0, External::New( newObj ));
 
 				return scope.Close( newPxParticleBase );
@@ -10790,7 +10790,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxScene* scene = thisPxActor->getScene();
 
 			Persistent<Object> newPxScene = Persistent<Object>::New(Isolate::GetCurrent(),V8PxScene::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxScene.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxScene.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxScene->SetInternalField(0, External::New( scene ));
 
 			return scope.Close( newPxScene );
@@ -10840,7 +10840,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxBounds3* bounds = new PxBounds3(thisPxActor->getWorldBounds());
 
 			Persistent<Object> newPxBounds3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxBounds3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxBounds3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//			newPxBounds3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 			newPxBounds3->SetInternalField(0, External::New( bounds ));
 
 			return scope.Close( newPxBounds3 );
@@ -10997,7 +10997,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxAggregate* aggregate = thisPxActor->getAggregate();
 
 			Persistent<Object> newPxAggregate = Persistent<Object>::New(Isolate::GetCurrent(),V8PxAggregate::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxAggregate.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//			newPxAggregate.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 			newPxAggregate->SetInternalField(0, External::New( aggregate ));
 
 			return scope.Close( newPxAggregate );
@@ -11035,7 +11035,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxTransform* transf = new PxTransform(thisPxRigidActor->getGlobalPose());
 
 			Persistent<Object> newPxTransform = Persistent<Object>::New(Isolate::GetCurrent(),V8PxTransform::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxTransform.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//			newPxTransform.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 			newPxTransform->SetInternalField(0, External::New( transf ));
 			
 			return scope.Close( newPxTransform );
@@ -11080,7 +11080,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxShape* shape = thisPxRigidActor->createShape(*inPxShapeDesc);
 
 			Persistent<Object> newPxShape = Persistent<Object>::New(Isolate::GetCurrent(),V8PxShape::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//			newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 			newPxShape->SetInternalField(0, External::New( shape ));
 
 			return scope.Close( newPxShape );
@@ -11100,7 +11100,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 					PxShape* shape = thisPxRigidActor->createShape(*inPxGeometry, *inPxMaterial, *inPxTransform);
 
 					Persistent<Object> newPxShape = Persistent<Object>::New(Isolate::GetCurrent(),V8PxShape::getTemplate()->InstanceTemplate()->NewInstance());			
-					newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//					newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 					newPxShape->SetInternalField(0, External::New( shape ));
 
 					return scope.Close( newPxShape );
@@ -11110,7 +11110,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 					PxShape* shape = thisPxRigidActor->createShape(*inPxGeometry, *inPxMaterial);
 
 					Persistent<Object> newPxShape = Persistent<Object>::New(Isolate::GetCurrent(),V8PxShape::getTemplate()->InstanceTemplate()->NewInstance());			
-					newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//					newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 					newPxShape->SetInternalField(0, External::New( shape ));
 
 					return scope.Close( newPxShape );
@@ -11137,7 +11137,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 					PxShape* shape = thisPxRigidActor->createShape(*inPxGeometry, matBuffer, length, *inPxTransform);
 
 					Persistent<Object> newPxShape = Persistent<Object>::New(Isolate::GetCurrent(),V8PxShape::getTemplate()->InstanceTemplate()->NewInstance());			
-					newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//					newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 					newPxShape->SetInternalField(0, External::New( shape ));
 
 					free(matBuffer);
@@ -11148,7 +11148,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 					PxShape* shape = thisPxRigidActor->createShape(*inPxGeometry, matBuffer, length);
 
 					Persistent<Object> newPxShape = Persistent<Object>::New(Isolate::GetCurrent(),V8PxShape::getTemplate()->InstanceTemplate()->NewInstance());			
-					newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//					newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 					newPxShape->SetInternalField(0, External::New( shape ));
 
 					free(matBuffer);
@@ -11188,11 +11188,11 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			int numShapes = thisPxRigidActor->getShapes(newShapes, thisPxRigidActor->getNbShapes());
 
 			Persistent<Array> newArray = Persistent<Array>::New(Isolate::GetCurrent(),Array::New(numShapes));
-			newArray.MakeWeak(Isolate::GetCurrent(),newShapes, &CleanupFree);
+//			newArray.MakeWeak(Isolate::GetCurrent(),newShapes, &CleanupFree);
 			
 			for(int i = 0; i < numShapes; i++){
 				Persistent<Object> newPxShape = Persistent<Object>::New(Isolate::GetCurrent(),V8PxShape::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxShape->SetInternalField(0, External::New( newShapes[i] ));
 
 				newArray->SetInternalField(i, newPxShape); 
@@ -11231,11 +11231,11 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			int numContraints = thisPxRigidActor->getConstraints(newConstraints, thisPxRigidActor->getNbConstraints());
 
 			Persistent<Array> newArray = Persistent<Array>::New(Isolate::GetCurrent(),Array::New(numContraints));
-			newArray.MakeWeak(Isolate::GetCurrent(),newConstraints, &CleanupFree);
+//			newArray.MakeWeak(Isolate::GetCurrent(),newConstraints, &CleanupFree);
 			
 			for(int i = 0; i < numContraints; i++){
 				Persistent<Object> newPxConstraint = Persistent<Object>::New(Isolate::GetCurrent(),V8PxConstraint::getTemplate()->InstanceTemplate()->NewInstance());			
-				newPxConstraint.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxConstraint.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxConstraint->SetInternalField(0, External::New( newConstraints[i] ));
 
 				newArray->SetInternalField(i, newPxConstraint); 
@@ -11288,7 +11288,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxTransform* transf = new PxTransform(thisPxRigidBody->getCMassLocalPose());
 
 			Persistent<Object> newPxTransform = Persistent<Object>::New(Isolate::GetCurrent(),V8PxTransform::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxTransform.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//			newPxTransform.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 			newPxTransform->SetInternalField(0, External::New( transf ));
 			
 			return scope.Close( newPxTransform );
@@ -11355,7 +11355,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxVec3* vec3 = new PxVec3(thisPxRigidBody->getMassSpaceInertiaTensor());
 
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( vec3 ));
 			
 			return scope.Close( newPxVec3 );
@@ -11375,7 +11375,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxVec3* vec3 = new PxVec3(thisPxRigidBody->getLinearVelocity());
 
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( vec3 ));
 			
 			return scope.Close( newPxVec3 );
@@ -11417,7 +11417,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxVec3* vec3 = new PxVec3(thisPxRigidBody->getAngularVelocity());
 
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( vec3 ));
 			
 			return scope.Close( newPxVec3 );
@@ -11579,7 +11579,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxParticleReadData* pReadData = thisPxParticleBase->lockParticleReadData();
 
 			Persistent<Object> newPxParticleReadData = Persistent<Object>::New(Isolate::GetCurrent(),V8PxParticleReadData::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxParticleReadData.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//			newPxParticleReadData.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 			newPxParticleReadData->SetInternalField(0, External::New( pReadData ));
 			
 			return scope.Close( newPxParticleReadData );
@@ -11898,7 +11898,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxVec3* vecObj = new PxVec3(thisPxParticleBase->getExternalAcceleration());
 
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( vecObj ));
 			
 			return scope.Close( newPxVec3 );
@@ -11938,7 +11938,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 
 			Persistent<Object> newPxVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
+//			newPxVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupDelete);
 			newPxVec3->SetInternalField(0, External::New( new PxVec3(normal) ));
 
 			Local<Array> returnArray = Array::New(2);
@@ -12107,7 +12107,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxFilterData dataObj = thisPxParticleBase->getSimulationFilterData();
 
 			Persistent<Object> newPxFilterData = Persistent<Object>::New(Isolate::GetCurrent(),V8PxFilterData::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxFilterData.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxFilterData.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxFilterData->SetInternalField(0, External::New( &dataObj ));
 			
 			return scope.Close( newPxFilterData );
@@ -12303,7 +12303,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		if(args.Length() == 0) {
 			PxStrideIterator<T>* thisPxStrideIterator = unwrap<PxStrideIterator<T>>(args.Holder());
 			Persistent<Object> obj = Persistent<Object>::New(Isolate::GetCurrent(),args.Data()->ToObject()->Clone());
-			obj.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			obj.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			obj->SetInternalField(0, External::New( &(**thisPxStrideIterator) ));
 
 			return scope.Close( obj );
@@ -12441,11 +12441,11 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxParticleReadData* thisPxParticleReadData = unwrap<PxParticleReadData>(info.Holder());
 
 			Persistent<Object> newPxStrideIterator = Persistent<Object>::New(Isolate::GetCurrent(),V8PxStrideIterator<PxVec3>::getTemplate()->InstanceTemplate()->NewInstance());
-			newPxStrideIterator.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxStrideIterator.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxStrideIterator->SetInternalField(0, External::New( &(thisPxParticleReadData->positionBuffer) ));
 
 			Persistent<Object> newDataObj = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());
-			newDataObj.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newDataObj.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newDataObj->SetInternalField(0, External::New( &(PxVec3)(*(thisPxParticleReadData->positionBuffer)) ));
 
 			V8PxStrideIterator<PxVec3>::initObject(newPxStrideIterator, newDataObj);
@@ -12467,11 +12467,11 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxParticleReadData* thisPxParticleReadData = unwrap<PxParticleReadData>(info.Holder());
 
 			Persistent<Object> newPxStrideIterator = Persistent<Object>::New(Isolate::GetCurrent(),V8PxStrideIterator<PxVec3>::getTemplate()->InstanceTemplate()->NewInstance());
-			newPxStrideIterator.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxStrideIterator.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxStrideIterator->SetInternalField(0, External::New( &(thisPxParticleReadData->velocityBuffer) ));
 
 			Persistent<Object> newDataObj = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());
-			newDataObj.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newDataObj.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newDataObj->SetInternalField(0, External::New( &(PxVec3)(*(thisPxParticleReadData->velocityBuffer)) ));
 
 			V8PxStrideIterator<PxVec3>::initObject(newPxStrideIterator, newDataObj);
@@ -12493,7 +12493,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxParticleReadData* thisPxParticleReadData = unwrap<PxParticleReadData>(info.Holder());
 
 			Persistent<Object> newPxStrideIterator = Persistent<Object>::New(Isolate::GetCurrent(),V8PxStrideIterator<PxF32>::getTemplate()->InstanceTemplate()->NewInstance());
-			newPxStrideIterator.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxStrideIterator.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxStrideIterator->SetInternalField(0, External::New( &(thisPxParticleReadData->restOffsetBuffer) ));
 
 			Handle<Number> newDataObj = Number::New( (*(thisPxParticleReadData->restOffsetBuffer)) ); //wonder how long this will live, it should live persistently...
@@ -12517,7 +12517,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxParticleReadData* thisPxParticleReadData = unwrap<PxParticleReadData>(info.Holder());
 
 			Persistent<Object> newPxStrideIterator = Persistent<Object>::New(Isolate::GetCurrent(),V8PxStrideIterator<PxParticleFlags>::getTemplate()->InstanceTemplate()->NewInstance());
-			newPxStrideIterator.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxStrideIterator.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxStrideIterator->SetInternalField(0, External::New( &(thisPxParticleReadData->flagsBuffer) ));
 
 			Handle<Integer> newDataObj = Uint32::New( (PxU32)(*(thisPxParticleReadData->flagsBuffer)) );
@@ -12542,11 +12542,11 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			if(thisPxParticleReadData->collisionNormalBuffer.ptr() != NULL){
 				Persistent<Object> newPxStrideIterator = Persistent<Object>::New(Isolate::GetCurrent(),V8PxStrideIterator<PxVec3>::getTemplate()->InstanceTemplate()->NewInstance());
-				newPxStrideIterator.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newPxStrideIterator.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newPxStrideIterator->SetInternalField(0, External::New( &(thisPxParticleReadData->collisionNormalBuffer) ));
 
 				Persistent<Object> newDataObj = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());
-				newDataObj.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//				newDataObj.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 				newDataObj->SetInternalField(0, External::New( &(PxVec3)(*(thisPxParticleReadData->collisionNormalBuffer)) ));
 
 				V8PxStrideIterator<PxVec3>::initObject(newPxStrideIterator, newDataObj);
@@ -13006,7 +13006,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxVec3* newVal = new PxVec3( thisScene->getGravity() );
 
 			Persistent<Object> obj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
-			obj.MakeWeak(Isolate::GetCurrent(),newVal, &CleanupDelete);
+//			obj.MakeWeak(Isolate::GetCurrent(),newVal, &CleanupDelete);
 			obj->SetInternalField(0, External::New( newVal ));
 			
 			return scope.Close( obj );
@@ -13111,8 +13111,8 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
-		if(args.Length() == 4 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxActor::getTemplate()->HasInstance(args[0])
-			&& !args[1].IsEmpty() && args[1]->IsObject() && V8PxActor::getTemplate()->HasInstance(args[1])
+		if(args.Length() == 4 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])
+			&& !args[1].IsEmpty() && args[1]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[1])
 			&& !args[2].IsEmpty() && args[2]->IsNumber()
 			&& !args[3].IsEmpty() && args[3]->IsObject() && V8PxSceneQueryHit::getTemplate()->HasInstance(args[3])) 
         {
@@ -13124,8 +13124,8 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 									*unwrap<PxSceneQueryHit>(args[3]->ToObject())
 									) ));
 		}
-		else if(args.Length() == 5 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxActor::getTemplate()->HasInstance(args[0])
-			&& !args[1].IsEmpty() && args[1]->IsObject() && V8PxActor::getTemplate()->HasInstance(args[1])
+		else if(args.Length() == 5 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])
+			&& !args[1].IsEmpty() && args[1]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[1])
 			&& !args[2].IsEmpty() && args[2]->IsNumber()
 			&& !args[3].IsEmpty() && args[3]->IsObject() && V8PxSceneQueryHit::getTemplate()->HasInstance(args[3])
 			&& !args[4].IsEmpty() && args[4]->IsObject() && V8PxSceneQueryFilterData::getTemplate()->HasInstance(args[4])) 
@@ -13149,8 +13149,24 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
-		if(args.Length() == 5 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxActor::getTemplate()->HasInstance(args[0])
-			&& !args[1].IsEmpty() && args[1]->IsObject() && V8PxActor::getTemplate()->HasInstance(args[1])
+		if(args.Length() == 5 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])
+			&& !args[1].IsEmpty() && args[1]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[1])
+			&& !args[2].IsEmpty() && args[2]->IsNumber()
+			&& !args[3].IsEmpty() && args[3]->IsUint32()
+			&& !args[4].IsEmpty() && args[4]->IsObject() && V8PxRaycastHit::getTemplate()->HasInstance(args[4])
+			&& !args[5].IsEmpty() && args[5]->IsObject() && V8PxSceneQueryFilterData::getTemplate()->HasInstance(args[5]))
+        {
+			PxScene* thisScene = unwrap<PxScene>(args.Holder());
+			
+			return scope.Close( Boolean::New( thisScene->raycastSingle(	*unwrap<PxVec3>(args[0]->ToObject()),
+									*unwrap<PxVec3>(args[1]->ToObject()),
+									args[2]->NumberValue(),
+									(PxSceneQueryFlags)args[3]->Uint32Value(),
+									*unwrap<PxRaycastHit>(args[4]->ToObject())
+									) ));
+		}
+		else if(args.Length() == 6 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])
+			&& !args[1].IsEmpty() && args[1]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[1])
 			&& !args[2].IsEmpty() && args[2]->IsNumber()
 			&& !args[3].IsEmpty() && args[3]->IsUint32()
 			&& !args[4].IsEmpty() && args[4]->IsObject() && V8PxRaycastHit::getTemplate()->HasInstance(args[4])) 
@@ -13161,7 +13177,8 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 									*unwrap<PxVec3>(args[1]->ToObject()),
 									args[2]->NumberValue(),
 									(PxSceneQueryFlags)args[3]->Uint32Value(),
-									*unwrap<PxRaycastHit>(args[4]->ToObject())
+									*unwrap<PxRaycastHit>(args[4]->ToObject()),
+									*unwrap<PxSceneQueryFilterData>(args[5]->ToObject())
 									) ));
 		}
 
@@ -13175,8 +13192,8 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		HandleScope scope(Isolate::GetCurrent());
 
 		//TODO: Finish this
-		//if(args.Length() == 4 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxActor::getTemplate()->HasInstance(args[0])
-		//	&& !args[1].IsEmpty() && args[1]->IsObject() && V8PxActor::getTemplate()->HasInstance(args[1])
+		//if(args.Length() == 4 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])
+		//	&& !args[1].IsEmpty() && args[1]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[1])
 		//	&& !args[2].IsEmpty() && args[2]->IsNumber()
 		//	&& !args[3].IsEmpty() && args[3]->IsUint32())
   //      {
@@ -13267,7 +13284,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxSceneQueryHit* val = new PxSceneQueryHit();
 
 			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
-			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
 			newObj->SetInternalField(0, External::New(val));
 			
 			return scope.Close(newObj);
@@ -13276,7 +13293,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxSceneQueryHit* val = new PxSceneQueryHit(*unwrap<PxSceneQueryHit>(args[0]->ToObject()));
 
 			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
-			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
 			newObj->SetInternalField(0, External::New(val));
 			
 			return scope.Close(newObj);
@@ -13294,7 +13311,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxSceneQueryHit* thisHit = unwrap<PxSceneQueryHit>(args.Holder());
 
 			Persistent<Object> newPxShape = Persistent<Object>::New(Isolate::GetCurrent(),V8PxShape::getTemplate()->InstanceTemplate()->NewInstance());			
-			newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+//			newPxShape.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 			newPxShape->SetInternalField(0, External::New(&*thisHit->shape));
 			
 			return scope.Close(newPxShape);
@@ -13345,7 +13362,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxSceneQueryImpactHit* val = new PxSceneQueryImpactHit();
 
 			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
-			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
 			newObj->SetInternalField(0, External::New(val));
 			
 			return scope.Close(newObj);
@@ -13354,7 +13371,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxSceneQueryImpactHit* val = new PxSceneQueryImpactHit(*unwrap<PxSceneQueryImpactHit>(args[0]->ToObject()));
 
 			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
-			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
 			newObj->SetInternalField(0, External::New(val));
 			
 			return scope.Close(newObj);
@@ -13374,7 +13391,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxVec3* newVal = new PxVec3(thisHit->impact);
 
 			Persistent<Object> obj = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			obj.MakeWeak(Isolate::GetCurrent(),newVal, &CleanupDelete);
+//			obj.MakeWeak(Isolate::GetCurrent(),newVal, &CleanupDelete);
 			obj->SetInternalField(0, External::New(newVal));
 			
 			return scope.Close(obj);
@@ -13394,7 +13411,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxVec3* newVal = new PxVec3(thisHit->normal);
 
 			Persistent<Object> obj = Persistent<Object>::New(Isolate::GetCurrent(),V8PxVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-			obj.MakeWeak(Isolate::GetCurrent(),newVal, &CleanupDelete);
+//			obj.MakeWeak(Isolate::GetCurrent(),newVal, &CleanupDelete);
 			obj->SetInternalField(0, External::New(newVal));
 			
 			return scope.Close(obj);
@@ -13430,7 +13447,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxRaycastHit* val = new PxRaycastHit();
 
 			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
-			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
 			newObj->SetInternalField(0, External::New(val));
 			
 			return scope.Close(newObj);
@@ -13439,7 +13456,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxRaycastHit* val = new PxRaycastHit(*unwrap<PxRaycastHit>(args[0]->ToObject()));
 
 			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
-			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
 			newObj->SetInternalField(0, External::New(val));
 			
 			return scope.Close(newObj);
@@ -13490,7 +13507,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxControllerState* val = new PxControllerState();
 
 			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
-			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
 			newObj->SetInternalField(0, External::New(val));
 			
 			return scope.Close(newObj);
@@ -13499,7 +13516,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxControllerState* val = new PxControllerState(*unwrap<PxControllerState>(args[0]->ToObject()));
 
 			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
-			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
 			newObj->SetInternalField(0, External::New(val));
 			
 			return scope.Close(newObj);
@@ -13665,7 +13682,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxControllerStats* val = new PxControllerStats();
 
 			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
-			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
 			newObj->SetInternalField(0, External::New(val));
 			
 			return scope.Close(newObj);
@@ -13674,7 +13691,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxControllerStats* val = new PxControllerStats(*unwrap<PxControllerStats>(args[0]->ToObject()));
 
 			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
-			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
 			newObj->SetInternalField(0, External::New(val));
 			
 			return scope.Close(newObj);
@@ -13757,7 +13774,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxControllerFilters* val = new PxControllerFilters();
 
 			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
-			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
 			newObj->SetInternalField(0, External::New(val));
 			
 			return scope.Close(newObj);
@@ -13766,7 +13783,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxControllerFilters* val = new PxControllerFilters(*unwrap<PxControllerFilters>(args[0]->ToObject()));
 
 			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
-			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
 			newObj->SetInternalField(0, External::New(val));
 			
 			return scope.Close(newObj);
@@ -14262,7 +14279,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxSceneQueryFilterData* val = new PxSceneQueryFilterData();
 
 			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
-			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
 			newObj->SetInternalField(0, External::New(val));
 			
 			return scope.Close(newObj);
@@ -14272,7 +14289,17 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxSceneQueryFilterData* val = new PxSceneQueryFilterData(*unwrap<PxSceneQueryFilterData>(args[0]->ToObject()));
 
 			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
-			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+		else if( args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()){
+
+			PxSceneQueryFilterData* val = new PxSceneQueryFilterData((PxSceneQueryFilterFlags)args[0]->Uint32Value());
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
 			newObj->SetInternalField(0, External::New(val));
 			
 			return scope.Close(newObj);
@@ -14283,7 +14310,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			PxSceneQueryFilterData* val = new PxSceneQueryFilterData(*unwrap<PxFilterData>(args[0]->ToObject()), (PxSceneQueryFilterFlags)args[1]->Uint32Value());
 
 			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
-			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+//			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
 			newObj->SetInternalField(0, External::New(val));
 			
 			return scope.Close(newObj);
@@ -14344,7 +14371,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //		//if(thisPxVec2 != NULL) 
 //		//{
 //			Persistent<Object> newPxExtendedVec3 = Persistent<Object>::New(Isolate::GetCurrent(),V8PxExtendedVec3::getTemplate()->InstanceTemplate()->NewInstance());			
-//			newPxExtendedVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
+////			newPxExtendedVec3.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 //			newPxExtendedVec3->SetInternalField(0, External::New(&thisPxControllerDesc->position));
 //
 //			return scope.Close(newPxExtendedVec3);
