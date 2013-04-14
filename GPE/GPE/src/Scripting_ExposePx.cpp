@@ -3,10 +3,10 @@
 #include <iostream>
 
 #include <Scripting_Helpers.hpp>
+#include <V8Scripting.hpp>
 //#include <Util.hpp>
 
 //TODO: Change mallocs into new[]
-
 
 using namespace physx;
 
@@ -1099,7 +1099,7 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				objTemp->Set(String::New("overlapAny"), FunctionTemplate::New(InvocationCallback(V8PxScene::overlapAny)));
 
 			//PxSceneQueryHit
-				V8PxSceneQueryHit::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New());
+				V8PxSceneQueryHit::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New(V8PxSceneQueryHit::V8PxSceneQueryHitConstructor));
 				V8PxSceneQueryHit::getTemplate()->SetClassName(String::New("PxSceneQueryHit"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxSceneQueryHit"), V8PxSceneQueryHit::getTemplate());
 
@@ -1111,9 +1111,9 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				objTemp->Set(String::New("getFlags"), FunctionTemplate::New(InvocationCallback(V8PxSceneQueryHit::getFlags)));
 
 			//PxSceneQueryImpactHit
-				V8PxSceneQueryImpactHit::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New());
-				V8PxSceneQueryImpactHit::getTemplate()->SetClassName(String::New("PxSceneQueryHit"));
-				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxSceneQueryHit"), V8PxSceneQueryImpactHit::getTemplate());
+				V8PxSceneQueryImpactHit::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New(V8PxSceneQueryImpactHit::V8PxSceneQueryImpactHitConstructor));
+				V8PxSceneQueryImpactHit::getTemplate()->SetClassName(String::New("PxSceneQueryImpactHit"));
+				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxSceneQueryImpactHit"), V8PxSceneQueryImpactHit::getTemplate());
 
 				V8PxSceneQueryImpactHit::getTemplate()->Inherit(V8PxSceneQueryHit::getTemplate());
 
@@ -1125,7 +1125,7 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				objTemp->Set(String::New("getDistance"), FunctionTemplate::New(InvocationCallback(V8PxSceneQueryImpactHit::getDistance)));
 
 			//PxRaycastHit
-				V8PxRaycastHit::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New());
+				V8PxRaycastHit::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New(V8PxRaycastHit::V8PxRaycastHitConstructor));
 				V8PxRaycastHit::getTemplate()->SetClassName(String::New("PxRaycastHit"));
 				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxRaycastHit"), V8PxRaycastHit::getTemplate());
 
@@ -1137,6 +1137,91 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				objTemp->Set(String::New("getU"), FunctionTemplate::New(InvocationCallback(V8PxRaycastHit::getU)));
 				objTemp->Set(String::New("getV"), FunctionTemplate::New(InvocationCallback(V8PxRaycastHit::getV)));
 
+			//PxControllerState
+				V8PxControllerState::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New(V8PxControllerState::V8PxControllerStateConstructor));
+				V8PxControllerState::getTemplate()->SetClassName(String::New("PxControllerState"));
+				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxControllerState"), V8PxControllerState::getTemplate());
+
+				objTemp = V8PxControllerState::getTemplate()->InstanceTemplate();
+				objTemp->SetInternalFieldCount(1);
+
+				objTemp->SetAccessor(v8::String::New("deltaXP"), V8PxControllerState::getDeltaXP, V8PxControllerState::setDeltaXP);
+				objTemp->SetAccessor(v8::String::New("touchedShape"), V8PxControllerState::getTouchedShape, V8PxControllerState::setTouchedShape);
+				objTemp->SetAccessor(v8::String::New("touchedObstacle"), V8PxControllerState::getTouchedObstacle, V8PxControllerState::setTouchedObstacle);
+				objTemp->SetAccessor(v8::String::New("collisionFlags"), V8PxControllerState::getCollisionFlags, V8PxControllerState::setCollisionFlags);
+				objTemp->SetAccessor(v8::String::New("standOnAnotherCCT"), V8PxControllerState::getStandOnAnotherCCT, V8PxControllerState::setStandOnAnotherCCT);
+				objTemp->SetAccessor(v8::String::New("standOnObstacle"), V8PxControllerState::getStandOnObstacle, V8PxControllerState::setStandOnObstacle);
+				objTemp->SetAccessor(v8::String::New("isMovingUp"), V8PxControllerState::getIsMovingUp, V8PxControllerState::setIsMovingUp);
+
+			//PxControllerStats
+				V8PxControllerStats::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New(V8PxControllerStats::V8PxControllerStatsConstructor));
+				V8PxControllerStats::getTemplate()->SetClassName(String::New("PxControllerStats"));
+				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxControllerStats"), V8PxControllerStats::getTemplate());
+
+				objTemp = V8PxControllerStats::getTemplate()->InstanceTemplate();
+				objTemp->SetInternalFieldCount(1);
+
+				objTemp->SetAccessor(v8::String::New("nbIterations"), V8PxControllerStats::getNbIterations, V8PxControllerStats::setNbIterations);
+				objTemp->SetAccessor(v8::String::New("nbFullUpdates"), V8PxControllerStats::getNbFullUpdates, V8PxControllerStats::setNbFullUpdates);
+				objTemp->SetAccessor(v8::String::New("nbPartialUpdates"), V8PxControllerStats::getNbPartialUpdates, V8PxControllerStats::setNbPartialUpdates);
+
+			//PxController
+				V8PxController::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New());
+				V8PxController::getTemplate()->SetClassName(String::New("PxController"));
+				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxController"), V8PxController::getTemplate());
+
+				objTemp = V8PxController::getTemplate()->PrototypeTemplate();
+				V8PxController::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
+
+				objTemp->Set(String::New("getType"), FunctionTemplate::New(InvocationCallback(V8PxController::getType)));
+				objTemp->Set(String::New("release"), FunctionTemplate::New(InvocationCallback(V8PxController::release)));
+				objTemp->Set(String::New("move"), FunctionTemplate::New(InvocationCallback(V8PxController::move)));
+				objTemp->Set(String::New("setPosition"), FunctionTemplate::New(InvocationCallback(V8PxController::setPosition)));
+				objTemp->Set(String::New("getPosition"), FunctionTemplate::New(InvocationCallback(V8PxController::getPosition)));
+				objTemp->Set(String::New("setFootPosition"), FunctionTemplate::New(InvocationCallback(V8PxController::setFootPosition)));
+				objTemp->Set(String::New("getFootPosition"), FunctionTemplate::New(InvocationCallback(V8PxController::getFootPosition)));
+				objTemp->Set(String::New("getActor"), FunctionTemplate::New(InvocationCallback(V8PxController::getActor)));
+				objTemp->Set(String::New("setStepOffset"), FunctionTemplate::New(InvocationCallback(V8PxController::setStepOffset)));
+				objTemp->Set(String::New("getStepOffset"), FunctionTemplate::New(InvocationCallback(V8PxController::getStepOffset)));
+				objTemp->Set(String::New("setInteraction"), FunctionTemplate::New(InvocationCallback(V8PxController::setInteraction)));
+				objTemp->Set(String::New("getInteraction"), FunctionTemplate::New(InvocationCallback(V8PxController::getInteraction)));
+				objTemp->Set(String::New("setNonWalkableMode"), FunctionTemplate::New(InvocationCallback(V8PxController::setNonWalkableMode)));
+				objTemp->Set(String::New("getNonWalkableMode"), FunctionTemplate::New(InvocationCallback(V8PxController::getNonWalkableMode)));
+				objTemp->Set(String::New("setGroupsBitmask"), FunctionTemplate::New(InvocationCallback(V8PxController::setGroupsBitmask)));
+				objTemp->Set(String::New("getGroupsBitmask"), FunctionTemplate::New(InvocationCallback(V8PxController::getGroupsBitmask)));
+				objTemp->Set(String::New("getContactOffset"), FunctionTemplate::New(InvocationCallback(V8PxController::getContactOffset)));
+				objTemp->Set(String::New("getUpDirection"), FunctionTemplate::New(InvocationCallback(V8PxController::getUpDirection)));
+				objTemp->Set(String::New("setUpDirection"), FunctionTemplate::New(InvocationCallback(V8PxController::setUpDirection)));
+				objTemp->Set(String::New("getSlopeLimit"), FunctionTemplate::New(InvocationCallback(V8PxController::getSlopeLimit)));
+				objTemp->Set(String::New("invalidateCache"), FunctionTemplate::New(InvocationCallback(V8PxController::invalidateCache)));
+				objTemp->Set(String::New("getScene"), FunctionTemplate::New(InvocationCallback(V8PxController::getScene)));
+				objTemp->Set(String::New("getState"), FunctionTemplate::New(InvocationCallback(V8PxController::getState)));
+				objTemp->Set(String::New("getStats"), FunctionTemplate::New(InvocationCallback(V8PxController::getStats)));
+				objTemp->Set(String::New("resize"), FunctionTemplate::New(InvocationCallback(V8PxController::resize)));
+
+			//PxControllerFilters
+				V8PxControllerFilters::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New(V8PxControllerFilters::V8PxControllerFiltersConstructor));
+				V8PxControllerFilters::getTemplate()->SetClassName(String::New("PxControllerFilters"));
+				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxControllerFilters"), V8PxControllerFilters::getTemplate());
+
+				objTemp = V8PxControllerFilters::getTemplate()->InstanceTemplate();
+				objTemp->SetInternalFieldCount(1);
+
+				objTemp->SetAccessor(v8::String::New("activeGroups"), V8PxControllerFilters::getActiveGroups, V8PxControllerFilters::setActiveGroups);
+				objTemp->SetAccessor(v8::String::New("filterData"), V8PxControllerFilters::getFilterData, V8PxControllerFilters::setFilterData);
+				//objTemp->SetAccessor(v8::String::New("filterCallback"), V8PxControllerFilters::getFilterCallback, V8PxControllerFilters::setFilterCallback);
+				objTemp->SetAccessor(v8::String::New("filterFlags"), V8PxControllerFilters::getFilterFlags, V8PxControllerFilters::setFilterFlags);
+
+			//PxSceneQueryFilterData
+				V8PxSceneQueryFilterData::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New(V8PxSceneQueryFilterData::V8PxSceneQueryFilterDataConstructor));
+				V8PxSceneQueryFilterData::getTemplate()->SetClassName(String::New("PxSceneQueryFilterData"));
+				physXFuncTemplateBase->PrototypeTemplate()->Set(String::New("PxSceneQueryFilterData"), V8PxSceneQueryFilterData::getTemplate());
+
+				objTemp = V8PxSceneQueryFilterData::getTemplate()->InstanceTemplate();
+				objTemp->SetInternalFieldCount(1);
+
+				objTemp->SetAccessor(v8::String::New("data"), V8PxSceneQueryFilterData::getData, V8PxSceneQueryFilterData::setData);
+				objTemp->SetAccessor(v8::String::New("flags"), V8PxSceneQueryFilterData::getFlags, V8PxSceneQueryFilterData::setFlags);
 
 			//PxControllerDesc
 				//V8PxControllerDesc::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New(V8PxControllerDesc::PxControllerDescConstructor));
@@ -1234,45 +1319,6 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				temp = FunctionTemplate::New();
 				temp->SetClassName(String::New("PxController"));
 				physXFuncTemplate->PrototypeTemplate()->Set("PxController", temp->InstanceTemplate());
-					//---------------------
-					//temp2 = FunctionTemplate::New();
-					//temp->PrototypeTemplate()->Set("upAxis", temp2->InstanceTemplate());
-					//temp2->SetClassName(String::New("PxCCTUpAxis"));
-
-					//temp2->PrototypeTemplate()->Set(String::New("eX"), Int32::New(PxCCTUpAxis::eX));
-					//temp2->PrototypeTemplate()->Set(String::New("eY"), Int32::New(PxCCTUpAxis::eY));
-					//temp2->PrototypeTemplate()->Set(String::New("eZ"), Int32::New(PxCCTUpAxis::eZ));
-					//---------------------
-					temp2 = FunctionTemplate::New();
-					temp->PrototypeTemplate()->Set("shapeType", temp2->InstanceTemplate());
-					temp2->SetClassName(String::New("PxControllerShapeType"));
-
-					temp2->PrototypeTemplate()->Set(String::New("eBOX"), Int32::New(PxControllerShapeType::eBOX));
-					temp2->PrototypeTemplate()->Set(String::New("eCAPSULE"), Int32::New(PxControllerShapeType::eCAPSULE));
-					temp2->PrototypeTemplate()->Set(String::New("eFORCE_DWORD"), Int32::New(PxControllerShapeType::eFORCE_DWORD));
-					//---------------------
-					temp2 = FunctionTemplate::New();
-					temp->PrototypeTemplate()->Set("interactionMode", temp2->InstanceTemplate());
-					temp2->SetClassName(String::New("PxCCTInteractionMode"));
-
-					temp2->PrototypeTemplate()->Set(String::New("eINCLUDE"), Int32::New(PxCCTInteractionMode::eINCLUDE));
-					temp2->PrototypeTemplate()->Set(String::New("eEXCLUDE"), Int32::New(PxCCTInteractionMode::eEXCLUDE));
-					temp2->PrototypeTemplate()->Set(String::New("eUSE_FILTER"), Int32::New(PxCCTInteractionMode::eUSE_FILTER));
-					//---------------------
-					temp2 = FunctionTemplate::New();
-					temp->PrototypeTemplate()->Set("controllerFlag", temp2->InstanceTemplate());
-					temp2->SetClassName(String::New("PxControllerFlag"));
-
-					temp2->PrototypeTemplate()->Set(String::New("eCOLLISION_SIDES"), Int32::New(PxControllerFlag::eCOLLISION_SIDES));
-					temp2->PrototypeTemplate()->Set(String::New("eCOLLISION_UP"), Int32::New(PxControllerFlag::eCOLLISION_UP));
-					temp2->PrototypeTemplate()->Set(String::New("eCOLLISION_DOWN"), Int32::New(PxControllerFlag::eCOLLISION_DOWN));
-					//---------------------
-					//temp2 = FunctionTemplate::New();
-					//temp->PrototypeTemplate()->Set("controllerAction", temp2->InstanceTemplate());
-					//temp2->SetClassName(String::New("PxControllerAction"));
-
-					//temp2->PrototypeTemplate()->Set(String::New("eNONE"), Int32::New(PxControllerAction::eNONE));
-					//temp2->PrototypeTemplate()->Set(String::New("ePUSH"), Int32::New(PxControllerAction::ePUSH));
 				
 				//-----------------------------------------------------------------------------------------------------------------------
 
@@ -1499,7 +1545,69 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				temp->PrototypeTemplate()->Set(String::New("eINITIAL_OVERLAP_KEEP"), Uint32::New(PxSceneQueryFlag::Enum::eINITIAL_OVERLAP_KEEP));
 				temp->PrototypeTemplate()->Set(String::New("eTOUCHING_HIT"), Uint32::New(PxSceneQueryFlag::Enum::eTOUCHING_HIT));
 				temp->PrototypeTemplate()->Set(String::New("eBLOCKING_HIT"), Uint32::New(PxSceneQueryFlag::Enum::eBLOCKING_HIT));
+
+				//-----------------------------------------------------------------------------------------------------------------------
+
+				temp = FunctionTemplate::New();
+				temp->SetClassName(String::New("PxCCTNonWalkableMode"));
+				physXFuncTemplate->PrototypeTemplate()->Set("PxCCTNonWalkableMode", temp->InstanceTemplate());
+
+				temp->PrototypeTemplate()->Set(String::New("ePREVENT_CLIMBING"), Uint32::New(PxCCTNonWalkableMode::Enum::ePREVENT_CLIMBING));
+				temp->PrototypeTemplate()->Set(String::New("eFORCE_SLIDING"), Uint32::New(PxCCTNonWalkableMode::Enum::eFORCE_SLIDING));
+
+				//-----------------------------------------------------------------------------------------------------------------------
+
+				temp = FunctionTemplate::New();
+				temp->SetClassName(String::New("PxControllerFlag"));
+				physXFuncTemplate->PrototypeTemplate()->Set("PxControllerFlag", temp->InstanceTemplate());
+
+				temp->PrototypeTemplate()->Set(String::New("eCOLLISION_SIDES"), Uint32::New(PxControllerFlag::Enum::eCOLLISION_SIDES));
+				temp->PrototypeTemplate()->Set(String::New("eCOLLISION_UP"), Uint32::New(PxControllerFlag::Enum::eCOLLISION_UP));
+				temp->PrototypeTemplate()->Set(String::New("eCOLLISION_DOWN"), Uint32::New(PxControllerFlag::Enum::eCOLLISION_DOWN));
+
+				//-----------------------------------------------------------------------------------------------------------------------
+
+				temp = FunctionTemplate::New();
+				temp->SetClassName(String::New("PxControllerShapeType"));
+				physXFuncTemplate->PrototypeTemplate()->Set("PxControllerShapeType", temp->InstanceTemplate());
+
+				temp->PrototypeTemplate()->Set(String::New("eBOX"), Int32::New(PxControllerShapeType::eBOX));
+				temp->PrototypeTemplate()->Set(String::New("eCAPSULE"), Int32::New(PxControllerShapeType::eCAPSULE));
+				temp->PrototypeTemplate()->Set(String::New("eFORCE_DWORD"), Int32::New(PxControllerShapeType::eFORCE_DWORD));
+
+				//-----------------------------------------------------------------------------------------------------------------------
+
+				temp = FunctionTemplate::New();
+				temp->SetClassName(String::New("PxCCTInteractionMode"));
+				physXFuncTemplate->PrototypeTemplate()->Set("PxCCTInteractionMode", temp->InstanceTemplate());
+
+				temp->PrototypeTemplate()->Set(String::New("eINCLUDE"), Int32::New(PxCCTInteractionMode::eINCLUDE));
+				temp->PrototypeTemplate()->Set(String::New("eEXCLUDE"), Int32::New(PxCCTInteractionMode::eEXCLUDE));
+				temp->PrototypeTemplate()->Set(String::New("eUSE_FILTER"), Int32::New(PxCCTInteractionMode::eUSE_FILTER));
+
+				//-----------------------------------------------------------------------------------------------------------------------
 				
+				temp = FunctionTemplate::New();
+				temp->SetClassName(String::New("PxSceneQueryFilterFlag"));
+				physXFuncTemplate->PrototypeTemplate()->Set("PxSceneQueryFilterFlag", temp->InstanceTemplate());
+
+				temp->PrototypeTemplate()->Set(String::New("eSTATIC"), Int32::New(PxSceneQueryFilterFlag::eSTATIC));
+				temp->PrototypeTemplate()->Set(String::New("eDYNAMIC"), Int32::New(PxSceneQueryFilterFlag::eDYNAMIC));
+				temp->PrototypeTemplate()->Set(String::New("ePREFILTER"), Int32::New(PxSceneQueryFilterFlag::ePREFILTER));
+				temp->PrototypeTemplate()->Set(String::New("ePOSTFILTER"), Int32::New(PxSceneQueryFilterFlag::ePOSTFILTER));
+				temp->PrototypeTemplate()->Set(String::New("eMESH_MULTIPLE"), Int32::New(PxSceneQueryFilterFlag::eMESH_MULTIPLE));
+				temp->PrototypeTemplate()->Set(String::New("eBACKFACE"), Int32::New(PxSceneQueryFilterFlag::eBACKFACE));
+
+				//-----------------------------------------------------------------------------------------------------------------------
+				
+				temp = FunctionTemplate::New();
+				temp->SetClassName(String::New("PxSceneQueryHitType"));
+				physXFuncTemplate->PrototypeTemplate()->Set("PxSceneQueryHitType", temp->InstanceTemplate());
+
+				temp->PrototypeTemplate()->Set(String::New("eNONE"), Int32::New(PxSceneQueryHitType::eNONE));
+				temp->PrototypeTemplate()->Set(String::New("eTOUCH"), Int32::New(PxSceneQueryHitType::eTOUCH));
+				temp->PrototypeTemplate()->Set(String::New("eBLOCK"), Int32::New(PxSceneQueryHitType::eBLOCK));
+
 
 		//Functions
 				physXFuncTemplate->PrototypeTemplate()->Set(String::New("toVec3"),			FunctionTemplate::New(func_toVec3));
@@ -1534,7 +1642,7 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 	}
 
 Handle<Value> V8PhysX::func_toVec3(const Arguments& args){
-	//Locker locker;
+	//Locker lock(Isolate::GetCurrent());
     HandleScope scope(Isolate::GetCurrent());
 
     if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxExtendedVec3::getTemplate()->HasInstance(args[0])) 
@@ -1548,7 +1656,7 @@ Handle<Value> V8PhysX::func_toVec3(const Arguments& args){
 }
 
 Handle<Value> V8PhysX::func_math_max(const Arguments& args){
-	//Locker locker;
+	//Locker lock(Isolate::GetCurrent());
     HandleScope scope(Isolate::GetCurrent());
 
     if(args.Length() == 2 ) 
@@ -1562,7 +1670,7 @@ Handle<Value> V8PhysX::func_math_max(const Arguments& args){
 }
 
 Handle<Value> V8PhysX::func_math_min(const Arguments& args){
-	//Locker locker;
+	//Locker lock(Isolate::GetCurrent());
     HandleScope scope(Isolate::GetCurrent());
 
     if(args.Length() == 2 ) 
@@ -1574,7 +1682,7 @@ Handle<Value> V8PhysX::func_math_min(const Arguments& args){
 }
 
 Handle<Value> V8PhysX::func_math_abs(const Arguments& args){
-	//Locker locker;
+	//Locker lock(Isolate::GetCurrent());
     HandleScope scope(Isolate::GetCurrent());
 
     if(args.Length() == 1 ) 
@@ -1606,7 +1714,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxSerializable
 	Handle<Value> V8PxSerializable::getOrder(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -1620,7 +1728,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxSerializable::collectForExport(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxCollection::getTemplate()->HasInstance(args[0])) 
@@ -1636,7 +1744,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxSerializable::getFields(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() >= 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxSerialStream::getTemplate()->HasInstance(args[0])) 
@@ -1655,7 +1763,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxSerializable::getFieldDescriptor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsString()) 
@@ -1677,7 +1785,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxSerializable::getObjectSize(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -1691,7 +1799,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxSerializable::exportExtraData(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxSerialStream::getTemplate()->HasInstance(args[0])) 
@@ -1707,7 +1815,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxSerializable::importExtraData(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsString() &&
@@ -1724,7 +1832,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxSerializable::resolvePointers(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxRefResolver::getTemplate()->HasInstance(args[0]) &&
@@ -1739,7 +1847,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	//Handle<Value> V8PxSerializable::getClassName(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0)
@@ -1753,7 +1861,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxSerializable::isKindOf(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsString())
@@ -1767,7 +1875,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	Handle<Value> V8PxSerializable::registerNameForExport(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxNameManager::getTemplate()->HasInstance(args[0]))
@@ -1785,7 +1893,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	//Handle<Value> V8PxSerializable::enableInScene(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0)
@@ -1801,7 +1909,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxSerializable::disableInScene(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0)
@@ -1817,7 +1925,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxSerializable::isInScene(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0)
@@ -1831,7 +1939,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxSerializable::disableAutoResolve(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0)
@@ -1847,7 +1955,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxSerializable::enableAutoResolve(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0)
@@ -1863,7 +1971,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxSerializable::isAutoResolveDisabled(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0)
@@ -1877,7 +1985,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxSerializable::disableFields(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0)
@@ -1893,7 +2001,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxSerializable::enableFields(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0)
@@ -1909,7 +2017,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxSerializable::areFieldsDisabled(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0)
@@ -1923,7 +2031,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxSerializable::setOwnsMemory(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0)
@@ -1939,7 +2047,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxSerializable::clearOwnsMemory(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0)
@@ -1955,7 +2063,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxSerializable::ownsMemory(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0)
@@ -1969,7 +2077,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	/*Handle<Value> V8PxSerializable::getAddress(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0)
@@ -1987,7 +2095,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}*/
 
 	//Handle<Value> V8PxSerializable::getSerialType(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0)
@@ -2001,7 +2109,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxSerializable::getMetaData(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxSerialStream::getTemplate()->HasInstance(args[0]))
@@ -2014,7 +2122,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxRefResolver
 	Handle<Value> V8PxRefResolver::newAddress(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxSerializable::getTemplate()->HasInstance(args[0])) 
@@ -2032,7 +2140,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRefResolver::setNewAddress(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxSerializable::getTemplate()->HasInstance(args[0])
@@ -2050,7 +2158,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxUserReferences
 	Handle<Value> V8PxUserReferences::getObjectFromID(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		//FIXME
@@ -2069,7 +2177,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxUserReferences::setUserData(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		//FIXME
@@ -2088,7 +2196,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxCollection
 	Handle<Value> V8PxCollection::serialize(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		//FIXME
@@ -2105,7 +2213,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxCollection::deserialize(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 3 && !args[0].IsEmpty() && args[0]->IsExternal() &&
@@ -2121,7 +2229,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxCollection::setUserData(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		//FIXME
@@ -2139,7 +2247,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxCollection::addExternalRef(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		//FIXME
@@ -2157,7 +2265,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxCollection::getNbObjects(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2171,7 +2279,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxCollection::getObject(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()) 
@@ -2190,7 +2298,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxVec2
 	Handle<Value>  V8PxVec2::PxVec2Constructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -2238,7 +2346,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::getX( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxVec2* thisPxVec2 = unwrap<PxVec2>(info.Holder());
@@ -2251,7 +2359,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxVec2::setX( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -2264,7 +2372,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::getY( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxVec2* thisPxVec2 = unwrap<PxVec2>(info.Holder());
@@ -2277,7 +2385,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxVec2::setY( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -2290,7 +2398,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::elementGet(uint32_t index, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(index >=0 && index<= 1){
@@ -2305,7 +2413,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::elementSet(uint32_t index, Local<Value> value, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber() && index >=0 && index<= 1){
@@ -2321,7 +2429,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::compare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec2::getTemplate()->HasInstance(args[0])) 
@@ -2338,7 +2446,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::acompare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec2::getTemplate()->HasInstance(args[0])) 
@@ -2355,7 +2463,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::isZero(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2371,7 +2479,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::isFinite(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2387,7 +2495,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::isNormalized(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2403,7 +2511,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::magnitudeSquared(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2419,7 +2527,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::magnitude(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2435,7 +2543,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::negate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2456,7 +2564,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::add(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec2::getTemplate()->HasInstance(args[0])) 
@@ -2478,7 +2586,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::subtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec2::getTemplate()->HasInstance(args[0])) 
@@ -2500,7 +2608,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::multiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -2521,7 +2629,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::divide(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -2543,7 +2651,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 
 	Handle<Value> V8PxVec2::assignmentAdd(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec2::getTemplate()->HasInstance(args[0])) 
@@ -2561,7 +2669,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::assignmentSubtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec2::getTemplate()->HasInstance(args[0])) 
@@ -2579,7 +2687,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::assignmentMultiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -2596,7 +2704,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::assignmentDivide(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -2614,7 +2722,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 
 	Handle<Value> V8PxVec2::dot(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec2::getTemplate()->HasInstance(args[0])) 
@@ -2631,7 +2739,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::getNormalized(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2652,7 +2760,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::normalize(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2669,7 +2777,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::min(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2686,7 +2794,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::max(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2704,7 +2812,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 
 	Handle<Value> V8PxVec2::elementwiseMultiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec2::getTemplate()->HasInstance(args[0])) 
@@ -2726,7 +2834,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::elementwiseMin(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec2::getTemplate()->HasInstance(args[0])) 
@@ -2748,7 +2856,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec2::elementwiseMax(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec2::getTemplate()->HasInstance(args[0])) 
@@ -2772,7 +2880,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxVec3
 	Handle<Value>  V8PxVec3::PxVec3Constructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -2821,7 +2929,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::getX( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxVec3* thisPxVec3 = unwrap<PxVec3>(info.Holder());
@@ -2834,7 +2942,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxVec3::setX( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -2847,7 +2955,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::getY( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxVec3* thisPxVec3 = unwrap<PxVec3>(info.Holder());
@@ -2860,7 +2968,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxVec3::setY( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -2873,7 +2981,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::getZ( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxVec3* thisPxVec3 = unwrap<PxVec3>(info.Holder());
@@ -2886,7 +2994,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxVec3::setZ( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -2899,7 +3007,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::elementGet(uint32_t index, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(index >=0 && index <= 2){
@@ -2914,7 +3022,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::elementSet(uint32_t index, Local<Value> value, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber() && index >=0 && index <= 2){
@@ -2930,7 +3038,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::compare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -2947,7 +3055,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::acompare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -2964,7 +3072,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::isZero(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2980,7 +3088,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::isFinite(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2996,7 +3104,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::isNormalized(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3012,7 +3120,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::magnitudeSquared(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3028,7 +3136,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::magnitude(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3044,7 +3152,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::negate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3065,7 +3173,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::add(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -3087,7 +3195,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::subtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -3109,7 +3217,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::multiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -3130,7 +3238,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::divide(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -3152,7 +3260,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 
 	Handle<Value> V8PxVec3::assignmentAdd(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -3170,7 +3278,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::assignmentSubtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -3188,7 +3296,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::assignmentMultiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -3205,7 +3313,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::assignmentDivide(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -3223,7 +3331,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 
 	Handle<Value> V8PxVec3::dot(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -3240,7 +3348,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::cross(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -3262,7 +3370,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::getNormalized(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3283,7 +3391,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::normalize(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3300,7 +3408,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::min(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3317,7 +3425,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::max(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3335,7 +3443,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 
 	Handle<Value> V8PxVec3::elementwiseMultiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -3357,7 +3465,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::elementwiseMin(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -3379,7 +3487,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec3::elementwiseMax(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -3402,7 +3510,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxExtendedVec3
 	Handle<Value>  V8PxExtendedVec3::PxExtendedVec3Constructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -3443,7 +3551,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::getX( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxExtendedVec3* thisPxExtendedVec3 = unwrap<PxExtendedVec3>(info.Holder());
@@ -3456,7 +3564,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxExtendedVec3::setX( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -3469,7 +3577,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::getY( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxExtendedVec3* thisPxExtendedVec3 = unwrap<PxExtendedVec3>(info.Holder());
@@ -3482,7 +3590,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxExtendedVec3::setY( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -3495,7 +3603,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::getZ( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxExtendedVec3* thisPxExtendedVec3 = unwrap<PxExtendedVec3>(info.Holder());
@@ -3508,7 +3616,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxExtendedVec3::setZ( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -3521,7 +3629,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::elementGet(uint32_t index, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(index >=0 && index <= 2){
@@ -3536,7 +3644,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::elementSet(uint32_t index, Local<Value> value, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber() && index >=0 && index <= 2){
@@ -3552,7 +3660,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::isZero(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3568,7 +3676,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::isFinite(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3584,7 +3692,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::magnitudeSquared(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3600,7 +3708,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::magnitude(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3616,7 +3724,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::negate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3637,7 +3745,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::add(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxExtendedVec3::getTemplate()->HasInstance(args[0])) 
@@ -3659,7 +3767,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::subtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxExtendedVec3::getTemplate()->HasInstance(args[0])) 
@@ -3681,7 +3789,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::assignmentAdd(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxExtendedVec3::getTemplate()->HasInstance(args[0])) 
@@ -3699,7 +3807,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::assignmentSubtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxExtendedVec3::getTemplate()->HasInstance(args[0])) 
@@ -3717,7 +3825,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::assignmentMultiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -3734,7 +3842,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::dot(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -3751,7 +3859,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::cross(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxExtendedVec3::getTemplate()->HasInstance(args[0])) 
@@ -3790,7 +3898,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::normalize(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3807,7 +3915,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::min(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxExtendedVec3::getTemplate()->HasInstance(args[0])) 
@@ -3826,7 +3934,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::max(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxExtendedVec3::getTemplate()->HasInstance(args[0])) 
@@ -3845,7 +3953,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::set(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 3 && !args[0].IsEmpty() && args[0]->IsNumber() && !args[1].IsEmpty() && args[1]->IsNumber() && !args[2].IsEmpty() && args[2]->IsNumber()) 
@@ -3862,7 +3970,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::setPlusInfinity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3879,7 +3987,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxExtendedVec3::setMinusInfinity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3897,7 +4005,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxVec4
 	Handle<Value>  V8PxVec4::PxVec4Constructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -3978,7 +4086,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::getX( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxVec4* thisPxVec4 = unwrap<PxVec4>(info.Holder());
@@ -3991,7 +4099,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxVec4::setX( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -4004,7 +4112,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::getY( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxVec4* thisPxVec4 = unwrap<PxVec4>(info.Holder());
@@ -4017,7 +4125,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxVec4::setY( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -4030,7 +4138,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::getZ( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxVec4* thisPxVec4 = unwrap<PxVec4>(info.Holder());
@@ -4043,7 +4151,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxVec4::setZ( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -4056,7 +4164,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::getW( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxVec4* thisPxVec4 = unwrap<PxVec4>(info.Holder());
@@ -4069,7 +4177,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxVec4::setW( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -4082,7 +4190,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::elementGet(uint32_t index, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(index >=0 && index<= 3){
@@ -4097,7 +4205,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::elementSet(uint32_t index, Local<Value> value, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber() && index >=0 && index<= 3){
@@ -4113,7 +4221,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::compare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec4::getTemplate()->HasInstance(args[0])) 
@@ -4130,7 +4238,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::acompare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec4::getTemplate()->HasInstance(args[0])) 
@@ -4147,7 +4255,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::isZero(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4163,7 +4271,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::isFinite(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4179,7 +4287,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::isNormalized(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4195,7 +4303,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::magnitudeSquared(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4211,7 +4319,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::magnitude(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4227,7 +4335,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::negate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4248,7 +4356,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::add(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec4::getTemplate()->HasInstance(args[0])) 
@@ -4270,7 +4378,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::subtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec4::getTemplate()->HasInstance(args[0])) 
@@ -4292,7 +4400,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::multiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -4313,7 +4421,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::divide(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -4335,7 +4443,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 
 	Handle<Value> V8PxVec4::assignmentAdd(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec4::getTemplate()->HasInstance(args[0])) 
@@ -4353,7 +4461,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::assignmentSubtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec4::getTemplate()->HasInstance(args[0])) 
@@ -4371,7 +4479,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::assignmentMultiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -4388,7 +4496,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::assignmentDivide(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -4406,7 +4514,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 
 	Handle<Value> V8PxVec4::dot(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec4::getTemplate()->HasInstance(args[0])) 
@@ -4423,7 +4531,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::getNormalized(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4444,7 +4552,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::normalize(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4461,7 +4569,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::elementwiseMultiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec4::getTemplate()->HasInstance(args[0])) 
@@ -4483,7 +4591,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::elementwiseMin(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec4::getTemplate()->HasInstance(args[0])) 
@@ -4505,7 +4613,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::elementwiseMax(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec4::getTemplate()->HasInstance(args[0])) 
@@ -4527,7 +4635,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::getXYZ(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4548,7 +4656,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxVec4::setZero(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4568,7 +4676,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxQuat
 	Handle<Value>  V8PxQuat::PxQuatConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -4591,7 +4699,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 				quatObject = new PxQuat(*unwrap<PxQuat>(args[0]->ToObject()));
 			}
 			else {
-				return ThrowException( Exception::TypeError( String::New("PxQuat constructor takes nothing, (PxMat33), (Number, Number, Number, Number), (PxVec3, Number), or (PxQuat) as an argument.") ) );
+				return ThrowException( Exception::TypeError( String::New("PxQuat constructor takes nothing, (PxMat33), (Number, Number, Number, Number), (Number, PxVec3), or (PxQuat) as an argument.") ) );
 			}
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
 			self.MakeWeak(Isolate::GetCurrent(),quatObject, &CleanupDelete);
@@ -4599,9 +4707,9 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 			return scope.Close( self );
 		}
-		else if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0]) &&
-				!args[1].IsEmpty() && args[1]->IsNumber()){
-			PxQuat* quatObject = new PxQuat(args[1]->NumberValue(),*unwrap<PxVec3>(args[0]->ToObject()));
+		else if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsNumber() && 
+			!args[1].IsEmpty() && args[1]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[1])){
+			PxQuat* quatObject = new PxQuat(args[0]->NumberValue(),*unwrap<PxVec3>(args[1]->ToObject()));
 			Persistent<Object> self = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder() );
 			self.MakeWeak(Isolate::GetCurrent(),quatObject, &CleanupDelete);
 			self->SetInternalField(0, External::New( quatObject ));
@@ -4623,11 +4731,11 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			}
 		}
         
-		return ThrowException( Exception::TypeError( String::New("PxQuat constructor takes nothing, (PxMat33), (Number, Number, Number, Number), (PxVec3, Number), or (PxQuat) as an argument.") ) );
+		return ThrowException( Exception::TypeError( String::New("PxQuat constructor takes nothing, (PxMat33), (Number, Number, Number, Number), (Number, PxVec3), or (PxQuat) as an argument.") ) );
 	}
 
 	Handle<Value> V8PxQuat::getX( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxQuat* thisPxQuat = unwrap<PxQuat>(info.Holder());
@@ -4641,7 +4749,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxQuat::setX( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxQuat* thisPxQuat = unwrap<PxQuat>(info.Holder());
@@ -4652,7 +4760,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::getY( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxQuat* thisPxQuat = unwrap<PxQuat>(info.Holder());
@@ -4666,7 +4774,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxQuat::setY( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxQuat* thisPxQuat = unwrap<PxQuat>(info.Holder());
@@ -4677,7 +4785,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::getZ( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxQuat* thisPxQuat = unwrap<PxQuat>(info.Holder());
@@ -4691,7 +4799,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxQuat::setZ( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxQuat* thisPxQuat = unwrap<PxQuat>(info.Holder());
@@ -4702,7 +4810,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::getW( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxQuat* thisPxQuat = unwrap<PxQuat>(info.Holder());
@@ -4716,7 +4824,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxQuat::setW( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxQuat* thisPxQuat = unwrap<PxQuat>(info.Holder());
@@ -4728,7 +4836,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 
 	Handle<Value> V8PxQuat::isFinite(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4744,7 +4852,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	//Handle<Value> V8PxQuat::isValid(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0) 
@@ -4760,7 +4868,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	Handle<Value> V8PxQuat::isSane(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4776,7 +4884,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::toRadiansAndUnitAxis(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4806,7 +4914,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::getAngle(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4831,7 +4939,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::magnitudeSquared(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4847,7 +4955,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::dot(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxQuat::getTemplate()->HasInstance(args[0])) 
@@ -4864,7 +4972,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::getNormalized(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4885,7 +4993,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::magnitude(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4901,7 +5009,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::normalize(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4918,7 +5026,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::getConjugate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4939,7 +5047,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::getImaginaryPart(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4962,7 +5070,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::getBasisVector0(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4984,7 +5092,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::getBasisVector1(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -5006,7 +5114,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::getBasisVector2(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -5028,7 +5136,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::rotate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -5051,7 +5159,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::rotateInv(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -5074,7 +5182,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::assignmentAdd(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxQuat::getTemplate()->HasInstance(args[0])) 
@@ -5092,7 +5200,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::assignmentSubtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxQuat::getTemplate()->HasInstance(args[0])) 
@@ -5110,7 +5218,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::assignmentMultiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty())
@@ -5141,7 +5249,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::add(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxQuat::getTemplate()->HasInstance(args[0])) 
@@ -5164,7 +5272,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::subtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxQuat::getTemplate()->HasInstance(args[0])) 
@@ -5187,7 +5295,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::multiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty())
@@ -5224,7 +5332,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::negate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -5246,7 +5354,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxQuat::createIdentity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -5268,7 +5376,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxMat33
 	Handle<Value>  V8PxMat33::PxMat33Constructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -5342,7 +5450,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::elementGet(uint32_t index, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(index >=0 && index <= 2){
@@ -5361,7 +5469,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::elementSet(uint32_t index, Local<Value> value, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(index >=0 && index <= 2 && !value.IsEmpty() && value->IsObject() && V8PxVec3::getTemplate()->HasInstance(value)){
@@ -5380,7 +5488,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 		
 	Handle<Value> V8PxMat33::createIdentity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -5400,7 +5508,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::createZero(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -5420,7 +5528,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::createDiagonal(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -5442,7 +5550,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::getTranspose(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -5463,7 +5571,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::getInverse(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -5484,7 +5592,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::getDeterminant(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -5500,7 +5608,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::transform(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -5522,7 +5630,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::transformTranspose(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -5544,7 +5652,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::assignmentAdd(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxMat33::getTemplate()->HasInstance(args[0])) 
@@ -5562,7 +5670,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::assignmentSubtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxMat33::getTemplate()->HasInstance(args[0])) 
@@ -5580,7 +5688,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::assignmentMultiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && !args[0].IsEmpty() && args[0]->IsNumber())
@@ -5599,7 +5707,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::add(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxMat33::getTemplate()->HasInstance(args[0])) 
@@ -5621,7 +5729,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::subtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxMat33::getTemplate()->HasInstance(args[0])) 
@@ -5643,7 +5751,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::multiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty())
@@ -5690,7 +5798,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat33::negate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -5712,7 +5820,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxMat44
 	Handle<Value>  V8PxMat44::PxMat44Constructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -5818,7 +5926,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::elementGet(uint32_t index, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(index >=0 && index <= 3){
@@ -5837,7 +5945,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::elementSet(uint32_t index, Local<Value> value, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(index >=0 && index <= 3 && !value.IsEmpty() && value->IsObject() && V8PxVec4::getTemplate()->HasInstance(value)){
@@ -5856,7 +5964,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 		
 	Handle<Value> V8PxMat44::createIdentity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -5876,7 +5984,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::createZero(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -5896,7 +6004,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::getTranspose(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -5917,7 +6025,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::transform(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject())
@@ -5956,7 +6064,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::rotate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject())
@@ -5995,7 +6103,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::getBasis(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsInt32())
@@ -6016,7 +6124,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::getPosition(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0)
@@ -6037,7 +6145,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::setPosition(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0]))
@@ -6056,7 +6164,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::scale(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec4::getTemplate()->HasInstance(args[0]))
@@ -6075,7 +6183,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::inverseRT(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0)
@@ -6096,7 +6204,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::isFinite(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0)
@@ -6112,7 +6220,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::assignmentAdd(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && args[0]->IsObject() && V8PxMat44::getTemplate()->HasInstance(args[0])) 
@@ -6130,7 +6238,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::assignmentSubtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && args[0]->IsObject() && V8PxMat44::getTemplate()->HasInstance(args[0])) 
@@ -6148,7 +6256,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::assignmentMultiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber())
@@ -6167,7 +6275,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::add(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && args[0]->IsObject() && V8PxMat44::getTemplate()->HasInstance(args[0])) 
@@ -6189,7 +6297,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::subtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && args[0]->IsObject() && V8PxMat44::getTemplate()->HasInstance(args[0])) 
@@ -6211,7 +6319,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::multiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty())
@@ -6246,7 +6354,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMat44::negate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -6269,7 +6377,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxTransform
 
 	Handle<Value>  V8PxTransform::PxTransformConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -6319,7 +6427,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTransform::getQ( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxTransform* thisPxTransform = unwrap<PxTransform>(info.Holder());
@@ -6336,7 +6444,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxTransform::setQ( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8PxQuat::getTemplate()->HasInstance(value)){
@@ -6350,7 +6458,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTransform::getP( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxTransform* thisPxTransform = unwrap<PxTransform>(info.Holder());
@@ -6367,7 +6475,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxTransform::setP( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8PxVec3::getTemplate()->HasInstance(value)){
@@ -6381,7 +6489,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTransform::createIdentity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -6401,7 +6509,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTransform::getInverse(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -6422,7 +6530,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 	
 	Handle<Value> V8PxTransform::transform(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -6444,7 +6552,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTransform::transformInv(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -6466,7 +6574,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTransform::rotate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -6488,7 +6596,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTransform::rotateInv(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -6510,7 +6618,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTransform::isValid(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -6526,7 +6634,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTransform::isSane(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -6542,7 +6650,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTransform::isFinite(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -6558,7 +6666,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTransform::multiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxTransform::getTemplate()->HasInstance(args[0])) 
@@ -6582,7 +6690,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxBounds3
 
 	Handle<Value>  V8PxBounds3::PxBounds3Constructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -6620,7 +6728,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::getMin( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxBounds3* thisPxBounds3 = unwrap<PxBounds3>(info.Holder());
@@ -6637,7 +6745,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxBounds3::setMin( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8PxVec3::getTemplate()->HasInstance(value)){
@@ -6651,7 +6759,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::getMax( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxBounds3* thisPxBounds3 = unwrap<PxBounds3>(info.Holder());
@@ -6668,7 +6776,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxBounds3::setMax( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8PxVec3::getTemplate()->HasInstance(value)){
@@ -6682,7 +6790,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::empty(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -6702,7 +6810,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::boundsOfPoints(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0]) &&
@@ -6723,7 +6831,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::centerExtents(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0]) &&
@@ -6744,7 +6852,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::basisExtent(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 3 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0]) &&
@@ -6766,7 +6874,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::poseExtent(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxTransform::getTemplate()->HasInstance(args[0]) &&
@@ -6787,7 +6895,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::transform(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsObject() &&
@@ -6816,7 +6924,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::setEmpty(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -6832,7 +6940,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::setInfinite(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -6848,7 +6956,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::include(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject()){
@@ -6873,7 +6981,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::isEmpty(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -6887,7 +6995,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::intersects(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxBounds3::getTemplate()->HasInstance(args[0])) 
@@ -6901,7 +7009,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::intersects1D(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxBounds3::getTemplate()->HasInstance(args[0]) &&
@@ -6916,7 +7024,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::contains(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -6930,7 +7038,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::isInside(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxBounds3::getTemplate()->HasInstance(args[0])) 
@@ -6944,7 +7052,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::getCenter(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -6968,7 +7076,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::getExtents(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -6992,7 +7100,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::getDimensions(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7011,7 +7119,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::scale(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -7028,7 +7136,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 	
 	Handle<Value> V8PxBounds3::fatten(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -7044,7 +7152,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBounds3::isFinite(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7060,7 +7168,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxShape
 
 	//Handle<Value> V8PxShape::getUserData( Local<String> property , const AccessorInfo& info ){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	PxShape* thisPxShape = unwrap<PxShape>(info.Holder());
@@ -7079,7 +7187,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//void V8PxShape::setUserData( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(!value.IsEmpty()){
@@ -7097,7 +7205,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	Handle<Value> V8PxShape::getUserData( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 
@@ -7118,7 +7226,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxShape::setUserData( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty()){
@@ -7130,7 +7238,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::release(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7145,7 +7253,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getGeometryType(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7160,7 +7268,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::setGeometry(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxGeometry::getTemplate()->HasInstance(args[0])) 
@@ -7177,7 +7285,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getBoxGeometry(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxBoxGeometry::getTemplate()->HasInstance(args[0])) 
@@ -7192,7 +7300,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getSphereGeometry(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxSphereGeometry::getTemplate()->HasInstance(args[0])) 
@@ -7207,7 +7315,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getCapsuleGeometry(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxSphereGeometry::getTemplate()->HasInstance(args[0])) 
@@ -7222,7 +7330,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getPlaneGeometry(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxSphereGeometry::getTemplate()->HasInstance(args[0])) 
@@ -7237,7 +7345,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getConvexMeshGeometry(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxSphereGeometry::getTemplate()->HasInstance(args[0])) 
@@ -7252,7 +7360,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getTriangleMeshGeometry(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxSphereGeometry::getTemplate()->HasInstance(args[0])) 
@@ -7267,7 +7375,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getHeightFieldGeometry(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxSphereGeometry::getTemplate()->HasInstance(args[0])) 
@@ -7282,7 +7390,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getActor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7300,7 +7408,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getWorldBounds(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7319,7 +7427,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::setLocalPose(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxTransform::getTemplate()->HasInstance(args[0])) 
@@ -7336,7 +7444,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getLocalPose(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7355,7 +7463,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::setSimulationFilterData(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxFilterData::getTemplate()->HasInstance(args[0])) 
@@ -7372,7 +7480,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getSimulationFilterData(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7391,7 +7499,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::resetFiltering(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7407,7 +7515,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::setQueryFilterData(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxFilterData::getTemplate()->HasInstance(args[0])) 
@@ -7424,7 +7532,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getQueryFilterData(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7443,7 +7551,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::setMaterials(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsArray() && V8PxFilterData::getTemplate()->HasInstance(args[0])) 
@@ -7470,7 +7578,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getNbMaterials(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7484,7 +7592,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getMaterials(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7514,7 +7622,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getMaterialFromInternalFaceIndex(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsInt32()) 
@@ -7532,7 +7640,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::setContactOffset(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -7548,7 +7656,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getContactOffset(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7562,7 +7670,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::setRestOffset(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -7578,7 +7686,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getRestOffset(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7592,7 +7700,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::setFlag(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsInt32() && !args[1].IsEmpty() && args[1]->IsBoolean()) 
@@ -7608,7 +7716,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::setFlags(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsInt32()) 
@@ -7624,7 +7732,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getFlags(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7638,7 +7746,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::setName(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsString()) 
@@ -7654,7 +7762,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxShape::getName(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7670,7 +7778,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxControllerShapeHit
 
 	Handle<Value> V8PxControllerShapeHit::getController(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7688,7 +7796,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxControllerShapeHit::getShape(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7706,7 +7814,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxControllerShapeHit::getWorldPose(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7724,7 +7832,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxControllerShapeHit::getWorldNormal(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7742,7 +7850,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxControllerShapeHit::getDirection(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7760,7 +7868,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxControllerShapeHit::getLength(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7776,7 +7884,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxControllersHit
 
 	Handle<Value> V8PxControllersHit::getController(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7794,7 +7902,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxControllersHit::getOther(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7815,7 +7923,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 	template<int SIZE>
 	Handle<Value> V8PxPadding<SIZE>::PxPaddingConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -7844,7 +7952,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 	template<int SIZE>
 	Handle<Value> V8PxPadding<SIZE>::getSize( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		return scope.Close(Uint32::New(SIZE));
@@ -7852,7 +7960,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 	template<int SIZE>
 	Handle<Value> V8PxPadding<SIZE>::elementGet(uint32_t index, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(index >=0 && index < SIZE){
@@ -7866,7 +7974,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 	template<int SIZE>
 	Handle<Value> V8PxPadding<SIZE>::elementSet(uint32_t index, Local<Value> value, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsUint32() && index >=0 && index < SIZE){
@@ -7882,7 +7990,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxGeometry
 
 	Handle<Value> V8PxGeometry::getType(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7898,7 +8006,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxBoxGeometry
 
 	Handle<Value>  V8PxBoxGeometry::PxBoxGeometryConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -7947,7 +8055,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBoxGeometry::getHalfExtents( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxBoxGeometry* thisPxBoxGeometry = unwrap<PxBoxGeometry>(info.Holder());
@@ -7964,7 +8072,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxBoxGeometry::setHalfExtents( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8PxVec3::getTemplate()->HasInstance(value)){
@@ -7978,7 +8086,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxBoxGeometry::isValid(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -7994,7 +8102,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxCapsuleGeometry
 
 	Handle<Value>  V8PxCapsuleGeometry::PxCapsuleGeometryConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -8031,7 +8139,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxCapsuleGeometry::getRadius( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxCapsuleGeometry* thisPxCapsuleGeometry = unwrap<PxCapsuleGeometry>(info.Holder());
@@ -8042,7 +8150,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxCapsuleGeometry::setRadius( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -8053,7 +8161,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxCapsuleGeometry::getHalfHeight( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxCapsuleGeometry* thisPxCapsuleGeometry = unwrap<PxCapsuleGeometry>(info.Holder());
@@ -8064,7 +8172,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxCapsuleGeometry::setHalfHeight( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -8075,7 +8183,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxCapsuleGeometry::isValid(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -8091,7 +8199,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxConvexMeshGeometry
 
 	Handle<Value>  V8PxConvexMeshGeometry::PxConvexMeshGeometryConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -8139,7 +8247,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxConvexMeshGeometry::getScale( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxConvexMeshGeometry* thisPxConvexMeshGeometry = unwrap<PxConvexMeshGeometry>(info.Holder());
@@ -8152,7 +8260,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxConvexMeshGeometry::setScale( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8PxMeshScale::getTemplate()->HasInstance(value)){
@@ -8163,7 +8271,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxConvexMeshGeometry::getConvexMesh( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxConvexMeshGeometry* thisPxConvexMeshGeometry = unwrap<PxConvexMeshGeometry>(info.Holder());
@@ -8176,7 +8284,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxConvexMeshGeometry::setConvexMesh( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8PxConvexMesh::getTemplate()->HasInstance(value)){
@@ -8187,7 +8295,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxConvexMeshGeometry::isValid(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -8203,7 +8311,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxHeightFieldGeometry
 
 	Handle<Value>  V8PxHeightFieldGeometry::PxHeightFieldGeometryConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -8243,7 +8351,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightFieldGeometry::getHeightField( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxHeightFieldGeometry* thisPxHeightFieldGeometry = unwrap<PxHeightFieldGeometry>(info.Holder());
@@ -8256,7 +8364,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxHeightFieldGeometry::setHeightField( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8PxHeightField::getTemplate()->HasInstance(value)){
@@ -8267,7 +8375,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightFieldGeometry::getHeightScale( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxHeightFieldGeometry* thisPxHeightFieldGeometry = unwrap<PxHeightFieldGeometry>(info.Holder());
@@ -8276,7 +8384,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxHeightFieldGeometry::setHeightScale( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -8287,7 +8395,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightFieldGeometry::getRowScale( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxHeightFieldGeometry* thisPxHeightFieldGeometry = unwrap<PxHeightFieldGeometry>(info.Holder());
@@ -8296,7 +8404,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxHeightFieldGeometry::setRowScale( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -8307,7 +8415,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightFieldGeometry::getColumnScale( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxHeightFieldGeometry* thisPxHeightFieldGeometry = unwrap<PxHeightFieldGeometry>(info.Holder());
@@ -8316,7 +8424,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxHeightFieldGeometry::setColumnScale( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -8327,7 +8435,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightFieldGeometry::getHeightFeildFlags( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxHeightFieldGeometry* thisPxHeightFieldGeometry = unwrap<PxHeightFieldGeometry>(info.Holder());
@@ -8336,7 +8444,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxHeightFieldGeometry::setHeightFieldFlags( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && (value->IsInt32() || value->IsUint32())){
@@ -8347,7 +8455,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightFieldGeometry::getPaddingFromFlags( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxHeightFieldGeometry* thisPxHeightFieldGeometry = unwrap<PxHeightFieldGeometry>(info.Holder());
@@ -8361,7 +8469,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxHeightFieldGeometry::setPaddingFromFlags( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8PxPadding<2>::getTemplate()->HasInstance(value)){
@@ -8374,7 +8482,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightFieldGeometry::isValid(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -8390,7 +8498,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxSphereGeometry
 
 	Handle<Value>  V8PxSphereGeometry::PxSphereGeometryConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -8427,7 +8535,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxSphereGeometry::getRadius( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxSphereGeometry* thisPxSphereGeometry = unwrap<PxSphereGeometry>(info.Holder());
@@ -8436,7 +8544,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxSphereGeometry::setRadius( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -8447,7 +8555,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxSphereGeometry::isValid(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -8463,7 +8571,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxPlaneGeometry
 
 	Handle<Value>  V8PxPlaneGeometry::PxPlaneGeometryConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -8490,7 +8598,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxPlaneGeometry::isValid(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -8506,7 +8614,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxTriangleMeshGeometry
 
 	Handle<Value>  V8PxTriangleMeshGeometry::PxTriangleMeshGeometryConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -8565,7 +8673,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTriangleMeshGeometry::getScale( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxTriangleMeshGeometry* thisPxTriangleMeshGeometry = unwrap<PxTriangleMeshGeometry>(info.Holder());
@@ -8579,7 +8687,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxTriangleMeshGeometry::setScale( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8PxMeshScale::getTemplate()->HasInstance(value)){
@@ -8592,7 +8700,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTriangleMeshGeometry::getMeshFlags( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxTriangleMeshGeometry* thisPxTriangleMeshGeometry = unwrap<PxTriangleMeshGeometry>(info.Holder());
@@ -8601,7 +8709,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxTriangleMeshGeometry::setMeshFlags( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && (value->IsInt32() || value->IsUint32())){
@@ -8612,7 +8720,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 	
 	Handle<Value> V8PxTriangleMeshGeometry::getPaddingFromFlags( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxTriangleMeshGeometry* thisPxTriangleMeshGeometry = unwrap<PxTriangleMeshGeometry>(info.Holder());
@@ -8626,7 +8734,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxTriangleMeshGeometry::setPaddingFromFlags( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8PxPadding<2>::getTemplate()->HasInstance(value)){
@@ -8639,7 +8747,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTriangleMeshGeometry::getTriangleMesh( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxTriangleMeshGeometry* thisPxTriangleMeshGeometry = unwrap<PxTriangleMeshGeometry>(info.Holder());
@@ -8652,7 +8760,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxTriangleMeshGeometry::setTriangleMesh( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8PxTriangleMesh::getTemplate()->HasInstance(value)){
@@ -8667,7 +8775,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTriangleMeshGeometry::isValid(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -8683,7 +8791,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxTriangleMesh
 
 	Handle<Value> V8PxTriangleMesh::getNbVertices(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -8697,7 +8805,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTriangleMesh::getVertices(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -8727,7 +8835,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTriangleMesh::getNbTriangles(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -8741,7 +8849,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTriangleMesh::getTriangles(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -8781,7 +8889,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTriangleMesh::has16BitTriangleIndices(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -8795,7 +8903,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTriangleMesh::getTrianglesRemap(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -8835,7 +8943,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTriangleMesh::release(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -8851,7 +8959,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTriangleMesh::getTriangleMaterialIndex(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()) 
@@ -8865,7 +8973,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxTriangleMesh::getReferenceCount(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -8880,7 +8988,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxFieldDescriptor
 	Handle<Value> V8PxFieldDescriptor::getType( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxFieldDescriptor* thisPxFieldDescriptor = unwrap<PxFieldDescriptor>(info.Holder());
@@ -8893,7 +9001,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxFieldDescriptor::setType( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsInt32()){
@@ -8906,7 +9014,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxFieldDescriptor::getName( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxFieldDescriptor* thisPxFieldDescriptor = unwrap<PxFieldDescriptor>(info.Holder());
@@ -8919,7 +9027,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	//void V8PxFieldDescriptor::setName( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(!value.IsEmpty() && value->IsString()){
@@ -8932,7 +9040,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	Handle<Value> V8PxFieldDescriptor::getOffset( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxFieldDescriptor* thisPxFieldDescriptor = unwrap<PxFieldDescriptor>(info.Holder());
@@ -8945,7 +9053,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxFieldDescriptor::setOffset( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsUint32()){
@@ -8958,7 +9066,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxFieldDescriptor::getSize( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxFieldDescriptor* thisPxFieldDescriptor = unwrap<PxFieldDescriptor>(info.Holder());
@@ -8971,7 +9079,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxFieldDescriptor::setSize( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsUint32()){
@@ -8984,7 +9092,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxFieldDescriptor::getCount( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxFieldDescriptor* thisPxFieldDescriptor = unwrap<PxFieldDescriptor>(info.Holder());
@@ -8997,7 +9105,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxFieldDescriptor::setCount( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsUint32()){
@@ -9010,7 +9118,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxFieldDescriptor::getOffsetSize( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxFieldDescriptor* thisPxFieldDescriptor = unwrap<PxFieldDescriptor>(info.Holder());
@@ -9023,7 +9131,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxFieldDescriptor::setOffsetSize( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsUint32()){
@@ -9036,7 +9144,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxFieldDescriptor::getFlags( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxFieldDescriptor* thisPxFieldDescriptor = unwrap<PxFieldDescriptor>(info.Holder());
@@ -9049,7 +9157,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxFieldDescriptor::setFlags( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsUint32()){
@@ -9063,7 +9171,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 
 	//Handle<Value> V8PxFieldDescriptor::FieldSize(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0) 
@@ -9077,7 +9185,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	Handle<Value> V8PxFieldDescriptor::Address(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsExternal()) 
@@ -9094,7 +9202,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxFieldDescriptor::GetArrayAddress(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsExternal()) 
@@ -9111,7 +9219,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxFieldDescriptor::IsStaticArray(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0 ) 
@@ -9125,7 +9233,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxFieldDescriptor::GetStaticArraySize(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0 ) 
@@ -9139,7 +9247,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxFieldDescriptor::IsDynamicArray(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0 ) 
@@ -9153,7 +9261,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxFieldDescriptor::GetDynamicArraySize(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsExternal()) 
@@ -9169,7 +9277,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxSerialStream
 
 	//Handle<Value> V8PxSerialStream::storeBuffer(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsExternal() &&
@@ -9186,7 +9294,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 	//
 	//Handle<Value> V8PxSerialStream::getTotalStoredSize(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsExternal() &&
@@ -9202,7 +9310,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxMeshScale
 	Handle<Value>  V8PxMeshScale::PxMeshScaleConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -9242,7 +9350,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMeshScale::createIdentity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9260,7 +9368,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMeshScale::getScale( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxMeshScale* thisPxMeshScale = unwrap<PxMeshScale>(info.Holder());
@@ -9273,7 +9381,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxMeshScale::setScale( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8PxVec3::getTemplate()->HasInstance(value)){
@@ -9286,7 +9394,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMeshScale::getRotation( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxMeshScale* thisPxMeshScale = unwrap<PxMeshScale>(info.Holder());
@@ -9299,7 +9407,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxMeshScale::setRotation( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8PxQuat::getTemplate()->HasInstance(value)){
@@ -9312,7 +9420,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMeshScale::isIdentity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9326,7 +9434,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMeshScale::getInverse(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9346,7 +9454,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMeshScale::toMat33(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9368,7 +9476,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxConvexMesh
 
 	Handle<Value> V8PxConvexMesh::getNbVertices(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9382,7 +9490,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxConvexMesh::getVertices(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9412,7 +9520,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxConvexMesh::getIndexBuffer(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9437,7 +9545,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxConvexMesh::getNbPolygons(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9451,7 +9559,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxConvexMesh::getPolygonData(const Arguments& args){ //NEED TO TEST THIS BADLY, DATA MIGHT GO OUT OF SCOPE AND DIE
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()) 
@@ -9473,7 +9581,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxConvexMesh::release(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9489,7 +9597,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxConvexMesh::getReferenceCount(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9503,7 +9611,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxConvexMesh::getMassInformation(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9540,7 +9648,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxHeightField
 
 	Handle<Value> V8PxHeightField::release(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9556,7 +9664,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightField::saveCells(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == !args[0].IsEmpty() && args[0]->IsExternal() && !args[1].IsEmpty() && args[1]->IsUint32()) 
@@ -9570,7 +9678,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightField::getNbRows(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9584,7 +9692,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightField::getNbColumns(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9598,7 +9706,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightField::getFormat(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9612,7 +9720,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightField::getSampleStride(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9626,7 +9734,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightField::getThickness(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9640,7 +9748,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightField::getConvexEdgeThreshold(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9654,7 +9762,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightField::getFlags(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9668,7 +9776,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightField::getHeight(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsNumber() && !args[1].IsEmpty() && args[1]->IsNumber()) 
@@ -9682,7 +9790,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightField::getReferenceCount(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9696,7 +9804,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHeightField::getTriangleMaterialIndex(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()) 
@@ -9711,7 +9819,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxFilterData
 	Handle<Value>  V8PxFilterData::PxFilterDataConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -9742,7 +9850,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxFilterData::getword0( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxFilterData* thisPxFilterData = unwrap<PxFilterData>(info.Holder());
@@ -9755,7 +9863,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxFilterData::setword0( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxFilterData* thisPxFilterData = unwrap<PxFilterData>(info.Holder());
@@ -9766,7 +9874,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxFilterData::getword1( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxFilterData* thisPxFilterData = unwrap<PxFilterData>(info.Holder());
@@ -9779,7 +9887,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxFilterData::setword1( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxFilterData* thisPxFilterData = unwrap<PxFilterData>(info.Holder());
@@ -9790,7 +9898,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxFilterData::getword2( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxFilterData* thisPxFilterData = unwrap<PxFilterData>(info.Holder());
@@ -9803,7 +9911,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxFilterData::setword2( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxFilterData* thisPxFilterData = unwrap<PxFilterData>(info.Holder());
@@ -9814,7 +9922,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxFilterData::getword3( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxFilterData* thisPxFilterData = unwrap<PxFilterData>(info.Holder());
@@ -9827,7 +9935,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxFilterData::setword3( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxFilterData* thisPxFilterData = unwrap<PxFilterData>(info.Holder());
@@ -9838,7 +9946,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxFilterData::setToDefault(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9855,7 +9963,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxHullPolygon
 	Handle<Value>  V8PxHullPolygon::PxHullPolygonConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!getTemplate()->HasInstance(args.Holder()))
@@ -9880,7 +9988,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHullPolygon::getmPlane( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		//PxHullPolygon* thisPxHullPolygon = unwrap<PxHullPolygon>(info.Holder());
@@ -9894,7 +10002,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHullPolygon::getmNbVerts( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxHullPolygon* thisPxHullPolygon = unwrap<PxHullPolygon>(info.Holder());
@@ -9908,7 +10016,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxHullPolygon::setmNbVerts( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxHullPolygon* thisPxHullPolygon = unwrap<PxHullPolygon>(info.Holder());
@@ -9919,7 +10027,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxHullPolygon::getmIndexBase( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxHullPolygon* thisPxHullPolygon = unwrap<PxHullPolygon>(info.Holder());
@@ -9933,7 +10041,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxHullPolygon::setmIndexBase( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxHullPolygon* thisPxHullPolygon = unwrap<PxHullPolygon>(info.Holder());
@@ -9946,7 +10054,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxMaterial
 
 	Handle<Value> V8PxMaterial::getUserData( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 
@@ -9967,7 +10075,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxMaterial::setUserData( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty()){
@@ -9979,7 +10087,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMaterial::release(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -9995,7 +10103,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMaterial::setDynamicFriction(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -10011,7 +10119,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMaterial::getDynamicFriction(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10025,7 +10133,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMaterial::setStaticFriction(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -10041,7 +10149,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMaterial::getStaticFriction(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10055,7 +10163,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMaterial::setRestitution(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -10071,7 +10179,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMaterial::getRestitution(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10085,7 +10193,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	//Handle<Value> V8PxMaterial::setDynamicFrictionV(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -10101,7 +10209,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxMaterial::getDynamicFrictionV(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0) 
@@ -10115,7 +10223,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxMaterial::setStaticFrictionV(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -10131,7 +10239,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxMaterial::getStaticFrictionV(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0) 
@@ -10145,7 +10253,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxMaterial::setDirOfAnisotropy(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -10163,7 +10271,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	//Handle<Value> V8PxMaterial::getDirOfAnisotropy(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0) 
@@ -10182,7 +10290,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	Handle<Value> V8PxMaterial::setFlag(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsUint32() &&
@@ -10199,7 +10307,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMaterial::setFlags(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()) 
@@ -10215,7 +10323,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMaterial::getFlags(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10229,7 +10337,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMaterial::setFrictionCombineMode(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -10245,7 +10353,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMaterial::getFrictionCombineMode(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10259,7 +10367,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMaterial::setRestitutionCombineMode(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -10275,7 +10383,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxMaterial::getRestitutionCombineMode(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10291,7 +10399,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxObserver
 
 	Handle<Value> V8PxObserver::onRelease(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10315,7 +10423,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxObservable
 
 	Handle<Value> V8PxObservable::getObservableType(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10329,7 +10437,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxObservable::registerObserver(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxObserver::getTemplate()->HasInstance(args[0])) 
@@ -10347,7 +10455,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxObservable::unregisterObserver(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxObserver::getTemplate()->HasInstance(args[0])) 
@@ -10365,7 +10473,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxObservable::getNbObservers(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10379,7 +10487,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxObservable::getObservers(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10411,7 +10519,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxActor
 
 	Handle<Value> V8PxActor::getUserData( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 
@@ -10432,7 +10540,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxActor::setUserData( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty()){
@@ -10444,7 +10552,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::release(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10460,7 +10568,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::getType(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10474,7 +10582,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::isRigidStatic(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10496,7 +10604,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::isRigidDynamic(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10518,7 +10626,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::isParticleSystem(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10540,7 +10648,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::isParticleFluid(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10562,7 +10670,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	//Handle<Value> V8PxActor::isDeformable(const Arguments& args){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	if(args.Length() == 0) 
@@ -10584,7 +10692,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	//}
 
 	Handle<Value> V8PxActor::isArticulationLink(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10606,7 +10714,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::isRigidActor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10628,7 +10736,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::isRigidBody(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10650,7 +10758,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::isParticleBase(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10672,7 +10780,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::getScene(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10692,7 +10800,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::setName(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsString()) 
@@ -10708,7 +10816,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::getName(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsString()) 
@@ -10722,7 +10830,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::getWorldBounds(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10742,7 +10850,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::setActorFlag(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsUint32() &&
@@ -10759,7 +10867,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::setActorFlags(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()) 
@@ -10775,7 +10883,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::getActorFlags(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10789,7 +10897,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::setDominanceGroup(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()) 
@@ -10805,7 +10913,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::getDominanceGroup(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10819,7 +10927,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::setOwnerClient(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()) 
@@ -10835,7 +10943,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::getOwnerClient(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10849,7 +10957,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::setClientBehaviorBits(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()) 
@@ -10865,7 +10973,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::getClientBehaviorBits(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10879,7 +10987,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxActor::getAggregate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10901,7 +11009,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxRigidActor
 
 	Handle<Value> V8PxRigidActor::release(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10917,7 +11025,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidActor::getGlobalPose(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -10937,7 +11045,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidActor::setGlobalPose(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!args[0].IsEmpty() && args[0]->IsObject() && V8PxTransform::getTemplate()->HasInstance(args[0])) 
@@ -10960,7 +11068,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidActor::createShape(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxRigidActor* thisPxRigidActor = unwrap<PxRigidActor>(args.Holder());
@@ -11054,7 +11162,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidActor::getNbShapes(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -11068,7 +11176,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidActor::getShapes(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -11097,7 +11205,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidActor::getNbConstraints(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -11111,7 +11219,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidActor::getConstraints(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -11140,7 +11248,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidActor::isRigidActor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -11154,7 +11262,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxRigidBody
 
 	Handle<Value> V8PxRigidBody::setCMassLocalPose(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxTransform::getTemplate()->HasInstance(args[0])) 
@@ -11171,7 +11279,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidBody::getCMassLocalPose(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -11190,7 +11298,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidBody::setMass(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -11206,7 +11314,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidBody::getMass(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -11220,7 +11328,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidBody::setMassSpaceInertiaTensor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -11237,7 +11345,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidBody::getMassSpaceInertiaTensor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -11257,7 +11365,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidBody::getLinearVelocity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -11277,7 +11385,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidBody::setLinearVelocity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -11299,7 +11407,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidBody::getAngularVelocity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -11319,7 +11427,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidBody::setAngularVelocity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -11341,7 +11449,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidBody::addForce(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -11369,7 +11477,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidBody::addTorque(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -11397,7 +11505,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidBody::clearForce(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0){
@@ -11422,7 +11530,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidBody::clearTorque(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0){
@@ -11450,7 +11558,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidBody::isRigidBody(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -11463,7 +11571,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxParticleBase
 
 	Handle<Value> V8PxParticleBase::lockParticleReadData(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -11481,7 +11589,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::createParticles(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxParticleCreationData::getTemplate()->HasInstance(args[0])) {
@@ -11516,7 +11624,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::releaseParticles(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsUint32() && !args[1].IsEmpty() && args[1]->IsArray()) {
@@ -11552,7 +11660,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::setPositions(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 3 && !args[0].IsEmpty() && args[0]->IsUint32() &&
@@ -11602,7 +11710,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::setVelocities(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 3 && !args[0].IsEmpty() && args[0]->IsUint32() &&
@@ -11652,7 +11760,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::setRestOffsets(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 3 && !args[0].IsEmpty() && args[0]->IsUint32() &&
@@ -11702,7 +11810,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::addForces(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 4 && !args[0].IsEmpty() && args[0]->IsUint32() &&
@@ -11753,7 +11861,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::getDamping(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -11766,7 +11874,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::setDamping(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) {
@@ -11781,7 +11889,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::getExternalAcceleration(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -11800,7 +11908,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::setExternalAcceleration(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) {
@@ -11817,7 +11925,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::getProjectionPlane(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -11845,7 +11953,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::setProjectionPlane(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0]) && !args[1].IsEmpty() && args[1]->IsNumber()) {
@@ -11862,7 +11970,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::getParticleMass(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -11875,7 +11983,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::setParticleMass(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) {
@@ -11890,7 +11998,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::getRestitution(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -11903,7 +12011,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::setRestitution(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) {
@@ -11918,7 +12026,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::getDynamicFriction(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -11931,7 +12039,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::setDynamicFriction(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) {
@@ -11946,7 +12054,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::getStaticFriction(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -11959,7 +12067,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::setStaticFriction(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) {
@@ -11974,7 +12082,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::setSimulationFilterData(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxFilterData::getTemplate()->HasInstance(args[0])) {
@@ -11990,7 +12098,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::getSimulationFilterData(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12009,7 +12117,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::resetFiltering(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12024,7 +12132,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::setParticleBaseFlag(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsUint32() && !args[1].IsEmpty() && args[1]->IsBoolean()) {
@@ -12039,7 +12147,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::getParticleBaseFlags(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12052,7 +12160,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::getMaxParticles(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12065,7 +12173,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::getMaxMotionDistance(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12078,7 +12186,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::getRestOffset(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12091,7 +12199,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::getContactOffset(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12104,7 +12212,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::getGridSize(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12117,7 +12225,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::getParticleReadDataFlags(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12130,7 +12238,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleBase::isParticleBase(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12143,7 +12251,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxLockedData
 
 	Handle<Value> V8PxLockedData::getDataAccessFlags(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12156,7 +12264,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxLockedData::unlock(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12174,7 +12282,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 	template<class T>
 	Handle<Value> V8PxStrideIterator<T>::handle(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12189,7 +12297,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 	template<class T>
 	Handle<Value> V8PxStrideIterator<T>::unique(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12206,7 +12314,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 	template<class T>
 	Handle<Value> V8PxStrideIterator<T>::stride(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12220,7 +12328,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 	template<class T>
 	Handle<Value> V8PxStrideIterator<T>::next(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsInt32()) {
@@ -12236,7 +12344,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 	template<class T>
 	Handle<Value> V8PxStrideIterator<T>::prev(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsInt32()) {
@@ -12252,7 +12360,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 	template<class T>
 	Handle<Value> V8PxStrideIterator<T>::jump(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsInt32()) {
@@ -12269,7 +12377,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //PxParticleReadData
 
 	Handle<Value> V8PxParticleReadData::getNumValidParticles( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxParticleReadData* thisPxParticleReadData = unwrap<PxParticleReadData>(info.Holder());
@@ -12277,7 +12385,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxParticleReadData::setNumValidParticles( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsUint32()){
@@ -12288,7 +12396,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleReadData::getValidParticleRange( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxParticleReadData* thisPxParticleReadData = unwrap<PxParticleReadData>(info.Holder());
@@ -12296,7 +12404,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	void V8PxParticleReadData::setValidParticleRange( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsUint32()){
@@ -12307,7 +12415,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleReadData::getValidParticleBitmap( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PxParticleReadData* thisPxParticleReadData = unwrap<PxParticleReadData>(info.Holder());
@@ -12315,7 +12423,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	/*void V8PxParticleReadData::setValidParticleBitmap( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsUint32()){
@@ -12326,7 +12434,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}*/
 
 	Handle<Value> V8PxParticleReadData::getPositionBuffer( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(info.Data().IsEmpty()){
@@ -12352,7 +12460,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleReadData::getVelocityBuffer( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(info.Data().IsEmpty()){
@@ -12378,7 +12486,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleReadData::getRestOffsetBuffer( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(info.Data().IsEmpty()){
@@ -12402,7 +12510,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleReadData::getFlagsBuffer( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(info.Data().IsEmpty()){
@@ -12426,7 +12534,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleReadData::getCollisionNormalBuffer( Local<String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(info.Data().IsEmpty()){
@@ -12457,7 +12565,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleReadData::getDataAccessFlags(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12470,7 +12578,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxParticleReadData::unlock(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12486,7 +12594,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxRigidDynamic
 	Handle<Value> V8PxRigidDynamic::setKinematicTarget(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxTransform::getTemplate()->HasInstance(args[0])) {
@@ -12501,7 +12609,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::getKinematicTarget(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxTransform::getTemplate()->HasInstance(args[0])) {
@@ -12514,7 +12622,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::setLinearDamping(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) {
@@ -12529,7 +12637,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::getLinearDamping(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12542,7 +12650,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::setAngularDamping(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) {
@@ -12557,7 +12665,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::getAngularDamping(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12570,7 +12678,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::setMaxAngularVelocity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) {
@@ -12585,7 +12693,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::getMaxAngularVelocity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12598,7 +12706,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::isSleeping(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12611,7 +12719,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::setSleepThreshold(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) {
@@ -12626,7 +12734,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::getSleepThreshold(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12640,7 +12748,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 
 	Handle<Value> V8PxRigidDynamic::wakeUp(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 
@@ -12663,7 +12771,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::putToSleep(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12678,7 +12786,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 	
 	Handle<Value> V8PxRigidDynamic::setSolverIterationCounts(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 		
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()) {
@@ -12701,7 +12809,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::getSolverIterationCounts(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 		
 		//TODO: Fix this
@@ -12720,7 +12828,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::getContactReportThreshold(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) {
@@ -12733,7 +12841,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::setContactReportThreshold(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) {
@@ -12748,7 +12856,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::setRigidDynamicFlag(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsUint32() &&
@@ -12765,7 +12873,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::setRigidDynamicFlags(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsInt32()) 
@@ -12781,7 +12889,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::getRigidDynamicFlags(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -12795,7 +12903,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRigidDynamic::getConcreteTypeName(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -12810,7 +12918,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxRigidStatic
 	Handle<Value> V8PxRigidStatic::getConcreteTypeName(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -12825,7 +12933,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxScene
 	Handle<Value> V8PxScene::release(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -12841,7 +12949,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::setFlag(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsUint32() &&
@@ -12858,7 +12966,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::getFlags(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -12872,7 +12980,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::setGravity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0])) 
@@ -12888,7 +12996,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::getGravity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -12908,7 +13016,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::getTimestamp(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -12923,7 +13031,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::getSceneQueryStaticTimestamp(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -12938,7 +13046,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::setBounceThresholdVelocity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -12954,7 +13062,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::getBounceThresholdVelocity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -12968,7 +13076,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::addActor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxActor::getTemplate()->HasInstance(args[0])) 
@@ -12984,7 +13092,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::removeActor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxActor::getTemplate()->HasInstance(args[0])) 
@@ -13000,7 +13108,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::raycastAny(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 4 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxActor::getTemplate()->HasInstance(args[0])
@@ -13016,6 +13124,21 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 									*unwrap<PxSceneQueryHit>(args[3]->ToObject())
 									) ));
 		}
+		else if(args.Length() == 5 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxActor::getTemplate()->HasInstance(args[0])
+			&& !args[1].IsEmpty() && args[1]->IsObject() && V8PxActor::getTemplate()->HasInstance(args[1])
+			&& !args[2].IsEmpty() && args[2]->IsNumber()
+			&& !args[3].IsEmpty() && args[3]->IsObject() && V8PxSceneQueryHit::getTemplate()->HasInstance(args[3])
+			&& !args[4].IsEmpty() && args[4]->IsObject() && V8PxSceneQueryFilterData::getTemplate()->HasInstance(args[4])) 
+        {
+			PxScene* thisScene = unwrap<PxScene>(args.Holder());
+			
+			return scope.Close( Boolean::New( thisScene->raycastAny(	*unwrap<PxVec3>(args[0]->ToObject()),
+									*unwrap<PxVec3>(args[1]->ToObject()),
+									args[2]->NumberValue(),
+									*unwrap<PxSceneQueryHit>(args[3]->ToObject()),
+									*unwrap<PxSceneQueryFilterData>(args[4]->ToObject())
+									) ));
+		}
 
 		//TODO: Add other types
 
@@ -13023,7 +13146,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::raycastSingle(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 5 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxActor::getTemplate()->HasInstance(args[0])
@@ -13048,7 +13171,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::raycastMultiple(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		//TODO: Finish this
@@ -13077,7 +13200,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::sweepAny(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		//TODO: Finish this
@@ -13088,7 +13211,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::sweepSingle(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		//TODO: Finish this
@@ -13099,7 +13222,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::sweepMultiple(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		//TODO: Finish this
@@ -13110,7 +13233,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::overlapMultiple(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		//TODO: Finish this
@@ -13121,7 +13244,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxScene::overlapAny(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		//TODO: Finish this
@@ -13133,8 +13256,37 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxSceneQueryHit
 
+	Handle<Value> V8PxSceneQueryHit::V8PxSceneQueryHitConstructor(const Arguments& args){
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
+		if(args.Length() == 0) 
+        {
+			PxSceneQueryHit* val = new PxSceneQueryHit();
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+		else if( args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && templ->HasInstance(args[0])){
+			PxSceneQueryHit* val = new PxSceneQueryHit(*unwrap<PxSceneQueryHit>(args[0]->ToObject()));
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+
+		return scope.Close( Undefined() );
+	}
+
 	Handle<Value> V8PxSceneQueryHit::getShape(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -13152,7 +13304,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxSceneQueryHit::getFaceIndex(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -13166,7 +13318,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxSceneQueryHit::getFlags(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -13181,8 +13333,38 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxSceneQueryImpactHit
 
+	Handle<Value> V8PxSceneQueryImpactHit::V8PxSceneQueryImpactHitConstructor(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
+		if(args.Length() == 0) 
+        {
+			PxSceneQueryImpactHit* val = new PxSceneQueryImpactHit();
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+		else if( args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && templ->HasInstance(args[0])){
+			PxSceneQueryImpactHit* val = new PxSceneQueryImpactHit(*unwrap<PxSceneQueryImpactHit>(args[0]->ToObject()));
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+
+		return scope.Close( Undefined() );
+	}
+
 	Handle<Value> V8PxSceneQueryImpactHit::getImpact(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -13202,7 +13384,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxSceneQueryImpactHit::getNormal(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -13222,7 +13404,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxSceneQueryImpactHit::getDistance(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -13237,8 +13419,37 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 
 //PxRaycastHit
 
+	Handle<Value> V8PxRaycastHit::V8PxRaycastHitConstructor(const Arguments& args){
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
+		if(args.Length() == 0) 
+        {
+			PxRaycastHit* val = new PxRaycastHit();
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+		else if( args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && templ->HasInstance(args[0])){
+			PxRaycastHit* val = new PxRaycastHit(*unwrap<PxRaycastHit>(args[0]->ToObject()));
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+
+		return scope.Close( Undefined() );
+	}
+
 	Handle<Value> V8PxRaycastHit::getU(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -13252,7 +13463,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 	}
 
 	Handle<Value> V8PxRaycastHit::getV(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -13265,10 +13476,868 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 		return scope.Close( Undefined() );
 	}
 
+//PxControllerState
+
+	Handle<Value> V8PxControllerState::V8PxControllerStateConstructor(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
+		if(args.Length() == 0) 
+        {
+			PxControllerState* val = new PxControllerState();
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+		else if( args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && templ->HasInstance(args[0])){
+			PxControllerState* val = new PxControllerState(*unwrap<PxControllerState>(args[0]->ToObject()));
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxControllerState::getDeltaXP( Local<v8::String> property, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		PxControllerState* thisObj = unwrap<PxControllerState>(info.Holder());
+			
+		return scope.Close( wrap<PxVec3, V8PxVec3>(thisObj->deltaXP) );
+	}
+
+	void V8PxControllerState::setDeltaXP( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!value.IsEmpty() && value->IsObject() && V8PxVec3::getTemplate()->HasInstance(value)){
+			PxControllerState* thisObj = unwrap<PxControllerState>(info.Holder());
+
+			thisObj->deltaXP = *unwrap<PxVec3>(value->ToObject());
+		}
+	}
+
+	Handle<Value> V8PxControllerState::getTouchedShape( Local<v8::String> property, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		PxControllerState* thisObj = unwrap<PxControllerState>(info.Holder());
+			
+		return scope.Close( wrapPtr<PxShape, V8PxShape>(thisObj->touchedShape) );
+	}
+
+	void V8PxControllerState::setTouchedShape( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!value.IsEmpty() && value->IsObject() && V8PxShape::getTemplate()->HasInstance(value)){
+			PxControllerState* thisObj = unwrap<PxControllerState>(info.Holder());
+
+			thisObj->touchedShape = unwrap<PxShape>(value->ToObject());
+		}
+	}
+
+
+	//TODO: Finish this
+	Handle<Value> V8PxControllerState::getTouchedObstacle( Local<v8::String> property, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		PxControllerState* thisObj = unwrap<PxControllerState>(info.Holder());
+			
+		//return scope.Close( wrapPtr<PxObstacle, V8PxObstacle>(thisObj->touchedObstacle) );
+		return scope.Close( Undefined() );
+	}
+	//TODO: Finish this
+	void V8PxControllerState::setTouchedObstacle( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		/*if(!value.IsEmpty() && value->IsObject() && V8PxObstacle::getTemplate()->HasInstance(value)){
+			PxControllerState* thisObj = unwrap<PxControllerState>(info.Holder());
+
+			thisObj->touchedObstacle = unwrap<PxObstacle>(value->ToObject());
+		}*/
+	}
+
+	Handle<Value> V8PxControllerState::getCollisionFlags( Local<v8::String> property, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		PxControllerState* thisObj = unwrap<PxControllerState>(info.Holder());
+			
+		return scope.Close( Uint32::New(thisObj->collisionFlags) );
+	}
+
+	void V8PxControllerState::setCollisionFlags( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!value.IsEmpty() && value->IsUint32()){
+			PxControllerState* thisObj = unwrap<PxControllerState>(info.Holder());
+
+			thisObj->collisionFlags = value->Uint32Value();
+		}
+	}
+
+	Handle<Value> V8PxControllerState::getStandOnAnotherCCT( Local<v8::String> property, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		PxControllerState* thisObj = unwrap<PxControllerState>(info.Holder());
+			
+		return scope.Close( Boolean::New(thisObj->standOnAnotherCCT) );
+	}
+
+	void V8PxControllerState::setStandOnAnotherCCT( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!value.IsEmpty() && value->IsBoolean()){
+			PxControllerState* thisObj = unwrap<PxControllerState>(info.Holder());
+
+			thisObj->standOnAnotherCCT = value->BooleanValue();
+		}
+	}
+
+	Handle<Value> V8PxControllerState::getStandOnObstacle( Local<v8::String> property, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		PxControllerState* thisObj = unwrap<PxControllerState>(info.Holder());
+			
+		return scope.Close( Boolean::New(thisObj->standOnObstacle) );
+	}
+
+	void V8PxControllerState::setStandOnObstacle( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!value.IsEmpty() && value->IsBoolean()){
+			PxControllerState* thisObj = unwrap<PxControllerState>(info.Holder());
+
+			thisObj->standOnObstacle = value->BooleanValue();
+		}
+	}
+
+	Handle<Value> V8PxControllerState::getIsMovingUp( Local<v8::String> property, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		PxControllerState* thisObj = unwrap<PxControllerState>(info.Holder());
+			
+		return scope.Close( Boolean::New(thisObj->isMovingUp) );
+	}
+
+	void V8PxControllerState::setIsMovingUp( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!value.IsEmpty() && value->IsBoolean()){
+			PxControllerState* thisObj = unwrap<PxControllerState>(info.Holder());
+
+			thisObj->isMovingUp = value->BooleanValue();
+		}
+	}
+
+//PxControllerStats
+
+	Handle<Value> V8PxControllerStats::V8PxControllerStatsConstructor(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
+		if(args.Length() == 0) 
+        {
+			PxControllerStats* val = new PxControllerStats();
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+		else if( args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && templ->HasInstance(args[0])){
+			PxControllerStats* val = new PxControllerStats(*unwrap<PxControllerStats>(args[0]->ToObject()));
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxControllerStats::getNbIterations( Local<v8::String> property, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		PxControllerStats* thisObj = unwrap<PxControllerStats>(info.Holder());
+			
+		return scope.Close( Uint32::New(thisObj->nbIterations) );
+	}
+
+	void V8PxControllerStats::setNbIterations( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!value.IsEmpty() && value->IsUint32()){
+			PxControllerStats* thisObj = unwrap<PxControllerStats>(info.Holder());
+
+			thisObj->nbIterations = value->Uint32Value();
+		}
+	}
+
+	Handle<Value> V8PxControllerStats::getNbFullUpdates( Local<v8::String> property, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		PxControllerStats* thisObj = unwrap<PxControllerStats>(info.Holder());
+			
+		return scope.Close( Uint32::New(thisObj->nbFullUpdates) );
+	}
+
+	void V8PxControllerStats::setNbFullUpdates( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!value.IsEmpty() && value->IsUint32()){
+			PxControllerStats* thisObj = unwrap<PxControllerStats>(info.Holder());
+
+			thisObj->nbFullUpdates = value->Uint32Value();
+		}
+	}
+
+	Handle<Value> V8PxControllerStats::getNbPartialUpdates( Local<v8::String> property, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		PxControllerStats* thisObj = unwrap<PxControllerStats>(info.Holder());
+			
+		return scope.Close( Uint32::New(thisObj->nbPartialUpdates) );
+	}
+
+	void V8PxControllerStats::setNbPartialUpdates( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!value.IsEmpty() && value->IsUint32()){
+			PxControllerStats* thisObj = unwrap<PxControllerStats>(info.Holder());
+
+			thisObj->nbPartialUpdates = value->Uint32Value();
+		}
+	}
+
+//PxControllerFilters
+
+	Handle<Value> V8PxControllerFilters::V8PxControllerFiltersConstructor(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
+		if(args.Length() == 0) 
+        {
+			PxControllerFilters* val = new PxControllerFilters();
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+		else if( args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && templ->HasInstance(args[0])){
+			PxControllerFilters* val = new PxControllerFilters(*unwrap<PxControllerFilters>(args[0]->ToObject()));
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxControllerFilters::getActiveGroups( Local<v8::String> property, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		PxControllerFilters* thisObj = unwrap<PxControllerFilters>(info.Holder());
+			
+		return scope.Close( Uint32::New(thisObj->mActiveGroups) );
+	}
+
+	void V8PxControllerFilters::setActiveGroups( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!value.IsEmpty() && value->IsUint32()){
+			PxControllerFilters* thisObj = unwrap<PxControllerFilters>(info.Holder());
+
+			thisObj->mActiveGroups = value->Uint32Value();
+		}
+	}
+
+	Handle<Value> V8PxControllerFilters::getFilterData( Local<v8::String> property, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		PxControllerFilters* thisObj = unwrap<PxControllerFilters>(info.Holder());
+			
+		return scope.Close( wrap<PxFilterData, V8PxFilterData>(*const_cast<PxFilterData*>(thisObj->mFilterData)) );
+	}
+
+	void V8PxControllerFilters::setFilterData( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!value.IsEmpty() && value->IsObject() && V8PxFilterData::getTemplate()->HasInstance(value)){
+			PxControllerFilters* thisObj = unwrap<PxControllerFilters>(info.Holder());
+
+			thisObj->mFilterData = unwrap<PxFilterData>(value->ToObject());
+		}
+	}
+
+	//Handle<Value> V8PxControllerFilters::getFilterCallback( Local<v8::String> property, const AccessorInfo& info ){
+	//	//Locker lock(Isolate::GetCurrent());
+	//	HandleScope scope(Isolate::GetCurrent());
+
+	//	PxControllerFilters* thisObj = unwrap<PxControllerFilters>(info.Holder());
+	//		
+	//	return scope.Close( wrap<PxSceneQueryFilterCallback, V8PxSceneQueryFilterCallback>(*thisObj->mFilterCallback) );
+	//}
+
+	//void V8PxControllerFilters::setFilterCallback( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+	//	//Locker lock(Isolate::GetCurrent());
+	//	HandleScope scope(Isolate::GetCurrent());
+
+	//	if(!value.IsEmpty() && value->IsObject() && V8PxFilterData::getTemplate()->HasInstance(value)){
+	//		PxControllerFilters* thisObj = unwrap<PxControllerFilters>(info.Holder());
+
+	//		thisObj->mFilterCallback = unwrap<PxSceneQueryFilterCallback>(value->ToObject());
+	//	}
+	//}
+
+	Handle<Value> V8PxControllerFilters::getFilterFlags( Local<v8::String> property, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		PxControllerFilters* thisObj = unwrap<PxControllerFilters>(info.Holder());
+			
+		return scope.Close( Uint32::New( (PxU32)thisObj->mFilterFlags) );
+	}
+
+	void V8PxControllerFilters::setFilterFlags( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!value.IsEmpty() && value->IsUint32() ){
+			PxControllerFilters* thisObj = unwrap<PxControllerFilters>(info.Holder());
+
+			thisObj->mFilterFlags = (PxSceneQueryFilterFlags)value->Uint32Value();
+		}
+	}
+
+//PxController
+	Handle<Value> V8PxController::getType(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+			
+			return scope.Close( Uint32::New( thisObj->getType() ) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::release(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			thisObj->release();
+
+			return scope.Close( args.Holder() );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::move(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 4 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0]) &&
+			!args[1].IsEmpty() && args[1]->IsNumber() &&
+			!args[2].IsEmpty() && args[2]->IsNumber() &&
+			!args[3].IsEmpty() && args[3]->IsObject() && V8PxControllerFilters::getTemplate()->HasInstance(args[3])) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			thisObj->move(*unwrap<PxVec3>(args[0]->ToObject()), args[1]->NumberValue(), args[2]->NumberValue(), *unwrap<PxControllerFilters>(args[3]->ToObject()));
+			
+			return scope.Close( args.Holder() );
+		}
+		else if(args.Length() == 4 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[0]) &&
+			!args[1].IsEmpty() && args[1]->IsNumber() &&
+			!args[2].IsEmpty() && args[2]->IsNumber() &&
+			!args[3].IsEmpty() && args[3]->IsUint32()) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			thisObj->move(*unwrap<PxVec3>(args[0]->ToObject()), args[1]->NumberValue(), args[2]->NumberValue(),args[3]->Uint32Value(), 0);
+			
+			return scope.Close( args.Holder() );
+		}
+		//TODO: Finish this
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::setPosition(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxExtendedVec3::getTemplate()->HasInstance(args[0])) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			return scope.Close( Boolean::New( thisObj->setPosition(*unwrap<PxExtendedVec3>(args[0]->ToObject())) ) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::getPosition(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			return scope.Close( wrap<PxExtendedVec3, V8PxExtendedVec3>(const_cast<PxExtendedVec3&>(thisObj->getPosition())) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::setFootPosition(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxExtendedVec3::getTemplate()->HasInstance(args[0])) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			return scope.Close( Boolean::New( thisObj->setFootPosition(*unwrap<PxExtendedVec3>(args[0]->ToObject())) ) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::getFootPosition(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			return scope.Close( wrap<PxExtendedVec3, V8PxExtendedVec3>(thisObj->getFootPosition()) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::getActor(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			return scope.Close( wrapPtr<PxRigidDynamic, V8PxRigidDynamic>(thisObj->getActor()) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::setStepOffset(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber())
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+			thisObj->setStepOffset(args[0]->NumberValue());
+
+			return scope.Close( args.Holder() );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::getStepOffset(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0)
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+			
+
+			return scope.Close( Number::New(thisObj->getStepOffset()) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::setInteraction(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32())
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+			thisObj->setInteraction((PxCCTInteractionMode::Enum)args[0]->Uint32Value());
+
+			return scope.Close( args.Holder() );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::getInteraction(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0)
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+			
+
+			return scope.Close( Uint32::New(thisObj->getInteraction()) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::setNonWalkableMode(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32())
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+			thisObj->setNonWalkableMode((PxCCTNonWalkableMode::Enum)args[0]->Uint32Value());
+
+			return scope.Close( args.Holder() );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::getNonWalkableMode(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0)
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+			
+
+			return scope.Close( Uint32::New(thisObj->getNonWalkableMode()) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::setGroupsBitmask(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32())
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+			thisObj->setGroupsBitmask(args[0]->Uint32Value());
+
+			return scope.Close( args.Holder() );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::getGroupsBitmask(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0)
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+			
+
+			return scope.Close( Uint32::New(thisObj->getGroupsBitmask()) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::getContactOffset(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0)
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+			
+
+			return scope.Close( Number::New(thisObj->getContactOffset()) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::setUpDirection(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxExtendedVec3::getTemplate()->HasInstance(args[0])) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			thisObj->setUpDirection(*unwrap<PxVec3>(args[0]->ToObject()));
+
+			return scope.Close( args.Holder() );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::getUpDirection(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			return scope.Close( wrap<PxVec3, V8PxVec3>(thisObj->getUpDirection()) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::getSlopeLimit(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			return scope.Close( Number::New(thisObj->getSlopeLimit()) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	
+	Handle<Value> V8PxController::invalidateCache(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			thisObj->invalidateCache();
+
+			return scope.Close( args.Holder() );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::getScene(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			return scope.Close( wrapPtr<PxScene, V8PxScene>(thisObj->getScene()) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::getState(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			PxControllerState* state = new PxControllerState();
+
+			thisObj->getState(*state);
+
+			return scope.Close( wrapPtrCleanup<PxControllerState, V8PxControllerState>(state) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::getStats(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			PxControllerStats* stat = new PxControllerStats();
+
+			thisObj->getStats(*stat);
+
+			return scope.Close( wrapPtrCleanup<PxControllerStats, V8PxControllerStats>(stat) );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxController::resize(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
+        {
+			PxController* thisObj = unwrap<PxController>(args.Holder());
+
+			thisObj->resize(args[0]->NumberValue());
+
+			return scope.Close( args.Holder() );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+//PxSceneQueryFilterData
+	Handle<Value> V8PxSceneQueryFilterData::V8PxSceneQueryFilterDataConstructor(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!getTemplate()->HasInstance(args.Holder()))
+			return ThrowException( Exception::Error(String::New("This must be an instance of an object, create it using the new keyword")));
+
+		if(args.Length() == 0) 
+        {
+			PxSceneQueryFilterData* val = new PxSceneQueryFilterData();
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+		else if( args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && templ->HasInstance(args[0])){
+
+			PxSceneQueryFilterData* val = new PxSceneQueryFilterData(*unwrap<PxSceneQueryFilterData>(args[0]->ToObject()));
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+		else if( args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsObject() && templ->HasInstance(args[0]) &&
+			!args[1].IsEmpty() && args[1]->IsUint32()){
+
+			PxSceneQueryFilterData* val = new PxSceneQueryFilterData(*unwrap<PxFilterData>(args[0]->ToObject()), (PxSceneQueryFilterFlags)args[1]->Uint32Value());
+
+			Persistent<Object> newObj = Persistent<Object>::New(Isolate::GetCurrent(), args.Holder());			
+			newObj.MakeWeak(Isolate::GetCurrent(),val, &CleanupDelete);
+			newObj->SetInternalField(0, External::New(val));
+			
+			return scope.Close(newObj);
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PxSceneQueryFilterData::getData( Local<v8::String> property, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		PxSceneQueryFilterData* thisObj = unwrap<PxSceneQueryFilterData>(info.Holder());
+			
+		return scope.Close( wrap<PxFilterData, V8PxFilterData>(thisObj->data) );
+	}
+
+	void V8PxSceneQueryFilterData::setData( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!value.IsEmpty() && value->IsObject() && V8PxFilterData::getTemplate()->HasInstance(value)){
+			PxSceneQueryFilterData* thisObj = unwrap<PxSceneQueryFilterData>(info.Holder());
+
+			thisObj->data = *unwrap<PxFilterData>(value->ToObject());
+		}
+	}
+
+	Handle<Value> V8PxSceneQueryFilterData::getFlags( Local<v8::String> property, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		PxSceneQueryFilterData* thisObj = unwrap<PxSceneQueryFilterData>(info.Holder());
+			
+		return scope.Close( Uint32::New( (PxU16)thisObj->flags) );
+	}
+
+	void V8PxSceneQueryFilterData::setFlags( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(!value.IsEmpty() && value->IsUint32()){
+			PxSceneQueryFilterData* thisObj = unwrap<PxSceneQueryFilterData>(info.Holder());
+
+			thisObj->flags = (PxSceneQueryFilterFlags)value->Uint32Value();
+		}
+	}
+
+
+
 ////PxControllerDesc
 //
 //	Handle<Value> V8PxControllerDesc::getPosition( Local<String> property , const AccessorInfo& info ){
-//		//Locker lock;
+//		//Locker lock(Isolate::GetCurrent());
 //		HandleScope scope(Isolate::GetCurrent());
 //
 //		PxControllerDesc* thisPxControllerDesc = unwrap<PxControllerDesc>(info.Holder());
@@ -13285,7 +14354,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 //	}
 //
 //	void V8PxControllerDesc::setPosition( Local<String> property, Local<Value> value, const AccessorInfo& info ){
-//		//Locker lock;
+//		//Locker lock(Isolate::GetCurrent());
 //		HandleScope scope(Isolate::GetCurrent());
 //
 //		if(!value.IsEmpty() && value->IsObject() && V8PxExtendedVec3::getTemplate()->HasInstance(value)){

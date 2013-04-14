@@ -326,7 +326,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 //Vector3
 	Handle<Value>  V8Vector3::Vector3Constructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0){
@@ -372,7 +372,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::getX( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		Vector3* thisVector3 = unwrap<Vector3>(info.Holder());
@@ -385,7 +385,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	void V8Vector3::setX( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -398,7 +398,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::getY( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		Vector3* thisVector3 = unwrap<Vector3>(info.Holder());
@@ -411,7 +411,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	void V8Vector3::setY( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -424,7 +424,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::getZ( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		Vector3* thisVector3 = unwrap<Vector3>(info.Holder());
@@ -437,7 +437,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	void V8Vector3::setZ( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -450,7 +450,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::elementGet(uint32_t index, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(index >=0 && index <= 2){
@@ -465,7 +465,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::elementSet(uint32_t index, Local<Value> value, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber() && index >=0 && index <= 2){
@@ -481,7 +481,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::compare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -498,7 +498,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::acompare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -515,7 +515,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}	
 
 	Handle<Value> V8Vector3::negate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -536,7 +536,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::add(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -558,7 +558,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::subtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -580,7 +580,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::multiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -601,7 +601,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::divide(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -623,7 +623,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 
 	Handle<Value> V8Vector3::assignmentAdd(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -641,7 +641,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::assignmentSubtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -659,7 +659,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::assignmentMultiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -676,7 +676,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::assignmentDivide(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -693,7 +693,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::length(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -709,7 +709,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::squaredLength(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -725,7 +725,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::distance(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0]))
@@ -743,7 +743,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::squaredDistance(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0]))
@@ -762,7 +762,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 
 	Handle<Value> V8Vector3::dotProduct(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -779,7 +779,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::absDotProduct(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -796,7 +796,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::crossProduct(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -818,7 +818,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::normalize(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -835,7 +835,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::midPoint(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -858,7 +858,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	
 
 	Handle<Value> V8Vector3::lessThan(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -875,7 +875,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::greaterThan(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -892,7 +892,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 	
 	Handle<Value> V8Vector3::makeFloor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -911,7 +911,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::makeCeil(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -930,7 +930,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::perpendicular(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -951,7 +951,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::randomDeviant(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -985,7 +985,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::angleBetween(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0]))  
@@ -1005,7 +1005,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::getRotationTo(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0]))  
@@ -1040,7 +1040,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::isZeroLength(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0)  
@@ -1054,7 +1054,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::getNormalized(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0)  
@@ -1073,7 +1073,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::reflect(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0]))  
@@ -1093,7 +1093,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::positionEquals(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0]))  
@@ -1116,7 +1116,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::positionCloses(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0]))  
@@ -1139,7 +1139,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::directionEquals(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0]) &&
@@ -1156,7 +1156,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::isNaN(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0)  
@@ -1170,7 +1170,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Vector3::primaryAxis(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0)  
@@ -1191,7 +1191,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 //Quaternion
 	Handle<Value>  V8Quaternion::QuaternionConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0){
@@ -1257,7 +1257,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::getX( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		Quaternion* thisQuat = unwrap<Quaternion>(info.Holder());
@@ -1271,7 +1271,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	void V8Quaternion::setX( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		Quaternion* thisQuat = unwrap<Quaternion>(info.Holder());
@@ -1282,7 +1282,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::getY( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		Quaternion* thisQuat = unwrap<Quaternion>(info.Holder());
@@ -1296,7 +1296,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	void V8Quaternion::setY( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		Quaternion* thisQuat = unwrap<Quaternion>(info.Holder());
@@ -1307,7 +1307,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::getZ( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		Quaternion* thisQuat = unwrap<Quaternion>(info.Holder());
@@ -1321,7 +1321,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	void V8Quaternion::setZ( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		Quaternion* thisQuat = unwrap<Quaternion>(info.Holder());
@@ -1332,7 +1332,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::getW( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		Quaternion* thisQuat = unwrap<Quaternion>(info.Holder());
@@ -1346,7 +1346,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	void V8Quaternion::setW( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		Quaternion* thisQuat = unwrap<Quaternion>(info.Holder());
@@ -1357,7 +1357,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::elementGet(uint32_t index, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(true){
@@ -1372,7 +1372,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::elementSet(uint32_t index, Local<Value> value, const AccessorInfo& info){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -1388,7 +1388,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::FromRotationMatrix(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Matrix3::getTemplate()->HasInstance(args[0])) 
@@ -1407,7 +1407,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::ToRotationMatrix(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Matrix3::getTemplate()->HasInstance(args[0])) 
@@ -1426,7 +1426,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::FromAngleAxis(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0]) && 
@@ -1446,7 +1446,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::ToAngleAxis(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0]) && 
@@ -1466,7 +1466,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::FromAxes(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 3 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0]) && 
@@ -1487,7 +1487,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::ToAxes(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 3 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0]) && 
@@ -1508,7 +1508,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::xAxis(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -1530,7 +1530,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::yAxis(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -1553,7 +1553,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 
 	Handle<Value> V8Quaternion::zAxis(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -1575,7 +1575,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::add(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Quaternion::getTemplate()->HasInstance(args[0])) 
@@ -1598,7 +1598,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::subtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Quaternion::getTemplate()->HasInstance(args[0])) 
@@ -1621,7 +1621,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::multiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty())
@@ -1658,7 +1658,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::negate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -1680,7 +1680,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::compare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Quaternion::getTemplate()->HasInstance(args[0])) 
@@ -1696,7 +1696,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::acompare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Quaternion::getTemplate()->HasInstance(args[0])) 
@@ -1712,7 +1712,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 	
 	Handle<Value> V8Quaternion::Dot(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Quaternion::getTemplate()->HasInstance(args[0])) 
@@ -1729,7 +1729,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::Norm(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -1744,7 +1744,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::normalize(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -1759,7 +1759,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::Inverse(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -1780,7 +1780,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::UnitInverse(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -1801,7 +1801,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}	
 
 	Handle<Value> V8Quaternion::Exp(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -1822,7 +1822,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::Log(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -1843,7 +1843,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::rotate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -1867,7 +1867,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 
 	Handle<Value> V8Quaternion::getRoll(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -1897,7 +1897,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::getPitch(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -1927,7 +1927,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::getYaw(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -1958,7 +1958,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 	
 	Handle<Value> V8Quaternion::equals(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsObject() && V8Quaternion::getTemplate()->HasInstance(args[0]) && 
@@ -1973,7 +1973,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::Slerp(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 3 && !args[0].IsEmpty() && args[0]->IsNumber() && 
@@ -2008,7 +2008,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::SlerpExtraSpins(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 4 && !args[0].IsEmpty() && args[0]->IsNumber() && 
@@ -2030,7 +2030,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::Intermediate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		//TODO: finish this
@@ -2039,7 +2039,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::Squad(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		//TODO: finish this
@@ -2049,7 +2049,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 
 	Handle<Value> V8Quaternion::nlerp(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 3 && !args[0].IsEmpty() && args[0]->IsNumber() && 
@@ -2084,7 +2084,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::isNaN(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2098,7 +2098,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Quaternion::createIdentity(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2120,7 +2120,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 //Radian
 	Handle<Value>  V8Radian::RadianConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0){
@@ -2157,7 +2157,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::set(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -2193,7 +2193,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::valueDegrees(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2208,7 +2208,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::valueRadians(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2223,7 +2223,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::valueAngleUnits(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2238,7 +2238,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::negate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2247,11 +2247,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Radian* newRad = new Radian(-*thisRad);
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Radian::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 
@@ -2259,7 +2259,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::add(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -2269,11 +2269,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Radian* newRad = new Radian(*thisRad + *otherRad);
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Radian::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 		else if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Degree::getTemplate()->HasInstance(args[0])) 
@@ -2283,11 +2283,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Radian* newRad = new Radian(*thisRad + *otherRad);
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Radian::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 
@@ -2295,7 +2295,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::subtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -2305,11 +2305,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Radian* newRad = new Radian(*thisRad - *otherRad);
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Radian::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 		else if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Degree::getTemplate()->HasInstance(args[0])) 
@@ -2319,11 +2319,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Radian* newRad = new Radian(*thisRad - *otherRad);
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Radian::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 
@@ -2331,7 +2331,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::multiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -2341,11 +2341,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Radian* newRad = new Radian(*thisRad * *otherRad);
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Radian::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 		else if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -2354,11 +2354,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Radian* newRad = new Radian(*thisRad * args[0]->NumberValue());
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Radian::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 
@@ -2366,7 +2366,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::divide(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -2375,11 +2375,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Radian* newRad = new Radian(*thisRad / args[0]->NumberValue());
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Radian::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 
@@ -2389,7 +2389,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 
 	Handle<Value> V8Radian::assignmentAdd(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -2417,7 +2417,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::assignmentSubtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -2445,7 +2445,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::assignmentMultiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -2462,7 +2462,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::assignmentDivide(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -2479,7 +2479,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::compare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -2495,7 +2495,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::acompare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -2511,7 +2511,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::lessThan(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -2527,7 +2527,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::lessThanEq(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -2543,7 +2543,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::greaterThan(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -2559,7 +2559,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Radian::greaterThanEq(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -2576,7 +2576,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 //Degree
 	Handle<Value>  V8Degree::DegreeConstructor(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0){
@@ -2613,7 +2613,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::set(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Degree::getTemplate()->HasInstance(args[0])) 
@@ -2649,7 +2649,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::valueRadians(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2664,7 +2664,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::valueDegrees(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2679,7 +2679,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::valueAngleUnits(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2694,7 +2694,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::negate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -2703,11 +2703,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Degree* newRad = new Degree(-*thisRad);
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Degree::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 
@@ -2715,7 +2715,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::add(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Degree::getTemplate()->HasInstance(args[0])) 
@@ -2725,11 +2725,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Degree* newRad = new Degree(*thisRad + *otherRad);
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Degree::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 		else if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -2739,11 +2739,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Degree* newRad = new Degree(*thisRad + *otherRad);
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Degree::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 
@@ -2751,7 +2751,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::subtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Degree::getTemplate()->HasInstance(args[0])) 
@@ -2761,11 +2761,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Degree* newRad = new Degree(*thisRad - *otherRad);
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Degree::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 		else if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -2775,11 +2775,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Degree* newRad = new Degree(*thisRad - *otherRad);
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Degree::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 
@@ -2787,7 +2787,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::multiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Degree::getTemplate()->HasInstance(args[0])) 
@@ -2797,11 +2797,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Degree* newRad = new Degree(*thisRad * *otherRad);
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Degree::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 		else if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -2810,11 +2810,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Degree* newRad = new Degree(*thisRad * args[0]->NumberValue());
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Degree::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 
@@ -2822,7 +2822,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::divide(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -2831,11 +2831,11 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 			Degree* newRad = new Degree(*thisRad / args[0]->NumberValue());
 
-			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Quaternion::getTemplate()->InstanceTemplate()->NewInstance());			
+			Persistent<Object> newPxQuat = Persistent<Object>::New(Isolate::GetCurrent(),V8Degree::getTemplate()->InstanceTemplate()->NewInstance());			
 			newPxQuat.MakeWeak(Isolate::GetCurrent(),newRad, &CleanupDelete);
 			newPxQuat->SetInternalField(0, External::New( newRad ));
 			
-			return scope.Close(args.Holder());
+			return scope.Close(newPxQuat);
 
 		}
 
@@ -2843,9 +2843,8 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 
-
 	Handle<Value> V8Degree::assignmentAdd(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Degree::getTemplate()->HasInstance(args[0])) 
@@ -2873,7 +2872,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::assignmentSubtract(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Degree::getTemplate()->HasInstance(args[0])) 
@@ -2901,7 +2900,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::assignmentMultiply(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -2918,7 +2917,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::assignmentDivide(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -2935,7 +2934,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::compare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Degree::getTemplate()->HasInstance(args[0])) 
@@ -2951,7 +2950,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::acompare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Degree::getTemplate()->HasInstance(args[0])) 
@@ -2967,7 +2966,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::lessThan(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Degree::getTemplate()->HasInstance(args[0])) 
@@ -2983,7 +2982,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::lessThanEq(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Degree::getTemplate()->HasInstance(args[0])) 
@@ -2999,7 +2998,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::greaterThan(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Degree::getTemplate()->HasInstance(args[0])) 
@@ -3015,7 +3014,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Degree::greaterThanEq(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Degree::getTemplate()->HasInstance(args[0])) 
@@ -3032,7 +3031,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 //Node
 	Handle<Value> V8Node::getName(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3047,7 +3046,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::getParent(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3067,7 +3066,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::getOrientation(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3087,7 +3086,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::setOrientation(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Quaternion::getTemplate()->HasInstance(args[0])) 
@@ -3114,7 +3113,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::resetOrientation(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3130,7 +3129,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::setPosition(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -3157,7 +3156,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	
 	
 	Handle<Value> V8Node::getPosition(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3177,7 +3176,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::setScale(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -3203,7 +3202,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::getScale(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3223,7 +3222,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::setInheritOrientation(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsBoolean()) 
@@ -3239,7 +3238,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::getInheritOrientation(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3254,7 +3253,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::setInheritScale(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsBoolean()) 
@@ -3270,7 +3269,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::getInheritScale(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3285,7 +3284,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::scale(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -3311,7 +3310,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::translate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -3358,7 +3357,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::roll(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -3383,7 +3382,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::pitch(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -3408,7 +3407,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::yaw(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Radian::getTemplate()->HasInstance(args[0])) 
@@ -3433,7 +3432,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::rotate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0]) &&
@@ -3477,7 +3476,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::createChild(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3556,7 +3555,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::addChild(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Node::getTemplate()->HasInstance(args[0])) 
@@ -3572,7 +3571,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::numChildren(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Node::getTemplate()->HasInstance(args[0])) 
@@ -3586,7 +3585,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::getChild(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()) 
@@ -3617,7 +3616,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::removeChild(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()) 
@@ -3659,7 +3658,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::removeAllChildren(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3675,7 +3674,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::_getDerivedOrientation(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3695,7 +3694,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 	
 	Handle<Value> V8Node::_getDerivedPosition(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3715,7 +3714,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::_setDerivedOrientation(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Quaternion::getTemplate()->HasInstance(args[0])) 
@@ -3731,7 +3730,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::_setDerivedPosition(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -3747,7 +3746,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::_getDerivedScale(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3767,7 +3766,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::_update(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsBoolean() &&
@@ -3784,7 +3783,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::setInitialState(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3800,7 +3799,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::resetToInitialState(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3816,7 +3815,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::getInitialOrientation(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3836,7 +3835,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 	
 	Handle<Value> V8Node::getInitialPosition(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3856,7 +3855,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::getInitialScale(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3876,7 +3875,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::convertWorldToLocalPosition(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -3896,7 +3895,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::convertLocalToWorldPosition(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Vector3::getTemplate()->HasInstance(args[0])) 
@@ -3916,7 +3915,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::convertWorldToLocalOrientation(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Quaternion::getTemplate()->HasInstance(args[0])) 
@@ -3936,7 +3935,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::convertLocalToWorldOrientation(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Quaternion::getTemplate()->HasInstance(args[0])) 
@@ -3956,7 +3955,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::needUpdate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -3980,7 +3979,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::requestUpdate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Node::getTemplate()->HasInstance(args[0])) 
@@ -4005,7 +4004,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::cancelUpdate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Node::getTemplate()->HasInstance(args[0])) 
@@ -4021,7 +4020,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::queueNeedUpdate(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8Node::getTemplate()->HasInstance(args[0])) 
@@ -4037,7 +4036,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8Node::processQueuedUpdates(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4054,7 +4053,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 //AnimationStateSet
 	Handle<Value> V8AnimationStateSet::createAnimationState(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 3 && !args[0].IsEmpty() && args[0]->IsString() &&
@@ -4106,7 +4105,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationStateSet::getAnimationState(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsString())
@@ -4126,7 +4125,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationStateSet::hasAnimationState(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsString())
@@ -4141,7 +4140,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationStateSet::removeAnimationState(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsString())
@@ -4157,7 +4156,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationStateSet::removeAllAnimationStates(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0)
@@ -4173,7 +4172,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationStateSet::copyMatchingState(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8AnimationStateSet::getTemplate()->HasInstance(args[0]))
@@ -4189,7 +4188,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationStateSet::_notifyDirty(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0)
@@ -4205,7 +4204,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationStateSet::getDirtyFrameNumber(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0)
@@ -4221,7 +4220,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationStateSet::_notifyAnimationStateEnabled(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsObject() && V8AnimationState::getTemplate()->HasInstance(args[0]) &&
@@ -4238,7 +4237,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationStateSet::hasEnabledAnimationState(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0)
@@ -4255,7 +4254,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 
 //AnimationState
 	Handle<Value> V8AnimationState::getAnimationName(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4270,7 +4269,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::getTimePosition(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4285,7 +4284,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::setTimePosition(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -4302,7 +4301,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::getLength(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4317,7 +4316,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::setLength(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -4334,7 +4333,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::getWeight(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4349,7 +4348,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::setWeight(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -4366,7 +4365,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::addTime(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsNumber()) 
@@ -4383,7 +4382,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::hasEnded(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4398,7 +4397,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::getEnabled(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4413,7 +4412,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::setEnabled(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsBoolean()) 
@@ -4430,7 +4429,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::compare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8AnimationState::getTemplate()->HasInstance(args[0])) 
@@ -4445,7 +4444,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::acompare(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8AnimationState::getTemplate()->HasInstance(args[0])) 
@@ -4460,7 +4459,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::getLoop(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4475,7 +4474,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::setLoop(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsBoolean()) 
@@ -4492,7 +4491,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::copyStateFrom(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsObject() && V8AnimationState::getTemplate()->HasInstance(args[0])) 
@@ -4508,7 +4507,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::getParent(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4529,7 +4528,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::createBlendMask(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()) 
@@ -4554,7 +4553,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::destroyBlendMask(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4571,7 +4570,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::_setBlendMaskData(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		//TODO: Finish this
@@ -4580,7 +4579,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::hasBlendMask(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 0) 
@@ -4594,7 +4593,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::setBlendMaskEntry(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsUint32() &&
@@ -4611,7 +4610,7 @@ Local<FunctionTemplate> V8OGRE::NewFunctionTemplate(InvocationCallback callback,
 	}
 
 	Handle<Value> V8AnimationState::getBlendMaskEntry(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()) 

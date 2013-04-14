@@ -126,7 +126,7 @@ public:
 
 template<class T>
 Handle<Value> createArray<T>::makeArray(const Arguments& args){
-	//Locker lock;
+	//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsUint32()) {
@@ -144,7 +144,7 @@ Handle<Value> createArray<T>::makeArray(const Arguments& args){
 
 template<class T, class templ>
 static Handle<Value> autoWrap(const Arguments& args){
-	//Locker lock;
+	//Locker lock(Isolate::GetCurrent());
 	HandleScope scope(Isolate::GetCurrent());
 
 	if(args.Length() == 0) 

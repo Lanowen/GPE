@@ -73,12 +73,10 @@ protected:
 	virtual void onControllerHit(const physx::PxControllersHit& hit);
 	virtual void onObstacleHit(const physx::PxControllerObstacleHit& hit);
 	static void addForceAtLocalPos(physx::PxRigidBody& body, const physx::PxVec3& force, const physx::PxVec3& pos, physx::PxForceMode::Enum mode, bool wakeup=true);
-	static inline void PlayerCharacter::addForceAtPosInternal(physx::PxRigidBody& body, const physx::PxVec3& force, const physx::PxVec3& pos, physx::PxForceMode::Enum mode, bool wakeup);
+	static inline void addForceAtPosInternal(physx::PxRigidBody& body, const physx::PxVec3& force, const physx::PxVec3& pos, physx::PxForceMode::Enum mode, bool wakeup);
 
-	void advancePhysics(Real deltaTime);
-	void updateAnimation(Real deltaTime);
-
-	static Handle<Value> get(const Arguments& args);
+	void AdvancePhysics(Real deltaTime);
+	void UpdateAnimation(Real deltaTime);
 
 public:
     int m_pJoyDeadZone;

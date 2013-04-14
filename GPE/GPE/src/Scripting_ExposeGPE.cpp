@@ -73,8 +73,15 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 
 				V8Enemy::getTemplate()->Inherit(V8GameObject::getTemplate());
 
-				objTemp = V8Enemy::getTemplate()->PrototypeTemplate();
-				V8Enemy::getTemplate()->InstanceTemplate()->SetInternalFieldCount(1);
+				objTemp = V8Enemy::getTemplate()->InstanceTemplate();
+				objTemp->SetInternalFieldCount(1);
+
+				objTemp->SetAccessor(v8::String::New("entity"), V8Enemy::getEntity);
+				objTemp->SetAccessor(v8::String::New("animationStateSet"), V8Enemy::getAniStates);
+				objTemp->SetAccessor(v8::String::New("node"), V8Enemy::getSceneNode);
+				objTemp->SetAccessor(v8::String::New("childNode"), V8Enemy::getChildNode);
+				objTemp->SetAccessor(v8::String::New("CCT"), V8Enemy::getCCT);
+				objTemp->SetAccessor(v8::String::New("physScene"), V8Enemy::getPhysScene);
 
 			//GPEGameState
 				V8GameState::getTemplate() = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New());
@@ -109,7 +116,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 //GameObject
 
 	Handle<Value> V8GameObject::loadScript(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsString()) 
@@ -125,7 +132,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8GameObject::dispatchEvent(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsString()) 
@@ -159,7 +166,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8GameObject::release(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsString()) 
@@ -177,7 +184,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 //PlayerCharacter
 	//physx::PxRigidBody& body, const physx::PxVec3& force, const physx::PxVec3& pos, physx::PxForceMode::Enum mode, bool wakeup=true);
 	Handle<Value> V8PlayerCharacter::addForceAtLocalPos(const Arguments& args){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length() == 4 && !args[0].IsEmpty() && args[0]->IsObject() && V8PxRigidBody::getTemplate()->HasInstance(args[0]) &&
@@ -208,7 +215,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getEntity( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -217,7 +224,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getGunTip( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -227,7 +234,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getAniStates( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -236,7 +243,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getSceneNode( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -246,7 +253,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getChildNode( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -256,7 +263,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getCCT( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -265,7 +272,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	//Handle<Value> V8PlayerCharacter::getPhys( Local<v8::String> property , const AccessorInfo& info ){
-	//	//Locker lock;
+	//	//Locker lock(Isolate::GetCurrent());
 	//	HandleScope scope(Isolate::GetCurrent());
 
 	//	PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -274,7 +281,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	//}
 
 	Handle<Value> V8PlayerCharacter::getPhysScene( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -283,7 +290,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getDirection( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -292,7 +299,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	void V8PlayerCharacter::setDirection( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsUint32()){
@@ -303,7 +310,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getGunDirection( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -312,7 +319,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	void V8PlayerCharacter::setGunDirection( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsUint32()){
@@ -323,7 +330,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getTimeSinceLastShot( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -332,7 +339,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	void V8PlayerCharacter::setTimeSinceLastShot( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsNumber()){
@@ -343,7 +350,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getGrounded( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -352,7 +359,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	void V8PlayerCharacter::setGrounded( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsBoolean()){
@@ -363,7 +370,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getIsTurning( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -372,7 +379,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	void V8PlayerCharacter::setIsTurning( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsBoolean()){
@@ -383,7 +390,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getShiftPressed( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -392,7 +399,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	void V8PlayerCharacter::setShiftPressed( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsBoolean()){
@@ -403,7 +410,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getFlipping( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -412,7 +419,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	void V8PlayerCharacter::setFlipping( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsBoolean()){
@@ -423,7 +430,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getYaw_Target( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -432,7 +439,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	void V8PlayerCharacter::setYaw_Target( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8Radian::getTemplate()->HasInstance(value) ){
@@ -443,7 +450,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getInputVel( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -452,7 +459,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	void V8PlayerCharacter::setInputVel( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8Radian::getTemplate()->HasInstance(value) ){
@@ -463,7 +470,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	Handle<Value> V8PlayerCharacter::getVelocity( Local<v8::String> property , const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		PlayerCharacter* thisObj = unwrap<PlayerCharacter>(info.Holder());
@@ -472,7 +479,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 	void V8PlayerCharacter::setVelocity( Local<v8::String> property, Local<Value> value, const AccessorInfo& info ){
-		//Locker lock;
+		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
 		if(!value.IsEmpty() && value->IsObject() && V8Radian::getTemplate()->HasInstance(value) ){
@@ -480,4 +487,61 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 
 			thisObj->mVelocity = *unwrap<PxVec3>(value->ToObject());
 		}
+	}
+
+//Enemy
+	Handle<Value> V8Enemy::getEntity( Local<v8::String> property , const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		Enemy* thisObj = unwrap<Enemy>(info.Holder());
+
+		return scope.Close( wrapByVal<Entity, V8Entity>(*thisObj->ent));
+	}
+
+	Handle<Value> V8Enemy::getAniStates( Local<v8::String> property , const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		Enemy* thisObj = unwrap<Enemy>(info.Holder());
+
+		return scope.Close( wrapByVal<AnimationStateSet, V8AnimationStateSet>(*thisObj->m_aniStates));
+	}
+
+	Handle<Value> V8Enemy::getSceneNode( Local<v8::String> property , const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		Enemy* thisObj = unwrap<Enemy>(info.Holder());
+
+		//TODO: Chande this to SceneNode
+		return scope.Close( wrapByVal<Node, V8Node>(*thisObj->node));
+	}
+
+	Handle<Value> V8Enemy::getChildNode( Local<v8::String> property , const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		Enemy* thisObj = unwrap<Enemy>(info.Holder());
+
+		//TODO: Chande this to SceneNode
+		return scope.Close( wrapByVal<Node, V8Node>(*thisObj->childNode));
+	}
+
+	Handle<Value> V8Enemy::getCCT( Local<v8::String> property , const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		Enemy* thisObj = unwrap<Enemy>(info.Holder());
+
+		return scope.Close( wrapByVal<PxController, V8PxController>(*thisObj->mCCT));
+	}
+
+	Handle<Value> V8Enemy::getPhysScene( Local<v8::String> property , const AccessorInfo& info ){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		Enemy* thisObj = unwrap<Enemy>(info.Holder());
+
+		return scope.Close( wrapByVal<PxScene, V8PxScene>(*thisObj->mPhysScene));
 	}

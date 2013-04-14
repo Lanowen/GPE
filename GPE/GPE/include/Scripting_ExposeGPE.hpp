@@ -53,7 +53,16 @@ public:
 
 class V8Enemy : public BaseV8TemplateObject<V8Enemy>{
 public:
-	//Functions
+	//Accessors
+	static Handle<Value> getEntity( Local<v8::String> property, const AccessorInfo& info );
+	static Handle<Value> getAniStates( Local<v8::String> property, const AccessorInfo& info );
+	static Handle<Value> getSceneNode( Local<v8::String> property, const AccessorInfo& info );
+	static Handle<Value> getChildNode( Local<v8::String> property, const AccessorInfo& info );
+	static Handle<Value> getCCT( Local<v8::String> property, const AccessorInfo& info );
+	static Handle<Value> getPhysScene( Local<v8::String> property, const AccessorInfo& info );
+
+	//static Handle<Value> getDirection( Local<v8::String> property, const AccessorInfo& info );
+	//static void setDirection( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
 };
 
 class V8GameState : public BaseV8TemplateObject<V8GameState>{

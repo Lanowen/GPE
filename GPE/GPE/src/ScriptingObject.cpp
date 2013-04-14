@@ -7,7 +7,7 @@
 //#include <OgreResourceManager.h>
 
 ScriptingObject::ScriptingObject() {
-	//Locker locker;
+	//Locker lock(Isolate::GetCurrent());
 	HandleScope handleScope;
 
 	Context::Scope thisScope(V8Scripting::getSingletonPtr()->globalContext);
@@ -18,7 +18,7 @@ ScriptingObject::ScriptingObject() {
 }
 
 ScriptingObject::ScriptingObject(Persistent<FunctionTemplate>& internalTempl) {
-	//Locker locker;
+	//Locker lock(Isolate::GetCurrent());
 	HandleScope handleScope;
 
 	Context::Scope thisScope(V8Scripting::getSingletonPtr()->globalContext);

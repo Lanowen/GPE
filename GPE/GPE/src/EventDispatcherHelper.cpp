@@ -26,7 +26,8 @@ void EventDispatcherHelper::runThroughList(std::string eventName, std::list<v8::
 			V8Scripting::reportException(&trycatch);
 		}
 
-		if(*tempNext == inList.end()){
+		//This might not be working properly...
+		if(tempNext == 0 ||*tempNext == inList.end()){
 			break;
 		}
 	}
@@ -52,7 +53,9 @@ void EventDispatcherHelper::runThroughList(std::string eventName, std::list<v8::
 			V8Scripting::reportException(&trycatch);
 		}
 
-		if(*tempNext == inList.end()){
+
+		//This might not be working properly...
+		if(tempNext == 0 || *tempNext == inList.end()){
 			break;
 		}
 	}

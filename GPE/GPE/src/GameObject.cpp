@@ -106,11 +106,13 @@ bool GameObject::loadScript(std::string inScript){
 	Handle<Script> script = V8Scripting::getSingletonPtr()->scriptMgr->getCompiledScript(inScript);
 
 	if(!script.IsEmpty()){
+		
+
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope handleScope;
+
 		ScriptingObject* newScript = new ScriptingObject(fcnTemplate);
 		attachedScripts.push_back(newScript);
-
-		//Locker locker;
-		HandleScope handleScope;
 
 		v8::Local<v8::Object> global = newScript->context->Global();
 

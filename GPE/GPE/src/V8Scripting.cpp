@@ -8,7 +8,6 @@
 template<> V8Scripting* Ogre::Singleton<V8Scripting>::msSingleton = 0;
 
 V8Scripting::V8Scripting() {
-	//Locker locker;
 	HandleScope handleScope(Isolate::GetCurrent());
 
 	globalFunctionTemp = Persistent<FunctionTemplate>::New(Isolate::GetCurrent(),FunctionTemplate::New());
@@ -20,7 +19,7 @@ V8Scripting::V8Scripting() {
 	globalContext = Context::New(NULL, globalObjectTemp);
 
 	globalContext->Enter();
-
+	//Locker lock(Isolate::GetCurrent());
 	scriptMgr = new ScriptingManager();
 }
 
@@ -33,7 +32,7 @@ V8Scripting::~V8Scripting(){
 }
 
 void V8Scripting::exposeBaseFunctions(){
-	//Locker locker;
+	//Locker lock(Isolate::GetCurrent());
 	HandleScope handleScope(Isolate::GetCurrent());
 
 	//Hacky as shit, FU JS
@@ -55,7 +54,7 @@ void V8Scripting::exposeBaseFunctions(){
 
 Handle<Value> V8Scripting::printMessage(const Arguments& args) 
     {
-        //Locker locker;
+        //Locker lock(Isolate::GetCurrent());
         HandleScope scope(Isolate::GetCurrent());
 
 		if(args.Length()){
@@ -84,6 +83,7 @@ Handle<Value> V8Scripting::printMessage(const Arguments& args)
     }
 
 void V8Scripting::reportException(TryCatch* try_catch) {
+	//Locker lock(Isolate::GetCurrent());
   v8::HandleScope handle_scope(Isolate::GetCurrent());
   v8::String::Utf8Value exception(try_catch->Exception());
   const char* exception_string = *exception;

@@ -2,11 +2,15 @@
 
 #include <Util.hpp>
 
+#include <Scripting_Helpers.hpp>
+#include <Scripting_ExposePx.hpp>
+#include <Scripting_ExposeGPE.hpp>
+
 #define MOVESPEED 2
 #define HALFEXTENT 0.4
 
 
-Enemy::Enemy(GameState* owner) : GameObject(owner)
+Enemy::Enemy(GameState* owner, std::string mesh) : GameObject(owner)
 {
 	float scale = 0.5;
 
@@ -48,30 +52,36 @@ Enemy::Enemy(GameState* owner) : GameObject(owner)
 	delete[] shapes;
 
     SceneManager* gameSceneMgr = Root::getSingletonPtr()->getSceneManager("GameSceneMgr");
-	ent = gameSceneMgr->createEntity("EnemyBro", "SimpleBox.mesh" );
+	ent = gameSceneMgr->createEntity("EnemyBro", mesh );
 
 	node = gameSceneMgr->getRootSceneNode()->createChildSceneNode();
 	node->setPosition(Vector3(mCCT->getPosition().x, mCCT->getPosition().y, mCCT->getPosition().z));
-	node->attachObject(ent);
+	//node->attachObject(ent);
 	node->setScale(0.8, 0.8, 0.8);
 
-	moveDir = PxVec3(1,0,0);
-	castDir = PxVec3(0,-1,0);
+	childNode = node->createChildSceneNode();
+	childNode->setPosition(Vector3::ZERO);
+	childNode->attachObject(ent);
+
+	displacement = PxVec3(0,0,0);
+
+	//moveDir = PxVec3(1,0,0);
+	//castDir = PxVec3(0,-1,0);
 
 	mPhysScene = owner->getMainPhysicsScene();
 
-	//nodeOffset = node->createChildSceneNode();
-
-	//nodeOffset->attachObject(ent);
-	//nodeOffset->setScale(scale, scale, scale);
-	//nodeOffset->setPosition(0, -cDesc.halfHeight, 0);
-
     m_aniStates = ent->getAllAnimationStates();
 
-	rotLeft = PxQuat((PxReal)Math::HALF_PI, PxVec3(0,0,1));
-	rotRight = PxQuat((PxReal)-Math::HALF_PI, PxVec3(0,0,1));
+	//rotLeft = PxQuat((PxReal)Math::HALF_PI, PxVec3(0,0,1));
+	//rotRight = PxQuat((PxReal)-Math::HALF_PI, PxVec3(0,0,1));
 
-	//loadScript("Enemy.js");
+	HandleScope scope(Isolate::GetCurrent());
+
+	//exposeObject("test", wrap<PxSceneQueryHit, V8PxSceneQueryHit>(PxSceneQueryHit()));
+
+	exposeObject("Enemy", wrapPtr<Enemy, V8Enemy>(this));
+
+	loadScript("Enemy.js");
 }
 
 Enemy::~Enemy()
@@ -85,11 +95,11 @@ void Enemy::release(){
 
 void Enemy::Update(Real deltaTime){
 	//runScripts();
-	advancePhysics(deltaTime);
-	updateAnimation(deltaTime);
+	AdvancePhysics(deltaTime);
+	UpdateAnimation(deltaTime);
 }
 
-void Enemy::updateAnimation(Real deltaTime){
+void Enemy::UpdateAnimation(Real deltaTime){
     if(m_aniStates && m_aniStates->hasEnabledAnimationState()){
         ConstEnabledAnimationStateIterator itrAnim = m_aniStates->getEnabledAnimationStateIterator();
 
@@ -98,43 +108,67 @@ void Enemy::updateAnimation(Real deltaTime){
         }
     }
 }
-void Enemy::advancePhysics(Real deltaTime){ 
-	PxVec3 disp = PxVec3(0);
-	//disp += castDir * 9.81;
+void Enemy::AdvancePhysics(Real deltaTime){ 
+	HandleScope handleScope(Isolate::GetCurrent());
+	Handle<Value> args[1];
+	args[0] = Number::New(deltaTime);
+	dispatchEvent("AdvancePhysics", 1, args);
 
-	Vector3 pos = Util::vec_from_to<PxExtendedVec3, Vector3>(mCCT->getPosition());
+	//mCCT->move(displacement*deltaTime,0,deltaTime,PxSceneQueryHitType::eBLOCK,0);
 
-	PxSceneQueryHit hit1, hit2;
-	if(!mPhysScene->raycastAny(toVec3(mCCT->getPosition()) - moveDir*HALFEXTENT, castDir, 1+HALFEXTENT, hit1, PxSceneQueryFilterData(PxSceneQueryFilterFlag::eSTATIC)) && !mPhysScene->raycastAny(toVec3(mCCT->getPosition()) + moveDir*HALFEXTENT, castDir, 1+HALFEXTENT, hit2, PxSceneQueryFilterData(PxSceneQueryFilterFlag::eSTATIC))){
-		//Util::dout << "Lol, off edge" << std::endl;
-		mCCT->move(moveDir*0.1f,0,deltaTime,PxSceneQueryHitType::eBLOCK,0);
-		disp += castDir * 9.81;
-		moveDir = rotRight.rotate(moveDir);
-		castDir = rotRight.rotate(castDir);
-		//Util::dout << castDir.x << " " << castDir.y << " " << castDir.z << std::endl;
-	}
-
-	disp += moveDir*MOVESPEED;
-
-	mCCT->move(disp*deltaTime,0,deltaTime,PxSceneQueryHitType::eBLOCK,0);
-
-	pos = Util::vec_from_to<PxExtendedVec3, Vector3>(mCCT->getPosition());
-	node->setPosition(pos);	
+	//node->setPosition(Util::vec_from_to<PxExtendedVec3, Vector3>(mCCT->getPosition()));	
 }
 
-void Enemy::onShapeHit(const physx::PxControllerShapeHit & hit){
-	
-	if(hit.dir.dot(moveDir) > .95){
-		//Util::dout << "Hitdir: " << hit.dir.x << " " << hit.dir.y << " " << hit.dir.z << std::endl;
-		moveDir = rotLeft.rotate(moveDir);
-		castDir = rotLeft.rotate(castDir);
-	}
+//void Enemy::onShapeHit(const physx::PxControllerShapeHit & hit){
+//	
+//	if(hit.dir.dot(moveDir) > .95){
+//		//Util::dout << "Hitdir: " << hit.dir.x << " " << hit.dir.y << " " << hit.dir.z << std::endl;
+//		moveDir = rotLeft.rotate(moveDir);
+//		castDir = rotLeft.rotate(castDir);
+//	}
+//}
+
+
+void Enemy::onShapeHit(const PxControllerShapeHit & hit){
+	HandleScope handleScope(Isolate::GetCurrent());
+	Handle<Value> args[1];
+	args[0] = wrapByVal<PxControllerShapeHit, V8PxControllerShapeHit>(const_cast<PxControllerShapeHit&>(hit));
+	dispatchEvent("onShapeHit", 1, args);
 }
 
-void Enemy::onControllerHit(const physx::PxControllersHit& hit){
-	Util::dout << "Enemy controller hit something" << std::endl;
+void Enemy::onControllerHit(const PxControllersHit& hit){
+	HandleScope handleScope(Isolate::GetCurrent());
+	Handle<Value> args[1];
+	args[0] = wrapByVal<PxControllersHit, V8PxControllersHit>(const_cast<PxControllersHit&>(hit));
+	dispatchEvent("onControllerHit", 1, args);
 }
 
-void Enemy::onObstacleHit(const physx::PxControllerObstacleHit& hit){
+void Enemy::onObstacleHit(const PxControllerObstacleHit& hit){
+	/*HandleScope handleScope(Isolate::GetCurrent());
+	Handle<Value> args[1];
+	args[0] = wrapByVal<PxControllerObstacleHit, V8PxControllerObstacleHit>(const_cast<PxControllerObstacleHit&>(hit));
+	dispatchEvent("onObstacleHit", 1, args);*/
+}
 
+void Enemy::addForceAtLocalPos(PxRigidBody& body, const PxVec3& force, const PxVec3& pos, PxForceMode::Enum mode, bool wakeup){
+	//transform pos to world space
+	const PxVec3 globalForcePos = body.getGlobalPose().transform(pos);
+
+	addForceAtPosInternal(body, force, globalForcePos, mode, wakeup);
+}
+
+inline void Enemy::addForceAtPosInternal(PxRigidBody& body, const PxVec3& force, const PxVec3& pos, PxForceMode::Enum mode, bool wakeup){
+/*	if(mode == PxForceMode::eACCELERATION || mode == PxForceMode::eVELOCITY_CHANGE)
+	{
+		Ps::getFoundation().error(PxErrorCode::eINVALID_PARAMETER, __FILE__, __LINE__, 
+			"PxRigidBodyExt::addForce methods do not support eACCELERATION or eVELOCITY_CHANGE modes");
+		return;
+	}*/
+
+	const PxTransform globalPose = body.getGlobalPose();
+	const PxVec3 centerOfMass = globalPose.transform(body.getCMassLocalPose().p);
+
+	const PxVec3 torque = (pos - centerOfMass).cross(force);
+	body.addForce(force, mode, wakeup);
+	body.addTorque(torque, mode, wakeup);
 }

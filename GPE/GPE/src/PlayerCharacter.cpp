@@ -119,6 +119,24 @@ PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_
 	//bo.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly);
 	//exposeObject("mGrounded", Number::New(23987234.234));
 
+	exposeObject("TURN_SPEED", Number::New(TURN_SPEED));
+	exposeObject("WALK_SPEED", Number::New(WALK_SPEED));
+	exposeObject("RUN_SPEED", Number::New(RUN_SPEED));
+	exposeObject("AIR_POWER", Number::New(AIR_POWER));
+	exposeObject("MAX_AIR_STANDING_SPEED", Number::New(MAX_AIR_STANDING_SPEED));
+	exposeObject("FLIP_SPEED", Number::New(FLIP_SPEED));
+	exposeObject("GRAVITY", Number::New(GRAVITY));
+	exposeObject("JUMP_VEL", Number::New(JUMP_VEL));
+	exposeObject("SHOOT_ANIMATION_LENGTH", Number::New(SHOOT_ANIMATION_LENGTH));
+
+	exposeObject("LEFT", Uint32::New(LEFT));
+	exposeObject("RIGHT", Uint32::New(RIGHT));
+	exposeObject("UPANGLED", Uint32::New(UPANGLED));
+	exposeObject("DOWNANGLED", Uint32::New(DOWNANGLED));
+	exposeObject("FORWARD", Uint32::New(FORWARD));
+	exposeObject("UP", Uint32::New(UP));
+	exposeObject("DOWN", Uint32::New(DOWN));
+
 	exposeObject("Player", wrapPtr<PlayerCharacter, V8PlayerCharacter>(this));
 	//exposeObject("testVect", wrap<PxVec3, V8PxVec3>(PxVec3(1,2,3)));
 	//exposeObject("testFunc", FunctionTemplate::New( InvocationCallback( PlayerCharacter::get ) ));
@@ -139,11 +157,11 @@ void PlayerCharacter::Update(Real deltaTime){
 	//runScripts();
 	timeSinceLastShot += deltaTime;
 	getInput(deltaTime);
-	advancePhysics(deltaTime);
-	updateAnimation(deltaTime);
+	AdvancePhysics(deltaTime);
+	UpdateAnimation(deltaTime);
 }
 
-void PlayerCharacter::advancePhysics(Real deltaTime){ 
+void PlayerCharacter::AdvancePhysics(Real deltaTime){ 
 	PxVec3 disp = PxVec3(0);
 
 	mVelocity.y += GRAVITY*deltaTime;
@@ -211,218 +229,24 @@ void PlayerCharacter::advancePhysics(Real deltaTime){
 }
 
 
-void PlayerCharacter::updateAnimation(Real deltaTime){
+void PlayerCharacter::UpdateAnimation(Real deltaTime){
+	HandleScope handleScope(Isolate::GetCurrent());
+	Handle<Value> args[1];
+	args[0] = Number::New(deltaTime);
+	dispatchEvent("UpdateAnimation", 1, args);
 
-	if(!mFlipping){
-		if(mGunDirection == UPANGLED){
-			m_aniStates->getAnimationState("Run_full_upper")->setEnabled(false);
-			m_aniStates->getAnimationState("Walk_full_upper")->setEnabled(false);
-			m_aniStates->getAnimationState("Run_step_upper")->setEnabled(false);
-			m_aniStates->getAnimationState("Walk_step_upper")->setEnabled(false);
-			m_aniStates->getAnimationState("Run_full_upper_shoot")->setEnabled(false);
-			m_aniStates->getAnimationState("Walk_full_upper_shoot")->setEnabled(false);
-			m_aniStates->getAnimationState("Run_step_upper_shoot")->setEnabled(false);
-			m_aniStates->getAnimationState("Walk_step_upper_shoot")->setEnabled(false);
-			m_aniStates->getAnimationState("Jump_up")->setEnabled(false);
-			m_aniStates->getAnimationState("Jump_peaking")->setEnabled(false);
-
-			m_aniStates->getAnimationState("Aim_up_angled")->setEnabled(true);
-			m_aniStates->getAnimationState("Aim_down_angled")->setEnabled(false);
-		}
-		else if(mGunDirection == DOWNANGLED){
-			m_aniStates->getAnimationState("Run_full_upper")->setEnabled(false);
-			m_aniStates->getAnimationState("Walk_full_upper")->setEnabled(false);
-			m_aniStates->getAnimationState("Run_step_upper")->setEnabled(false);
-			m_aniStates->getAnimationState("Walk_step_upper")->setEnabled(false);
-			m_aniStates->getAnimationState("Run_full_upper_shoot")->setEnabled(false);
-			m_aniStates->getAnimationState("Walk_full_upper_shoot")->setEnabled(false);
-			m_aniStates->getAnimationState("Run_step_upper_shoot")->setEnabled(false);
-			m_aniStates->getAnimationState("Walk_step_upper_shoot")->setEnabled(false);
-			m_aniStates->getAnimationState("Jump_up")->setEnabled(false);
-			m_aniStates->getAnimationState("Jump_peaking")->setEnabled(false);
-
-			m_aniStates->getAnimationState("Aim_up_angled")->setEnabled(false);
-			m_aniStates->getAnimationState("Aim_down_angled")->setEnabled(true);
-		}
-		else {
-			m_aniStates->getAnimationState("Aim_up_angled")->setEnabled(false);
-			m_aniStates->getAnimationState("Aim_down_angled")->setEnabled(false);
-		}
-	}
-
-
-	if(!mGrounded){
-		m_aniStates->getAnimationState("Run_full")->setEnabled(false);
-		m_aniStates->getAnimationState("Walk_full")->setEnabled(false);
-		m_aniStates->getAnimationState("Run_full_upper")->setEnabled(false);
-		m_aniStates->getAnimationState("Walk_full_upper")->setEnabled(false);
-
-		if(mFlipping){
-			m_aniStates->getAnimationState("Run_full_upper_shoot")->setEnabled(false);
-			m_aniStates->getAnimationState("Walk_full_upper_shoot")->setEnabled(false);
-			m_aniStates->getAnimationState("Run_step_upper_shoot")->setEnabled(false);
-			m_aniStates->getAnimationState("Walk_step_upper_shoot")->setEnabled(false);
-		}
-
-		if(!m_aniStates->getAnimationState("Flipping")->getEnabled()){
-			if(mVelocity.y < -1){
-				if(!m_aniStates->getAnimationState("Falling")->getEnabled()){
-					m_aniStates->getAnimationState("Falling")->setEnabled(true);
-					m_aniStates->getAnimationState("Falling")->setTimePosition(0);
-				}
-				m_aniStates->getAnimationState("Jump_peaking")->setEnabled(false);
-				m_aniStates->getAnimationState("Jump_up")->setEnabled(false);
-			}
-			else if(mVelocity.y < 6 && !m_aniStates->getAnimationState("Jump_peaking")->getEnabled() && !m_aniStates->getAnimationState("Falling")->getEnabled()){
-				m_aniStates->getAnimationState("Jump_peaking")->setTimePosition(0);
-				m_aniStates->getAnimationState("Jump_peaking")->setEnabled(true);
-				
-				m_aniStates->getAnimationState("Jump_up")->setEnabled(false);
-			}
-			//Util::dout << m_aniStates->getAnimationState("Jump_peaking")->getEnabled() << " " << m_aniStates->getAnimationState("Jump_peaking")->getTimePosition() << " " << m_aniStates->getAnimationState("Jump_peaking")->getLength() << std::endl;
-		}
-	}
-	else {
-		m_aniStates->getAnimationState("Flipping")->setEnabled(false);
-		m_aniStates->getAnimationState("Falling")->setEnabled(false);
-		if(mInputVel.isZero()){
-			m_aniStates->getAnimationState("Run_full")->setEnabled(false);
-			m_aniStates->getAnimationState("Walk_full")->setEnabled(false);
-			m_aniStates->getAnimationState("Run_step")->setEnabled(false);
-			m_aniStates->getAnimationState("Walk_step")->setEnabled(false);
-
-			
-			m_aniStates->getAnimationState("Run_full_upper")->setEnabled(false);
-			m_aniStates->getAnimationState("Walk_full_upper")->setEnabled(false);
-			m_aniStates->getAnimationState("Run_step_upper")->setEnabled(false);
-			m_aniStates->getAnimationState("Walk_step_upper")->setEnabled(false);
-
-			if(mGunDirection == UPANGLED){
-				m_aniStates->getAnimationState("Aim_up_angled")->setEnabled(true);
-				m_aniStates->getAnimationState("Aim_down_angled")->setEnabled(false);
-			}
-			else if(mGunDirection == DOWNANGLED){
-				m_aniStates->getAnimationState("Aim_up_angled")->setEnabled(false);
-				m_aniStates->getAnimationState("Aim_down_angled")->setEnabled(true);
-			}
-			else {
-				m_aniStates->getAnimationState("Aim_up_angled")->setEnabled(false);
-				m_aniStates->getAnimationState("Aim_down_angled")->setEnabled(false);
-			}
-		}
-		else {
-			if(mIsTurning){
-				//turning animation
-				m_aniStates->getAnimationState("Run_full")->setEnabled(false);
-				m_aniStates->getAnimationState("Walk_full")->setEnabled(false);
-				m_aniStates->getAnimationState("Run_step")->setEnabled(false);
-				m_aniStates->getAnimationState("Walk_step")->setEnabled(false);
-
-				m_aniStates->getAnimationState("Run_full_upper")->setEnabled(false);
-				m_aniStates->getAnimationState("Walk_full_upper")->setEnabled(false);
-				m_aniStates->getAnimationState("Run_step_upper")->setEnabled(false);
-				m_aniStates->getAnimationState("Walk_step_upper")->setEnabled(false);
-				m_aniStates->getAnimationState("Run_full_upper_shoot")->setEnabled(false);
-				m_aniStates->getAnimationState("Walk_full_upper_shoot")->setEnabled(false);
-				m_aniStates->getAnimationState("Run_step_upper_shoot")->setEnabled(false);
-				m_aniStates->getAnimationState("Walk_step_upper_shoot")->setEnabled(false);
-			}
-			else if(mShiftPressed){
-				if(!m_aniStates->getAnimationState("Run_full")->getEnabled() && !m_aniStates->getAnimationState("Run_step")->getEnabled() ){
-					m_aniStates->getAnimationState("Run_step")->setEnabled(true);
-					m_aniStates->getAnimationState("Run_step")->setTimePosition(0);
-
-					if(timeSinceLastShot > SHOOT_ANIMATION_LENGTH && mGunDirection == FORWARD){
-						m_aniStates->getAnimationState("Run_step_upper")->setEnabled(true);
-						m_aniStates->getAnimationState("Run_step_upper")->setTimePosition(m_aniStates->getAnimationState("Run_step")->getTimePosition());
-					}
-				}
-				if(m_aniStates->getAnimationState("Run_step")->getEnabled() && m_aniStates->getAnimationState("Run_step")->hasEnded()){
-					m_aniStates->getAnimationState("Run_full")->setEnabled(true);
-					m_aniStates->getAnimationState("Run_full")->setTimePosition(0);
-
-					m_aniStates->getAnimationState("Run_step")->setEnabled(false);
-					m_aniStates->getAnimationState("Run_step_upper")->setEnabled(false);
-
-					if(timeSinceLastShot > SHOOT_ANIMATION_LENGTH && mGunDirection == FORWARD){
-						m_aniStates->getAnimationState("Run_full_upper")->setEnabled(true);
-						m_aniStates->getAnimationState("Run_full_upper")->setTimePosition(m_aniStates->getAnimationState("Run_full")->getTimePosition());
-					}
-				}
-				m_aniStates->getAnimationState("Walk_full")->setEnabled(false);
-				m_aniStates->getAnimationState("Walk_step")->setEnabled(false);
-
-				m_aniStates->getAnimationState("Walk_step_upper")->setEnabled(false);
-				m_aniStates->getAnimationState("Walk_full_upper")->setEnabled(false);
-			}
-			else{
-				if(!m_aniStates->getAnimationState("Walk_full")->getEnabled() && !m_aniStates->getAnimationState("Walk_step")->getEnabled() ){
-					m_aniStates->getAnimationState("Walk_step")->setEnabled(true);
-					m_aniStates->getAnimationState("Walk_step")->setTimePosition(0);
-
-					if(timeSinceLastShot > SHOOT_ANIMATION_LENGTH && mGunDirection == FORWARD){
-						m_aniStates->getAnimationState("Walk_step_upper")->setEnabled(true);
-						m_aniStates->getAnimationState("Walk_step_upper")->setTimePosition(m_aniStates->getAnimationState("Walk_step")->getTimePosition());
-					}
-				}
-				if(m_aniStates->getAnimationState("Walk_step")->getEnabled() && m_aniStates->getAnimationState("Walk_step")->hasEnded() ){
-					m_aniStates->getAnimationState("Walk_step")->setEnabled(false);
-					m_aniStates->getAnimationState("Walk_full")->setEnabled(true);
-					m_aniStates->getAnimationState("Walk_full")->setTimePosition(0);
-
-					m_aniStates->getAnimationState("Walk_step_upper")->setEnabled(false);
-
-					if(timeSinceLastShot > SHOOT_ANIMATION_LENGTH && mGunDirection == FORWARD){
-						m_aniStates->getAnimationState("Walk_full_upper")->setEnabled(true);
-						m_aniStates->getAnimationState("Walk_full_upper")->setTimePosition(m_aniStates->getAnimationState("Walk_full")->getTimePosition());
-					}
-				}
-				m_aniStates->getAnimationState("Run_full")->setEnabled(false);
-				m_aniStates->getAnimationState("Run_step")->setEnabled(false);
-
-				m_aniStates->getAnimationState("Run_full_upper")->setEnabled(false);
-				m_aniStates->getAnimationState("Run_step_upper")->setEnabled(false);				
-			}
-		}
-	}
-	if(mIsTurning){
-		Radian yaw = node->_getDerivedOrientation().getYaw();
-		Radian temp = Math::Abs(mYaw_Target - yaw);
-		if(temp < Radian(TURN_SPEED * deltaTime)){
-			yaw = temp;
-			mIsTurning = false;
-		}
-		else {
-			yaw = Radian(TURN_SPEED * deltaTime);
-		}
-		node->yaw(yaw * (mDirection == LEFT ? -1 : 1));
-	}
-
-	if(mFlipping){
-		childNode->pitch(Radian(FLIP_SPEED * deltaTime));
-	}
-	else {
-		Radian deltaAngle = childNode->getOrientation().getPitch();
-		childNode->pitch(-deltaAngle);
-		
-	}
-
-    if(m_aniStates->hasEnabledAnimationState()){
+	if(m_aniStates->hasEnabledAnimationState()){
         ConstEnabledAnimationStateIterator itrAnim = m_aniStates->getEnabledAnimationStateIterator();
 
         while(itrAnim.hasMoreElements()){
-			AnimationState *anim = itrAnim.getNext();
-        	anim->addTime(deltaTime);
-			//if(!anim->getLoop() && anim->getLength() == anim->getTimePosition()){
-				//anim->setEnabled(false);
-				//anim->setTimePosition(0);
-			//}
+            AnimationState *anim = itrAnim.getNext();
+            anim->addTime(deltaTime);
+            //if(!anim.getLoop() && anim.getLength() == anim.getTimePosition()){
+            //anim.setEnabled(false);
+            //anim.setTimePosition(0);
+            //}
         }
     }
-
-	
-	//else {
-	//}
 }
 
 bool PlayerCharacter::keyPressed(const OIS::KeyEvent &keyEventRef){
@@ -602,42 +426,20 @@ void PlayerCharacter::onShapeHit(const PxControllerShapeHit & hit){
 	Handle<Value> args[1];
 	args[0] = wrapByVal<PxControllerShapeHit, V8PxControllerShapeHit>(const_cast<PxControllerShapeHit&>(hit));
 	dispatchEvent("onShapeHit", 1, args);
-//	PxRigidDynamic* actor = hit.shape->getActor().is<PxRigidDynamic>();
-//	if(actor)
-//	{
-//		if(actor->getRigidDynamicFlags() & PxRigidDynamicFlag::eKINEMATIC)
-//			return;
-//
-//		// We only allow horizontal pushes. Vertical pushes when we stand on dynamic objects creates
-//		// useless stress on the solver. It would be possible to enable/disable vertical pushes on
-//		// particular objects, if the gameplay requires it.
-//		const PxVec3 upVector = hit.controller->getUpDirection();
-//		const PxF32 dp = hit.dir.dot(upVector);
-////		printf("%f\n", fabsf(dp));
-//		if(fabsf(dp)<1e-3f)
-////		if(hit.dir.y==0.0f)
-//		{
-//			const PxTransform globalPose = actor->getGlobalPose();
-//			const PxVec3 localPos = globalPose.transformInv(toVec3(hit.worldPos));
-//			addForceAtLocalPos(*actor, hit.dir*hit.length*1000.0f, localPos, PxForceMode::eACCELERATION);
-//		}
-//	}
-//	
-//	if(hit.dir.dot(mCCT->getUpDirection()) < -0.95){
-//		mGrounded = true;
-//		mFlipping = false;
-//		mVelocity.x = mVelocity.y = 0;
-//	}
 }
 
-
-
 void PlayerCharacter::onControllerHit(const PxControllersHit& hit){
-	
+	HandleScope handleScope(Isolate::GetCurrent());
+	Handle<Value> args[1];
+	args[0] = wrapByVal<PxControllersHit, V8PxControllersHit>(const_cast<PxControllersHit&>(hit));
+	dispatchEvent("onControllerHit", 1, args);
 }
 
 void PlayerCharacter::onObstacleHit(const PxControllerObstacleHit& hit){
-
+	/*HandleScope handleScope(Isolate::GetCurrent());
+	Handle<Value> args[1];
+	args[0] = wrapByVal<PxControllerObstacleHit, V8PxControllerObstacleHit>(const_cast<PxControllerObstacleHit&>(hit));
+	dispatchEvent("onObstacleHit", 1, args);*/
 }
 
 void PlayerCharacter::addForceAtLocalPos(PxRigidBody& body, const PxVec3& force, const PxVec3& pos, PxForceMode::Enum mode, bool wakeup){

@@ -423,7 +423,7 @@ GameState::createScene()
 	testConn->freezeYRot();
 	testConn->freezeZPos();
 
-	Enemy *testEnemy = new Enemy(this);
+	Enemy *testEnemy = new Enemy(this, "SimpleBox.mesh");
 	//mGameObjects.push_back(testEnemy);
 	AddGameObject(testEnemy);
 }
@@ -730,7 +730,7 @@ void GameState::advanceSimulation(float dtime)
 	{
 		const PxReal dt = dtime>=timestep ? timestep : dtime;
 		mPxScene->simulate(dt);
-		mPxScene->fetchResults(true);
+		mPxScene->fetchResults(false);
 		dtime -= dt;
 
 		if(toDelete.size() > 0){
@@ -762,11 +762,12 @@ bool GameState::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 	SceneWideEvent::dispatch_SceneWide(SceneWideEvent::ONFRAMEQUEUED);
 
-	v8::V8::IdleNotification();
+	
 
     update(evt.timeSinceLastFrame);
 
 	advanceSimulation(evt.timeSinceLastFrame);
+	v8::V8::IdleNotification();
 
 	if(!pxVisualDebuggerHidden)
 		mVisualDebugger->update(mPxScene->getRenderBuffer());

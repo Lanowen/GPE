@@ -1075,6 +1075,9 @@ public:
 
 class V8PxSceneQueryImpactHit : public BaseV8TemplateObject<V8PxSceneQueryImpactHit>{
 public:
+
+	static Handle<Value> V8PxSceneQueryImpactHitConstructor( const Arguments& args );
+
 	//Functions
 	static Handle<Value> getImpact( const Arguments& args );
 	static Handle<Value> getNormal( const Arguments& args );
@@ -1084,6 +1087,8 @@ public:
 
 class V8PxSceneQueryHit : public BaseV8TemplateObject<V8PxSceneQueryHit>{
 public:
+	static Handle<Value> V8PxSceneQueryHitConstructor( const Arguments& args );
+
 	//Functions
 	static Handle<Value> getShape( const Arguments& args );
 	static Handle<Value> getFaceIndex( const Arguments& args );
@@ -1093,9 +1098,109 @@ public:
 
 class V8PxRaycastHit : public BaseV8TemplateObject<V8PxRaycastHit>{
 public:
+	static Handle<Value> V8PxRaycastHitConstructor( const Arguments& args );
+
 	//Functions
 	static Handle<Value> getU( const Arguments& args );
 	static Handle<Value> getV( const Arguments& args );
+};
+
+class V8PxControllerState : public BaseV8TemplateObject<V8PxControllerState>{
+public:
+	static Handle<Value> V8PxControllerStateConstructor(const Arguments& args);
+
+	//Accessors
+	static Handle<Value> getDeltaXP( Local<v8::String> property, const AccessorInfo& info );
+	static void setDeltaXP( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+	static Handle<Value> getTouchedShape( Local<v8::String> property, const AccessorInfo& info );
+	static void setTouchedShape( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+	static Handle<Value> getTouchedObstacle( Local<v8::String> property, const AccessorInfo& info );
+	static void setTouchedObstacle( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+	static Handle<Value> getCollisionFlags( Local<v8::String> property, const AccessorInfo& info );
+	static void setCollisionFlags( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+	static Handle<Value> getStandOnAnotherCCT( Local<v8::String> property, const AccessorInfo& info );
+	static void setStandOnAnotherCCT( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+	static Handle<Value> getStandOnObstacle( Local<v8::String> property, const AccessorInfo& info );
+	static void setStandOnObstacle( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+	static Handle<Value> getIsMovingUp( Local<v8::String> property, const AccessorInfo& info );
+	static void setIsMovingUp( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+};
+
+class V8PxControllerStats : public BaseV8TemplateObject<V8PxControllerStats>{
+public:
+	static Handle<Value> V8PxControllerStatsConstructor(const Arguments& args);
+
+	//Accessors
+	static Handle<Value> getNbIterations( Local<v8::String> property, const AccessorInfo& info );
+	static void setNbIterations( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+	static Handle<Value> getNbFullUpdates( Local<v8::String> property, const AccessorInfo& info );
+	static void setNbFullUpdates( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+	static Handle<Value> getNbPartialUpdates( Local<v8::String> property, const AccessorInfo& info );
+	static void setNbPartialUpdates( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+	
+};
+
+class V8PxControllerFilters : public BaseV8TemplateObject<V8PxControllerFilters>{
+public:
+	static Handle<Value> V8PxControllerFiltersConstructor(const Arguments& args);
+
+	//Accessors
+	static Handle<Value> getActiveGroups( Local<v8::String> property, const AccessorInfo& info );
+	static void setActiveGroups( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+	static Handle<Value> getFilterData( Local<v8::String> property, const AccessorInfo& info );
+	static void setFilterData( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+	//static Handle<Value> getFilterCallback( Local<v8::String> property, const AccessorInfo& info );
+	//static void setFilterCallback( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+	static Handle<Value> getFilterFlags( Local<v8::String> property, const AccessorInfo& info );
+	static void setFilterFlags( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+
+};
+
+class V8PxSceneQueryFilterData : public BaseV8TemplateObject<V8PxSceneQueryFilterData>{
+public:
+	static Handle<Value> V8PxSceneQueryFilterDataConstructor(const Arguments& args);
+
+	//Accessors
+	static Handle<Value> getData( Local<v8::String> property, const AccessorInfo& info );
+	static void setData( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+	static Handle<Value> getFlags( Local<v8::String> property, const AccessorInfo& info );
+	static void setFlags( Local<v8::String> property, Local<Value> value, const AccessorInfo& info );
+};
+
+class V8PxSceneQueryFilterCallback : public BaseV8TemplateObject<V8PxSceneQueryFilterCallback>{
+public:
+
+};
+
+class V8PxController : public BaseV8TemplateObject<V8PxController>{
+public:
+	static Handle<Value> getType(const Arguments& args);
+	static Handle<Value> release(const Arguments& args);
+	static Handle<Value> move(const Arguments& args);
+	static Handle<Value> setPosition(const Arguments& args);
+	static Handle<Value> getPosition(const Arguments& args);
+	static Handle<Value> setFootPosition(const Arguments& args);
+	static Handle<Value> getFootPosition(const Arguments& args);
+	static Handle<Value> getActor(const Arguments& args);
+	static Handle<Value> setStepOffset(const Arguments& args);
+	static Handle<Value> getStepOffset(const Arguments& args);
+	static Handle<Value> setInteraction(const Arguments& args);
+	static Handle<Value> getInteraction(const Arguments& args);
+	static Handle<Value> setNonWalkableMode(const Arguments& args);
+	static Handle<Value> getNonWalkableMode(const Arguments& args);
+	static Handle<Value> setGroupsBitmask(const Arguments& args);
+	static Handle<Value> getGroupsBitmask(const Arguments& args);
+	static Handle<Value> getContactOffset(const Arguments& args);
+	static Handle<Value> getUpDirection(const Arguments& args);
+	static Handle<Value> setUpDirection(const Arguments& args);
+	static Handle<Value> getSlopeLimit(const Arguments& args);
+	static Handle<Value> invalidateCache(const Arguments& args);
+	static Handle<Value> getScene(const Arguments& args);
+	//static Handle<Value> getUserData(const Arguments& args);
+	static Handle<Value> getState(const Arguments& args);
+	static Handle<Value> getStats(const Arguments& args);
+	static Handle<Value> resize(const Arguments& args);
+
 };
 
 class V8PxControllerDesc : public BaseV8TemplateObject<V8PxControllerDesc>{
@@ -1153,8 +1258,7 @@ class V8PxShapeDesc : public BaseV8TemplateObject<V8PxShapeDesc>{
 };
 class V8PxAggregate : public BaseV8TemplateObject<V8PxAggregate>{
 };
-class V8PxController : public BaseV8TemplateObject<V8PxController>{
-};
+
 
 class V8PhysX {
 public:
