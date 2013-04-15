@@ -318,16 +318,15 @@ GameState::createScene()
 
 	//mPhysRenderSystem = new Critter::RenderSystem(mPhysScene, m_pSceneMgr);
 
-	//NxOgre::VisualDebugger* physDebug = mPhysRenderSystem->createVisualDebugger(debugDesc);
 //================================================================================================================
 	mScripting = new V8Scripting();
-
-
 //================================================================================================================
 
-	PlayerCharacter* playerChar = new PlayerCharacter(m_pKeyboard, m_pJoyStick, m_pJoyDeadZone, this);
-	//mGameObjects.push_back(playerChar);
-	AddGameObject(playerChar);
+	//PlayerCharacter* playerChar = new PlayerCharacter(m_pKeyboard, m_pJoyStick, m_pJoyDeadZone, this);
+	//playerChar->giveGamera(m_pCamera);
+	//AddGameObject(playerChar);
+
+	//Create Level Begins here
 
     Ogre::StaticGeometry* static_World = m_pSceneMgr->createStaticGeometry("WorldTest");
 
@@ -336,70 +335,93 @@ GameState::createScene()
     Ogre::Entity* ent;
     Ogre::SceneNode* node;
 
-	//mPhysScene->createSceneGeometry(NxOgre::PlaneGeometryDescription());
-
-	//NxOgre::Mesh* mesh = NxOgre::MeshManager::getSingleton()->load("file://../../media/tools/SimpleBox.nxs", "SimpleBox");
-
 	PxFilterData filterData;
 	filterData.word0 = 4; // word0 = own ID
 	filterData.word1 = 2;	// word1 = ID mask to filter pairs that trigger a contact callback;
 
-    for( int i = -10; i < 10; i++){
-        node = m_pSceneMgr->getRootSceneNode()->createChildSceneNode(Ogre::Vector3(i,0,0));
-        ent = m_pSceneMgr->createEntity( Ogre::String("floorobj")+ Ogre::StringConverter::toString(i), "SimpleBox.mesh" );
-        node->attachObject( ent );
-        node->setScale( size );
+	
 
-		physx::PxRigidStatic* derp = mPhysics->createRigidStatic(physx::PxTransform(physx::PxVec3(i,0,0)));
-		physx::PxShape* shape = derp->createShape(physx::PxBoxGeometry(0.5f,0.5f,0.5f), *mMaterial);
-		shape->setSimulationFilterData(filterData);
-		mPxScene->addActor(*derp);
+	struct EnemyDef {
+		std::string classID;
+		std::string model;
+		std::string script;
+	};
 
-        static_World->addEntity(ent,Ogre::Vector3(i,0,0),Ogre::Quaternion::IDENTITY,size);
+	std::map<char, EnemyDef> enemyDefs;
 
-        m_pSceneMgr->destroyEntity(ent);
-        m_pSceneMgr->destroySceneNode(node);
-    }
+	char buf[512];
 
-    node = m_pSceneMgr->getRootSceneNode()->createChildSceneNode(Ogre::Vector3(-4,1,0));
-    ent = m_pSceneMgr->createEntity( Ogre::String("floorobjtest"), "SimpleBox.mesh" );
-    node->attachObject( ent );
-    node->setScale( size );
+	DataStreamPtr levelData = ResourceGroupManager::getSingletonPtr()->openResource("level1.txt");
+	for(int y = 0; !levelData->eof(); y--){
 
-	physx::PxRigidStatic* derp = mPhysics->createRigidStatic(physx::PxTransform(physx::PxVec3(-4,1,0)));
-	physx::PxShape* shape = derp->createShape(physx::PxBoxGeometry(0.5f,0.5f,0.5f), *mMaterial);
-	shape->setSimulationFilterData(filterData);
-	mPxScene->addActor(*derp);
+		ZeroMemory(buf, 512);
+		size_t length_read = levelData->readLine(buf, 512);
 
-	//NxOgre::TriangleGeometryDescription tri_geom;
-	//tri_geom.mMesh = mesh;
+		for(int x = 0; x < length_read; x++){
+			switch(buf[x]){
+			case '#':
+				{
+				EnemyDef ed;
+				char id;
 
-	//NxOgre::SceneGeometry* scene_geom = mPhysScene->createSceneGeometry(tri_geom, NxOgre::Vec3(-4,1,0));
-    static_World->addEntity(ent,Ogre::Vector3(-4,1,0),Ogre::Quaternion::IDENTITY, size);
+				std::stringstream ss;
+				ss << buf;
 
-	m_pSceneMgr->destroyEntity(ent);
-    m_pSceneMgr->destroySceneNode(node);
+				ss >> id >> id >> ed.classID >> ed.model >> ed.script;
 
-	node = m_pSceneMgr->getRootSceneNode()->createChildSceneNode(Ogre::Vector3(4,2,0));
-    ent = m_pSceneMgr->createEntity( Ogre::String("floatobjtest"), "SimpleBox.mesh" );
-    node->attachObject( ent );
-    node->setScale( size );
+				enemyDefs[id] = ed;
+				x = length_read;
+				}
+				break;
+			case 'b':
+				{
+				node = m_pSceneMgr->getRootSceneNode()->createChildSceneNode(Ogre::Vector3(x,y,0));
+				ent = m_pSceneMgr->createEntity("SimpleBox.mesh" );
+				node->attachObject( ent );
+				node->setScale( size );
 
-	derp = mPhysics->createRigidStatic(PxTransform(PxVec3(4,2,0)));
-	shape = derp->createShape(PxBoxGeometry(0.5f,0.5f,0.5f), *mMaterial);
-	shape->setSimulationFilterData(filterData);
-	mPxScene->addActor(*derp);
+				physx::PxRigidStatic* derp = mPhysics->createRigidStatic(physx::PxTransform(physx::PxVec3(x,y,0)));
+				physx::PxShape* shape = derp->createShape(physx::PxBoxGeometry(0.5f,0.5f,0.5f), *mMaterial);
+				shape->setSimulationFilterData(filterData);
+				mPxScene->addActor(*derp);
 
-	//NxOgre::SceneGeometry* scene_geom2 = mPhysScene->createSceneGeometry(tri_geom, NxOgre::Vec3(4,2,0));
-	//scene_geom2->setGroup(NxOgre::Enums::CharacterControllerInteractionFlag::CharacterControllerInteractionFlag_Include);
-    static_World->addEntity(ent,Ogre::Vector3(4,2,0),Ogre::Quaternion::IDENTITY, size);
+				static_World->addEntity(ent,Ogre::Vector3(x,y,0),Ogre::Quaternion::IDENTITY,size);
 
-    m_pSceneMgr->destroyEntity(ent);
-    m_pSceneMgr->destroySceneNode(node);
+				m_pSceneMgr->destroyEntity(ent);
+				m_pSceneMgr->destroySceneNode(node);
+				}
+				break;
+			case 's':
+				break;
+			case ' ':
+				//do nothing
+				break;
+			default:
+				{
+				std::map<char, EnemyDef>::iterator itr;
+				for(itr = enemyDefs.begin(); itr != enemyDefs.end(); itr++){
+					if(buf[x] == itr->first){
+						if(itr->second.classID == "Enemy"){
+							Enemy *nme = new Enemy(this, itr->second.model, itr->second.script);
+							nme->setPosition(PxVec3(x,y,0));
+							AddGameObject(nme);
+						}
+						break;
+					}
+				}
+				}
+				break;
+			}
+		}
 
-    static_World->build();
+	}
 
-	physx::PxRigidDynamic* derp2 = mPhysics->createRigidDynamic(PxTransform(PxVec3(3.2,5.0f,0.f)));
+	levelData->close();
+
+	static_World->build();
+	//Create Level Ends Here
+
+	/*physx::PxRigidDynamic* derp2 = mPhysics->createRigidDynamic(PxTransform(PxVec3(3.2,5.0f,0.f)));
 	physx::PxShape* hmm = derp2->createShape(PxBoxGeometry(0.5f,0.5f,0.5f), *mMaterial);
 	physx::PxRigidBodyExt::setMassAndUpdateInertia(*derp2,10.0f);
 
@@ -424,8 +446,7 @@ GameState::createScene()
 	testConn->freezeZPos();
 
 	Enemy *testEnemy = new Enemy(this, "SimpleBox.mesh");
-	//mGameObjects.push_back(testEnemy);
-	AddGameObject(testEnemy);
+	AddGameObject(testEnemy);*/
 }
 
 void GameState::RegisterInputListener(IInputListener* listener){
@@ -526,7 +547,7 @@ bool GameState::keyReleased(const OIS::KeyEvent &keyEventRef){
 }
 
 bool GameState::mouseMoved(const OIS::MouseEvent &evt){
-    //CEGUI::System &sys = CEGUI::System::getSingleton();
+	//CEGUI::System &sys = CEGUI::System::getSingleton();
     //sys.injectMouseMove(evt.state.X.rel, evt.state.Y.rel);
 
     if(m_bRMouseDown)
@@ -676,6 +697,7 @@ bool GameState::buttonReleased( const OIS::JoyStickEvent &e, int button ) {
 
 void GameState::moveCamera()
 {
+
     if(m_pKeyboard->isKeyDown(OIS::KC_LSHIFT) || m_pKeyboard->isKeyDown(OIS::KC_RSHIFT))
         m_pCamera->moveRelative(m_TranslateVector*10);
 

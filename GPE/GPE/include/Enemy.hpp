@@ -15,11 +15,13 @@ using namespace physx;
 class Enemy : public physx::PxUserControllerHitReport/*, public physx::PxControllerBehaviorCallback*/, public GameObject {
 	friend class V8Enemy;
 public:
-    Enemy(GameState* owner, std::string mesh);
+    Enemy(GameState* owner, std::string mesh, std::string script);
 	virtual ~Enemy();
 
 	virtual void Update(Real deltaTime);
 	virtual void release();
+
+	void setPosition(PxVec3 pos);
 
 protected:
 	void AdvancePhysics(Real deltaTime);

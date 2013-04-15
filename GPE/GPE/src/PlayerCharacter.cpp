@@ -17,7 +17,7 @@
 #define JUMP_VEL 20
 #define SHOOT_ANIMATION_LENGTH 3
 
-PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_pJoyStick, int im_pJoyDeadZone, GameState* owner) : GameObject(owner), IInputListener(owner)
+PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_pJoyStick, int im_pJoyDeadZone, GameState* owner) : GameObject(owner), IInputListener(owner), m_pCamera(0)
 {
 	mPhys = owner->getPhysics();
 	mPhysScene = owner->getMainPhysicsScene();
@@ -153,12 +153,21 @@ void PlayerCharacter::release(){
 	owner->DeleteGameObject(this);
 }
 
+void PlayerCharacter::giveGamera(Camera* cam){
+	m_pCamera = cam;
+}
+
 void PlayerCharacter::Update(Real deltaTime){
 	//runScripts();
 	timeSinceLastShot += deltaTime;
 	getInput(deltaTime);
 	AdvancePhysics(deltaTime);
 	UpdateAnimation(deltaTime);
+
+	if(m_pCamera){
+		m_pCamera->setPosition(ent->getParentSceneNode()->_getDerivedPosition() + Vector3(0,0,20));
+		m_pCamera->lookAt(ent->getParentSceneNode()->_getDerivedPosition());
+	}
 }
 
 void PlayerCharacter::AdvancePhysics(Real deltaTime){ 

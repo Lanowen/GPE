@@ -1608,6 +1608,20 @@ Local<FunctionTemplate> V8PhysX::NewFunctionTemplate(InvocationCallback callback
 				temp->PrototypeTemplate()->Set(String::New("eTOUCH"), Int32::New(PxSceneQueryHitType::eTOUCH));
 				temp->PrototypeTemplate()->Set(String::New("eBLOCK"), Int32::New(PxSceneQueryHitType::eBLOCK));
 
+				//-----------------------------------------------------------------------------------------------------------------------
+				
+				temp = FunctionTemplate::New();
+				temp->SetClassName(String::New("PxSceneQueryFlag"));
+				physXFuncTemplate->PrototypeTemplate()->Set("PxSceneQueryFlag", temp->InstanceTemplate());
+
+				temp->PrototypeTemplate()->Set(String::New("eNORMAL"), Int32::New(PxSceneQueryFlag::eNORMAL));
+				temp->PrototypeTemplate()->Set(String::New("eDISTANCE"), Int32::New(PxSceneQueryFlag::eDISTANCE));
+				temp->PrototypeTemplate()->Set(String::New("eUV"), Int32::New(PxSceneQueryFlag::eUV));
+				temp->PrototypeTemplate()->Set(String::New("eINITIAL_OVERLAP"), Int32::New(PxSceneQueryFlag::eINITIAL_OVERLAP));
+				temp->PrototypeTemplate()->Set(String::New("eINITIAL_OVERLAP_KEEP"), Int32::New(PxSceneQueryFlag::eINITIAL_OVERLAP_KEEP));
+				temp->PrototypeTemplate()->Set(String::New("eTOUCHING_HIT"), Int32::New(PxSceneQueryFlag::eTOUCHING_HIT));
+				temp->PrototypeTemplate()->Set(String::New("eBLOCKING_HIT"), Int32::New(PxSceneQueryFlag::eBLOCKING_HIT));
+
 
 		//Functions
 				physXFuncTemplate->PrototypeTemplate()->Set(String::New("toVec3"),			FunctionTemplate::New(func_toVec3));
@@ -13153,8 +13167,7 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			&& !args[1].IsEmpty() && args[1]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[1])
 			&& !args[2].IsEmpty() && args[2]->IsNumber()
 			&& !args[3].IsEmpty() && args[3]->IsUint32()
-			&& !args[4].IsEmpty() && args[4]->IsObject() && V8PxRaycastHit::getTemplate()->HasInstance(args[4])
-			&& !args[5].IsEmpty() && args[5]->IsObject() && V8PxSceneQueryFilterData::getTemplate()->HasInstance(args[5]))
+			&& !args[4].IsEmpty() && args[4]->IsObject() && V8PxRaycastHit::getTemplate()->HasInstance(args[4]))
         {
 			PxScene* thisScene = unwrap<PxScene>(args.Holder());
 			
@@ -13169,7 +13182,8 @@ Handle<Value> V8PhysX::func_math_log(const Arguments& args){return Undefined();}
 			&& !args[1].IsEmpty() && args[1]->IsObject() && V8PxVec3::getTemplate()->HasInstance(args[1])
 			&& !args[2].IsEmpty() && args[2]->IsNumber()
 			&& !args[3].IsEmpty() && args[3]->IsUint32()
-			&& !args[4].IsEmpty() && args[4]->IsObject() && V8PxRaycastHit::getTemplate()->HasInstance(args[4])) 
+			&& !args[4].IsEmpty() && args[4]->IsObject() && V8PxRaycastHit::getTemplate()->HasInstance(args[4])
+			&& !args[5].IsEmpty() && args[5]->IsObject() && V8PxSceneQueryFilterData::getTemplate()->HasInstance(args[5])) 
         {
 			PxScene* thisScene = unwrap<PxScene>(args.Holder());
 			

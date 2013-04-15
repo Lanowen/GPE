@@ -10,7 +10,7 @@
 #define HALFEXTENT 0.4
 
 
-Enemy::Enemy(GameState* owner, std::string mesh) : GameObject(owner)
+Enemy::Enemy(GameState* owner, std::string mesh, std::string script) : GameObject(owner)
 {
 	float scale = 0.5;
 
@@ -52,11 +52,10 @@ Enemy::Enemy(GameState* owner, std::string mesh) : GameObject(owner)
 	delete[] shapes;
 
     SceneManager* gameSceneMgr = Root::getSingletonPtr()->getSceneManager("GameSceneMgr");
-	ent = gameSceneMgr->createEntity("EnemyBro", mesh );
+	ent = gameSceneMgr->createEntity( mesh );
 
 	node = gameSceneMgr->getRootSceneNode()->createChildSceneNode();
 	node->setPosition(Vector3(mCCT->getPosition().x, mCCT->getPosition().y, mCCT->getPosition().z));
-	//node->attachObject(ent);
 	node->setScale(0.8, 0.8, 0.8);
 
 	childNode = node->createChildSceneNode();
@@ -65,23 +64,16 @@ Enemy::Enemy(GameState* owner, std::string mesh) : GameObject(owner)
 
 	displacement = PxVec3(0,0,0);
 
-	//moveDir = PxVec3(1,0,0);
-	//castDir = PxVec3(0,-1,0);
-
 	mPhysScene = owner->getMainPhysicsScene();
 
     m_aniStates = ent->getAllAnimationStates();
 
-	//rotLeft = PxQuat((PxReal)Math::HALF_PI, PxVec3(0,0,1));
-	//rotRight = PxQuat((PxReal)-Math::HALF_PI, PxVec3(0,0,1));
 
 	HandleScope scope(Isolate::GetCurrent());
 
-	//exposeObject("test", wrap<PxSceneQueryHit, V8PxSceneQueryHit>(PxSceneQueryHit()));
-
 	exposeObject("Enemy", wrapPtr<Enemy, V8Enemy>(this));
 
-	loadScript("Enemy.js");
+	loadScript(script);
 }
 
 Enemy::~Enemy()
@@ -99,6 +91,10 @@ void Enemy::Update(Real deltaTime){
 	UpdateAnimation(deltaTime);
 }
 
+void Enemy::setPosition(PxVec3 pos){
+	mCCT->setPosition(Util::vec_from_to<PxVec3, PxExtendedVec3>(pos));
+}
+
 void Enemy::UpdateAnimation(Real deltaTime){
     if(m_aniStates && m_aniStates->hasEnabledAnimationState()){
         ConstEnabledAnimationStateIterator itrAnim = m_aniStates->getEnabledAnimationStateIterator();
@@ -113,20 +109,7 @@ void Enemy::AdvancePhysics(Real deltaTime){
 	Handle<Value> args[1];
 	args[0] = Number::New(deltaTime);
 	dispatchEvent("AdvancePhysics", 1, args);
-
-	//mCCT->move(displacement*deltaTime,0,deltaTime,PxSceneQueryHitType::eBLOCK,0);
-
-	//node->setPosition(Util::vec_from_to<PxExtendedVec3, Vector3>(mCCT->getPosition()));	
 }
-
-//void Enemy::onShapeHit(const physx::PxControllerShapeHit & hit){
-//	
-//	if(hit.dir.dot(moveDir) > .95){
-//		//Util::dout << "Hitdir: " << hit.dir.x << " " << hit.dir.y << " " << hit.dir.z << std::endl;
-//		moveDir = rotLeft.rotate(moveDir);
-//		castDir = rotLeft.rotate(castDir);
-//	}
-//}
 
 
 void Enemy::onShapeHit(const PxControllerShapeHit & hit){

@@ -67,6 +67,8 @@ public:
 	bool keyPressed(const OIS::KeyEvent &keyEventRef);
     bool keyReleased(const OIS::KeyEvent &keyEventRef);
 
+	void giveGamera(Camera* cam);
+
 protected:		
     void getInput(Real deltaTime);
 	virtual void onShapeHit(const physx::PxControllerShapeHit & hit);
@@ -77,6 +79,8 @@ protected:
 
 	void AdvancePhysics(Real deltaTime);
 	void UpdateAnimation(Real deltaTime);
+
+	
 
 public:
     int m_pJoyDeadZone;
@@ -102,4 +106,5 @@ public:
 	PxPhysics* mPhys;
 	PxScene* mPhysScene;
 	//std::map<STATE, Animation> animations;
+	Camera* m_pCamera;
 };
