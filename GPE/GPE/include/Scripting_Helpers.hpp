@@ -146,26 +146,26 @@ Handle<Value> createArray<T>::makeArray(const Arguments& args){
 		return scope.Close( Undefined() );
 }
 
-template<class T, class templ>
-static inline Handle<Value> autoWrap(const Arguments& args){
-	//Locker lock(Isolate::GetCurrent());
-	HandleScope scope(Isolate::GetCurrent());
-
-	if(args.Length() == 0) 
-    {
-
-		T* ptr = reinterpret_cast<T*>(External::Cast(*args.Holder()->GetHiddenValue(v8::String::New("GameObject")))->Value());
-
-		Persistent<Object> obj = Persistent<Object>::New(Isolate::GetCurrent(),templ::getTemplate()->InstanceTemplate()->NewInstance());			
-		obj.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly );
-		obj->SetInternalField(0, External::New( ptr ));
-		
-		return scope.Close( obj );
-	}
-	//boost::type_traits<PlayerCharacter>(
-
-	return scope.Close( Undefined() );
-}
+//template<class T, class templ>
+//static inline Handle<Value> autoWrap(const Arguments& args){
+//	//Locker lock(Isolate::GetCurrent());
+//	HandleScope scope(Isolate::GetCurrent());
+//
+//	if(args.Length() == 0) 
+//    {
+//
+//		T* ptr = reinterpret_cast<T*>(External::Cast(*args.Holder()->GetHiddenValue(v8::String::New("GameObject")))->Value());
+//
+//		Persistent<Object> obj = Persistent<Object>::New(Isolate::GetCurrent(),templ::getTemplate()->InstanceTemplate()->NewInstance());			
+//		obj.MakeWeak(Isolate::GetCurrent(),NULL, &CleanupHandleOnly );
+//		obj->SetInternalField(0, External::New( ptr ));
+//		
+//		return scope.Close( obj );
+//	}
+//	//boost::type_traits<PlayerCharacter>(
+//
+//	return scope.Close( Undefined() );
+//}
 
 //#define EXPOSE_TO_SCRIPTS(type, templateObj, name) exposeObject(name, FunctionTemplate::New( InvocationCallback( autoWrap<type, templateObj> ) ))
 //#define EXPOSE_TO_SCRIPTS(type, templateObj, name, obj) exposeObject(name, wrapByVal<type, templateObj>(obj))

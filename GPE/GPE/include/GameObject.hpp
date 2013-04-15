@@ -9,7 +9,14 @@
 
 #include <GameState.hpp>
 
+enum GO_TYPE{
+	PLAYER,
+	ENEMY,
+	PROJECTILE
+};
+
 class GameObject : public EventDispatcherHelper {
+	friend class GameState;
 public:
 	GameObject(GameState* owner);
 	virtual ~GameObject();
@@ -35,6 +42,8 @@ public:
 
 	void exposeObject(std::string name, Handle<Data> val);
 
+	virtual GO_TYPE getType() = 0;
+
 protected:
 	GameState* owner;
 
@@ -44,4 +53,5 @@ private:
 	std::vector<ScriptingObject*> attachedScripts;
 	std::unordered_map<std::string, std::list<v8::Persistent<v8::Function>>> events;
 
+	bool released;
 };

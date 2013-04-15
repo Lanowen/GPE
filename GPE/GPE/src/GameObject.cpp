@@ -4,7 +4,7 @@
 #include <V8Scripting.hpp>
 #include <SceneWideEvent.hpp>
 
-GameObject::GameObject(GameState* owner) : owner(owner) {
+GameObject::GameObject(GameState* owner) : owner(owner), released(false) {
 	HandleScope scope;
 
 	fcnTemplate = Persistent<FunctionTemplate>::New(FunctionTemplate::New());
@@ -176,5 +176,6 @@ void  GameObject::Update(Ogre::Real deltaTime){
 }
 
 void GameObject::release(){
-	
+	released = true;
+	owner->DeleteGameObject(this);
 }

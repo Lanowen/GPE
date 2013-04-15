@@ -21,6 +21,8 @@ falling = false;
 
 time = 0;
 
+life = 3;
+
 function onContact() {
     print("Recieved Projectile_Hit event\n");
 }
@@ -92,7 +94,7 @@ function AdvancePhysics(deltaTime) {
 
     disp = disp.multiply(deltaTime);
 
-    Enemy.CCT.move(disp, 0, deltaTime, PhysX.PxSceneQueryHitType.eBLOCK);
+   // Enemy.CCT.move(disp, 0, deltaTime, PhysX.PxSceneQueryHitType.eBLOCK);
 
     tempPos = Enemy.CCT.getPosition();
 
@@ -101,3 +103,11 @@ function AdvancePhysics(deltaTime) {
 
 registerEventCallback("AdvancePhysics", AdvancePhysics);
 
+function OnDamage(power) {
+    life -= power;
+
+    if (life <= 0)
+        Enemy.release();
+}
+
+registerEventCallback("OnDamage", OnDamage);

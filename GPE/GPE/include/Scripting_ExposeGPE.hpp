@@ -18,6 +18,8 @@ class V8PlayerCharacter : public BaseV8TemplateObject<V8PlayerCharacter>{
 public:
 	//Functions
 	static Handle<Value> addForceAtLocalPos( const Arguments& args );
+	static Handle<Value> release( const Arguments& args );
+
 
 	//Accessors
 	static Handle<Value> getEntity( Local<v8::String> property, const AccessorInfo& info );
@@ -53,6 +55,9 @@ public:
 
 class V8Enemy : public BaseV8TemplateObject<V8Enemy>{
 public:
+
+	static Handle<Value> release( const Arguments& args );
+
 	//Accessors
 	static Handle<Value> getEntity( Local<v8::String> property, const AccessorInfo& info );
 	static Handle<Value> getAniStates( Local<v8::String> property, const AccessorInfo& info );

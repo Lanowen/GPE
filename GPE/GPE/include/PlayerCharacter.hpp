@@ -69,6 +69,14 @@ public:
 
 	void giveGamera(Camera* cam);
 
+	bool IsAlive();
+
+	Vector3 getPosition();
+	void setPosition(Vector3 pos);
+	void DoHit(PxControllersHit hit);
+
+	virtual GO_TYPE getType() { return GO_TYPE::PLAYER; }
+
 protected:		
     void getInput(Real deltaTime);
 	virtual void onShapeHit(const physx::PxControllerShapeHit & hit);
@@ -83,6 +91,7 @@ protected:
 	
 
 public:
+	bool isAlive;
     int m_pJoyDeadZone;
     OIS::Keyboard* m_pKeyboard;
     OIS::JoyStick* m_pJoyStick;

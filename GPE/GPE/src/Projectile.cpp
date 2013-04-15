@@ -19,7 +19,7 @@ void Projectile::Initialize(PxVec3 pos, PxQuat dir){
 	actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
 	actor->setLinearVelocity(dir.rotate(PxVec3(0,0,1)*PROJECTILESPEED));
 
-	actor->userData = this;
+	actor->userData = (GameObject*)this;
 
 	actor->setName("Projectile");
 
@@ -40,5 +40,7 @@ void Projectile::Initialize(PxVec3 pos, PxQuat dir){
 }
 
 Projectile::~Projectile(){
-
+	//node->removeAndDestroyAllChildren();
+	//Root::getSingletonPtr()->getSceneManager("GameSceneMgr")->destroySceneNode(node);
+	actor->release();
 }

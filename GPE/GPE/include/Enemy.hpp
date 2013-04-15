@@ -23,6 +23,8 @@ public:
 
 	void setPosition(PxVec3 pos);
 
+	virtual GO_TYPE getType() { return GO_TYPE::ENEMY; }
+
 protected:
 	void AdvancePhysics(Real deltaTime);
 	void UpdateAnimation(Real deltaTime);

@@ -107,6 +107,7 @@
     <ClInclude Include="include\DynamicConstraints.hpp" />
     <ClInclude Include="include\Enemy.hpp" />
     <ClInclude Include="include\ErrorStream.h" />
+    <ClInclude Include="include\EventData.hpp" />
     <ClInclude Include="include\EventDispatcherHelper.hpp" />
     <ClInclude Include="include\Game.hpp" />
     <ClInclude Include="include\GameObject.hpp" />
@@ -129,6 +130,7 @@
     <ClInclude Include="include\Util.hpp" />
     <ClInclude Include="include\V8Scripting.hpp" />
     <ClInclude Include="include\VisualDebugger.hpp" />
+    <ClInclude Include="src\EventData.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Media\scripts\BasicProjectile.js" />

@@ -33,6 +33,7 @@
 
 #include <list>
 
+class PlayerCharacter;
 class GameObject;
 class Enemy;
 
@@ -67,11 +68,27 @@ public:
 	void DeleteGameObject(GameObject* go);
 	void RemoveGameObject(GameObject* go);
 
+	void RespawnPlayer(PlayerCharacter* player);
+	PlayerCharacter* SpawnPlayer();
+
+	void RegisterHit(PlayerCharacter* player, PxControllersHit hit);
+
 private:
+
+	struct PlayerHit {
+		bool operator == (const PlayerHit& other){
+			return player == other.player;
+		}
+
+		PlayerCharacter* player;
+		PxControllersHit hit;
+	};
 
 	void enter();
 	void createScene();
 	void exit();
+
+	Vector3 GetBestSpawnpoint();
 
 	void moveCamera();
 	void getInput(double timeSinceLastFrame);
@@ -137,6 +154,10 @@ private:
 	SceneWideEvent*				mEventHandler;
 	V8Scripting*				mScripting;
 
+	std::vector<Vector3> spawnPoints;
+	std::vector<PlayerCharacter*> players;
+	std::list<PlayerHit> hitsThisFrame;
+
 
 protected:
 
@@ -178,8 +199,9 @@ private:
     FrameEvent            m_FrameEvent;
     bool				        m_bShutdown;
 	bool			pxVisualDebuggerHidden;
+	bool fetchingResults;
 
-	std::list<PxActor*> toDelete;
+	std::list<GameObject*> toDelete;
 
 };
 

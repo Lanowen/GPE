@@ -15,12 +15,14 @@ public:
 	Projectile(GameState* owner, GameObject* spawner, PxVec3 pos, PxQuat dir);
 	virtual ~Projectile();
 
+	virtual GO_TYPE getType() { return GO_TYPE::PROJECTILE; }
+
 private:
 	void Initialize(PxVec3 pos, PxQuat dir);
 
 
 private:
 	PxRigidDynamic* actor;
-	Node* node;
+	SceneNode* node;
 	GameObject* spawner;
 };

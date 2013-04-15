@@ -45,6 +45,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 				objTemp->SetInternalFieldCount(1);
 
 				V8PlayerCharacter::getTemplate()->PrototypeTemplate()->Set(v8::String::New("addForceAtLocalPos"), FunctionTemplate::New(InvocationCallback( V8PlayerCharacter::addForceAtLocalPos )));
+				V8PlayerCharacter::getTemplate()->PrototypeTemplate()->Set(v8::String::New("release"), FunctionTemplate::New(InvocationCallback( V8PlayerCharacter::release )));
 
 				objTemp->SetAccessor(v8::String::New("entity"), V8PlayerCharacter::getEntity);
 				objTemp->SetAccessor(v8::String::New("gunTip"), V8PlayerCharacter::getGunTip);
@@ -75,6 +76,8 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 
 				objTemp = V8Enemy::getTemplate()->InstanceTemplate();
 				objTemp->SetInternalFieldCount(1);
+
+				V8Enemy::getTemplate()->PrototypeTemplate()->Set(v8::String::New("release"), FunctionTemplate::New(InvocationCallback( V8Enemy::release )));
 
 				objTemp->SetAccessor(v8::String::New("entity"), V8Enemy::getEntity);
 				objTemp->SetAccessor(v8::String::New("animationStateSet"), V8Enemy::getAniStates);
@@ -144,7 +147,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 			return scope.Close( args.Holder() );
 		}
 		else if(args.Length() == 2 && !args[0].IsEmpty() && args[0]->IsString() &&
-			!args[1].IsEmpty() && args[0]->IsArray()){
+			!args[1].IsEmpty() && args[1]->IsArray()){
 			GameObject* thisGO = unwrap<GameObject>(args.Holder());
 
 			Local<Array> arr = Local<Array>::Cast(args[1]);
@@ -169,7 +172,7 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());
 
-		if(args.Length() == 1 && !args[0].IsEmpty() && args[0]->IsString()) 
+		if(args.Length() == 0) 
         {
 			GameObject* thisGO = unwrap<GameObject>(args.Holder());
 
@@ -207,6 +210,22 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 			PlayerCharacter* thisObj = unwrap<PlayerCharacter>(args.Holder());
 
 			thisObj->addForceAtLocalPos(*unwrap<PxRigidBody>(args[0]->ToObject()), *unwrap<PxVec3>(args[1]->ToObject()), *unwrap<PxVec3>(args[2]->ToObject()), (PxForceMode::Enum)args[3]->Uint32Value(), args[4]->BooleanValue());
+
+			return scope.Close( args.Holder() );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
+	Handle<Value> V8PlayerCharacter::release(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0) 
+        {
+			PlayerCharacter* thisObj = unwrap<PlayerCharacter>(args.Holder());
+
+			thisObj->release();
 
 			return scope.Close( args.Holder() );
 		}
@@ -490,6 +509,23 @@ Local<FunctionTemplate> V8GPE::NewFunctionTemplate(InvocationCallback callback, 
 	}
 
 //Enemy
+
+	Handle<Value> V8Enemy::release(const Arguments& args){
+		//Locker lock(Isolate::GetCurrent());
+		HandleScope scope(Isolate::GetCurrent());
+
+		if(args.Length() == 0) 
+        {
+			Enemy* thisObj = unwrap<Enemy>(args.Holder());
+
+			thisObj->release();
+
+			return scope.Close( args.Holder() );
+		}
+
+		return scope.Close( Undefined() );
+	}
+
 	Handle<Value> V8Enemy::getEntity( Local<v8::String> property , const AccessorInfo& info ){
 		//Locker lock(Isolate::GetCurrent());
 		HandleScope scope(Isolate::GetCurrent());

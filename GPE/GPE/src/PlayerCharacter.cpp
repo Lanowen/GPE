@@ -40,10 +40,12 @@ PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_
 	cDesc.halfForwardExtent = 0.4;
 	cDesc.callback		= this;
 	//cDesc.behaviorCallback
-	cDesc.userData = this;
+	cDesc.userData = (GameObject*)this;
 
 	mCCT = owner->getControllerManager()->createController(*mPhys, mPhysScene, cDesc);
 	PX_ASSERT(mCCT);
+
+	mCCT->getActor()->userData = (GameObject*)this;
 
 	PxFilterData filterData;
 	filterData.word0 = 1; // word0 = own ID
@@ -146,11 +148,13 @@ PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_
 
 PlayerCharacter::~PlayerCharacter()
 {
-
+	mCCT->release();
+	node->removeAndDestroyAllChildren();
+	Root::getSingletonPtr()->getSceneManager("GameSceneMgr")->destroySceneNode(node);
 }
 
 void PlayerCharacter::release(){
-	owner->DeleteGameObject(this);
+	GameObject::release();
 }
 
 void PlayerCharacter::giveGamera(Camera* cam){
@@ -236,6 +240,19 @@ void PlayerCharacter::AdvancePhysics(Real deltaTime){
 
 	node->setPosition(pos);	
 }
+
+bool PlayerCharacter::IsAlive(){
+	return isAlive;
+}
+
+Vector3 PlayerCharacter::getPosition(){
+	return Util::vec_from_to<PxExtendedVec3, Vector3>(mCCT->getPosition());
+}
+
+void PlayerCharacter::setPosition(Vector3 pos){
+	mCCT->setPosition(Util::vec_from_to<Vector3,PxExtendedVec3>(pos));
+}
+
 
 
 void PlayerCharacter::UpdateAnimation(Real deltaTime){
@@ -430,6 +447,10 @@ void PlayerCharacter::getInput(Real deltaTime){
 
 }
 
+void PlayerCharacter::DoHit(PxControllersHit hit){
+	Util::dout << "Thats a hit on me" << std::endl;
+}
+
 void PlayerCharacter::onShapeHit(const PxControllerShapeHit & hit){
 	HandleScope handleScope(Isolate::GetCurrent());
 	Handle<Value> args[1];
@@ -438,10 +459,12 @@ void PlayerCharacter::onShapeHit(const PxControllerShapeHit & hit){
 }
 
 void PlayerCharacter::onControllerHit(const PxControllersHit& hit){
-	HandleScope handleScope(Isolate::GetCurrent());
+	/*HandleScope handleScope(Isolate::GetCurrent());
 	Handle<Value> args[1];
 	args[0] = wrapByVal<PxControllersHit, V8PxControllersHit>(const_cast<PxControllersHit&>(hit));
-	dispatchEvent("onControllerHit", 1, args);
+	dispatchEvent("onControllerHit", 1, args);*/
+
+	owner->RegisterHit(this, hit);
 }
 
 void PlayerCharacter::onObstacleHit(const PxControllerObstacleHit& hit){

@@ -9,6 +9,8 @@
 #define MOVESPEED 2
 #define HALFEXTENT 0.4
 
+#include <PlayerCharacter.hpp>
+
 
 Enemy::Enemy(GameState* owner, std::string mesh, std::string script) : GameObject(owner)
 {
@@ -32,14 +34,18 @@ Enemy::Enemy(GameState* owner, std::string mesh, std::string script) : GameObjec
 	cDesc.halfForwardExtent = HALFEXTENT;
 	cDesc.callback		= this;
 	//cDesc.behaviorCallback
-	cDesc.userData = this;
+	cDesc.userData = (GameObject*)this;
 
 	mCCT = owner->getControllerManager()->createController(*owner->getPhysics(), owner->getMainPhysicsScene(),cDesc);
 	PX_ASSERT(mCCT);
 
+	mCCT->getActor()->userData = (GameObject*)this ;
+
 	PxFilterData filterData;
 	filterData.word0 = 8; // word0 = own ID
 	filterData.word1 = 2;	// word1 = ID mask to filter pairs that trigger a contact callback;
+
+	//Util::dout << "enemy: " << (int)this << " derp " << (int)(GameObject*)this << std::endl;
 
 	const PxU32 numShapes = mCCT->getActor()->getNbShapes();
 	PxShape** shapes = new PxShape*[numShapes];
@@ -78,11 +84,13 @@ Enemy::Enemy(GameState* owner, std::string mesh, std::string script) : GameObjec
 
 Enemy::~Enemy()
 {
-
+	mCCT->release();
+	node->removeAndDestroyAllChildren();
+	Root::getSingletonPtr()->getSceneManager("GameSceneMgr")->destroySceneNode(node);
 }
 
 void Enemy::release(){
-	owner->DeleteGameObject(this);
+	GameObject::release();
 }
 
 void Enemy::Update(Real deltaTime){
@@ -120,10 +128,16 @@ void Enemy::onShapeHit(const PxControllerShapeHit & hit){
 }
 
 void Enemy::onControllerHit(const PxControllersHit& hit){
-	HandleScope handleScope(Isolate::GetCurrent());
+	/*HandleScope handleScope(Isolate::GetCurrent());
 	Handle<Value> args[1];
 	args[0] = wrapByVal<PxControllersHit, V8PxControllersHit>(const_cast<PxControllersHit&>(hit));
-	dispatchEvent("onControllerHit", 1, args);
+	dispatchEvent("onControllerHit", 1, args);*/
+	if (hit.other->getActor()->userData != 0){
+		GameObject* go = reinterpret_cast<GameObject*>(hit.other->getActor()->userData);
+		if(go->getType() == GO_TYPE::PLAYER)
+			owner->RegisterHit((PlayerCharacter*)go, hit);
+	}
+	
 }
 
 void Enemy::onObstacleHit(const PxControllerObstacleHit& hit){
@@ -141,7 +155,7 @@ void Enemy::addForceAtLocalPos(PxRigidBody& body, const PxVec3& force, const PxV
 }
 
 inline void Enemy::addForceAtPosInternal(PxRigidBody& body, const PxVec3& force, const PxVec3& pos, PxForceMode::Enum mode, bool wakeup){
-/*	if(mode == PxForceMode::eACCELERATION || mode == PxForceMode::eVELOCITY_CHANGE)
+	/*if(mode == PxForceMode::eACCELERATION || mode == PxForceMode::eVELOCITY_CHANGE)
 	{
 		Ps::getFoundation().error(PxErrorCode::eINVALID_PARAMETER, __FILE__, __LINE__, 
 			"PxRigidBodyExt::addForce methods do not support eACCELERATION or eVELOCITY_CHANGE modes");

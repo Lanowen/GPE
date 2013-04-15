@@ -9,6 +9,9 @@
 #include <PlayerCharacter.hpp>
 #include <Enemy.hpp>
 
+#include <Scripting_Helpers.hpp>
+#include <Scripting_ExposeGPE.hpp>
+
 
 //|||||||||||||||||||||||||||||||||||||||||||||||
 
@@ -85,6 +88,7 @@ GameState::GameState()
 	mEventHandler		= 0;
 	mScripting			= 0;
 	pxVisualDebuggerHidden = false;
+	fetchingResults = false;
 }
 
 GameState::~GameState() {
@@ -392,6 +396,7 @@ GameState::createScene()
 				}
 				break;
 			case 's':
+				spawnPoints.push_back(Vector3(x,y,0));
 				break;
 			case ' ':
 				//do nothing
@@ -419,6 +424,11 @@ GameState::createScene()
 	levelData->close();
 
 	static_World->build();
+
+	srand(time(0));
+
+	PlayerCharacter* player = SpawnPlayer();
+	player->giveGamera(m_pCamera);
 	//Create Level Ends Here
 
 	/*physx::PxRigidDynamic* derp2 = mPhysics->createRigidDynamic(PxTransform(PxVec3(3.2,5.0f,0.f)));
@@ -449,6 +459,38 @@ GameState::createScene()
 	AddGameObject(testEnemy);*/
 }
 
+Vector3 GameState::GetBestSpawnpoint(){
+	int spawnPoint = rand()%spawnPoints.size();
+	unsigned int bestValue = 0;
+
+	for(int i = 0; i < spawnPoints.size(); i++){
+		int tempval = 0;
+		for(int j = 0; j < players.size(); j++){
+			tempval += players[i]->getPosition().squaredDistance(spawnPoints[i]);
+		}
+
+		if(bestValue < tempval){
+			bestValue = tempval;
+			spawnPoint = i;
+		}
+	}
+
+	return spawnPoints[spawnPoint];
+}
+
+void GameState::RespawnPlayer(PlayerCharacter* player){
+	player->setPosition(GetBestSpawnpoint());
+}
+
+
+PlayerCharacter* GameState::SpawnPlayer(){
+	PlayerCharacter* newPlayer = new PlayerCharacter(m_pKeyboard, m_pJoyStick, m_pJoyDeadZone, this);
+	newPlayer->setPosition(GetBestSpawnpoint());
+	AddGameObject(newPlayer);
+
+	return newPlayer;
+}
+
 void GameState::RegisterInputListener(IInputListener* listener){
 	mInputListeners.push_back(listener);
 }
@@ -476,14 +518,31 @@ void GameState::AddGameObject(GameObject* go){
 }
 
 void GameState::DeleteGameObject(GameObject* go){
-	RemoveGameObject(go);
-	delete go;
+	
+	if(!fetchingResults){	
+		RemoveGameObject(go);
+		delete go;
+	}
+	else {
+		if(std::find<std::list<GameObject*>::iterator, GameObject*>(toDelete.begin(), toDelete.end(), go) == toDelete.end()){
+			toDelete.push_back(go);
+		}		
+	}
 }
 
 void GameState::RemoveGameObject(GameObject* go){
 	std::vector<GameObject*>::iterator itr = std::find<std::vector<GameObject*>::iterator, GameObject*>(mGameObjects.begin(), mGameObjects.end(), go);
 	if(itr != mGameObjects.end())
 		mGameObjects.erase(itr);
+}
+
+void GameState::RegisterHit(PlayerCharacter* player, PxControllersHit hit){
+	PlayerHit ph;
+	ph.player = player;
+	ph.hit = hit;
+	std::list<PlayerHit>::iterator itr = std::find<std::list<PlayerHit>::iterator, PlayerHit>(hitsThisFrame.begin(), hitsThisFrame.end(), ph);
+	if(itr == hitsThisFrame.end())
+		hitsThisFrame.push_back(ph);
 }
 
 bool GameState::keyPressed(const OIS::KeyEvent &keyEventRef){
@@ -752,18 +811,28 @@ void GameState::advanceSimulation(float dtime)
 	{
 		const PxReal dt = dtime>=timestep ? timestep : dtime;
 		mPxScene->simulate(dt);
+		fetchingResults = true;
 		mPxScene->fetchResults(true);
+		fetchingResults = false;
 		dtime -= dt;
 
 		if(toDelete.size() > 0){
-			std::list<PxActor*>::iterator itr = toDelete.begin();
+			std::list<GameObject*>::iterator itr = toDelete.begin();
 			for(;itr != toDelete.end(); itr++){
-				PxActor* temp = *itr;
-				temp->release();
+				GameObject* temp = *itr;
+				RemoveGameObject(temp);
+				delete temp;
 			}
 			toDelete.clear();
 		}
-		
+
+		if(hitsThisFrame.size() > 0){
+			std::list<PlayerHit>::iterator itr = hitsThisFrame.begin();
+			for(;itr != hitsThisFrame.end(); itr++){
+				itr->player->DoHit(itr->hit);				
+			}
+			hitsThisFrame.clear();
+		}		
 	}
 }
 
@@ -817,17 +886,60 @@ void GameState::onSleep(PxActor** actors, PxU32 count){
 }
 
 void GameState::onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs){
-	Util::dout << "onContact called...." << nbPairs << std::endl;
+	//Util::dout << "onContact called...." << nbPairs << std::endl;
 	//for(int pairs = 0; pairs < nbPairs; pairs++){ //this might be wrong
 
-		if(pairHeader.actors[0]->getName() == "Projectile" || pairHeader.actors[1]->getName() == "Projectile"){
+		/*if(pairHeader.actors[0]->getName() == "Projectile" || pairHeader.actors[1]->getName() == "Projectile"){
 			for(int i = 0; i < 2; i++){
 				if(pairHeader.actors[i]->userData != 0){
 					GameObject* go = reinterpret_cast<GameObject*>(pairHeader.actors[i]->userData);
 					go->dispatchEvent("Projectile_Hit");
 				}
 			}
+		}*/
+
+		if(pairHeader.actors[0]->getName() == "Projectile"){
+			GameObject* go = reinterpret_cast<GameObject*>(pairHeader.actors[0]->userData);
+
+			if(pairHeader.actors[1]->userData != 0){
+				if(pairHeader.actors[1]->getName() == "Projectile"){
+					go->release();
+					GameObject*  otherGO = reinterpret_cast<GameObject*>(pairHeader.actors[1]->userData);
+					otherGO->release();
+				}
+				else{
+					HandleScope scope(Isolate::GetCurrent());
+					GameObject*  otherGO = reinterpret_cast<GameObject*>(pairHeader.actors[1]->userData);
+					Handle<Value> args[1];
+					args[0] = wrapPtr<GameObject, V8GameObject>(otherGO);
+					go->dispatchEvent("Projectile_Hit", 1, args);
+				}
+			}
+
+			go->release();
 		}
+
+		if(pairHeader.actors[1]->getName() == "Projectile"){
+			GameObject* go = reinterpret_cast<GameObject*>(pairHeader.actors[1]->userData);
+
+			if(pairHeader.actors[0]->userData != 0){
+				if(pairHeader.actors[0]->getName() == "Projectile"){
+					go->release();
+					GameObject*  otherGO = reinterpret_cast<GameObject*>(pairHeader.actors[0]->userData);
+					otherGO->release();
+				}
+				else{
+					HandleScope scope(Isolate::GetCurrent());
+					GameObject*  otherGO = reinterpret_cast<GameObject*>(pairHeader.actors[0]->userData);
+					Handle<Value> args[1];
+					args[0] = wrapPtr<GameObject, V8GameObject>(otherGO);
+					go->dispatchEvent("Projectile_Hit", 1, args);
+				}
+			}
+
+			go->release();
+		}
+
 		//for(int i = 0; i < 2; i++){
 		//	
 		//		if(pairHeader.actors[i]->isRigidDynamic()){
@@ -857,12 +969,6 @@ void GameState::onContact(const PxContactPairHeader& pairHeader, const PxContact
 void GameState::onTrigger(PxTriggerPair* pairs, PxU32 count){
 	Util::dout << "onTrigger called...." << std::endl;
 }
-
-
-
-
-
-
 
 //Adjust mouse clipping area
 void GameState::windowResized(Ogre::RenderWindow* rw)

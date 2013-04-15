@@ -21,13 +21,19 @@ function onShapeHit(hit) {
 		    Player.addForceAtLocalPos(actor, hit.getDirection().multiply(hit.getLength() * 1000.0), localPos, PhysX.PxForceMode.eACCELERATION);
         }
     }
+
+    dotP = hit.getDirection().dot(hit.getController().getUpDirection());
 	
-    if (hit.getDirection().dot(hit.getController().getUpDirection()) < -0.95) {
-    //if (hit.getDirection().dot(new PxVec3(0, 1, 0)) < -0.95) {
-        Player.grounded = true;
-        Player.flipping = false;
-        Player.velocity.x = 0;
-        Player.velocity.y = 0;
+    if (Math.abs(dotP) > 0.95) {
+        if (dotP < 0) {
+            Player.grounded = true;
+            Player.flipping = false;
+            Player.velocity.x = 0;
+            Player.velocity.y = 0;
+        }
+        else {
+            Player.velocity.y = 0;
+        }        
     }
 }
 
@@ -226,8 +232,6 @@ function UpdateAnimation(deltaTime) {
         deltaAngle = Player.childNode.getOrientation().getPitch();
         Player.childNode.pitch(deltaAngle.negate());		
     }
-
-    
 }
 
 registerEventCallback("UpdateAnimation", UpdateAnimation);
