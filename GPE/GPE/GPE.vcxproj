@@ -82,6 +82,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Enemy.cpp" />
+    <ClCompile Include="src\EventData.cpp" />
     <ClCompile Include="src\EventDispatcherHelper.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
@@ -92,13 +93,7 @@
     <ClCompile Include="src\PlayerCharacter.cpp" />
     <ClCompile Include="src\Projectile.cpp" />
     <ClCompile Include="src\SceneWideEvent.cpp" />
-    <ClCompile Include="src\ScriptingManager.cpp" />
-    <ClCompile Include="src\ScriptingObject.cpp" />
-    <ClCompile Include="src\Scripting_ExposeGPE.cpp" />
-    <ClCompile Include="src\Scripting_ExposeOGRE.cpp" />
-    <ClCompile Include="src\Scripting_ExposePx.cpp" />
     <ClCompile Include="src\SerializeableData.cpp" />
-    <ClCompile Include="src\V8Scripting.cpp" />
     <ClCompile Include="src\VisualDebugger.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -119,18 +114,10 @@
     <ClInclude Include="include\Projectile.hpp" />
     <ClInclude Include="include\Sample.h" />
     <ClInclude Include="include\SceneWideEvent.hpp" />
-    <ClInclude Include="include\ScriptingManager.hpp" />
-    <ClInclude Include="include\ScriptingObject.hpp" />
-    <ClInclude Include="include\Scripting_ExposeGPE.hpp" />
-    <ClInclude Include="include\Scripting_ExposeOGRE.hpp" />
-    <ClInclude Include="include\Scripting_ExposePx.hpp" />
-    <ClInclude Include="include\Scripting_Helpers.hpp" />
     <ClInclude Include="include\SerializationClassExports.hpp" />
     <ClInclude Include="include\SerializeableData.hpp" />
     <ClInclude Include="include\Util.hpp" />
-    <ClInclude Include="include\V8Scripting.hpp" />
     <ClInclude Include="include\VisualDebugger.hpp" />
-    <ClInclude Include="src\EventData.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Media\scripts\BasicProjectile.js" />

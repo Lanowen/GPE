@@ -36,11 +36,20 @@ void Projectile::Initialize(PxVec3 pos, PxQuat dir){
 
 	owner->getMainPhysicsScene()->addActor(*actor);
 
-	loadScript("BasicProjectile.js");
+	//loadScript("BasicProjectile.js");
+
+	registerEventCallback("Projectile_Hit", boost::bind(&Projectile::OnProjectileHit, this, _1));
 }
 
 Projectile::~Projectile(){
 	//node->removeAndDestroyAllChildren();
 	//Root::getSingletonPtr()->getSceneManager("GameSceneMgr")->destroySceneNode(node);
 	actor->release();
+}
+
+void Projectile::OnProjectileHit(const EventData* other){
+	GameObject*  otherGO = reinterpret_cast<GameObject*>(other->data);
+	ProjectileEvent pe;
+	pe.power = 1;
+	otherGO->dispatchEvent("OnDamage", &pe);
 }

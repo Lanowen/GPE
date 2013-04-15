@@ -28,7 +28,7 @@
 
 #include <VisualDebugger.hpp>
 #include <DynamicConstraints.hpp>
-#include <V8Scripting.hpp>
+//#include <V8Scripting.hpp>
 #include <SceneWideEvent.hpp>
 
 #include <list>
@@ -152,7 +152,7 @@ private:
 	VisualDebugger*				mVisualDebugger;
 
 	SceneWideEvent*				mEventHandler;
-	V8Scripting*				mScripting;
+	//V8Scripting*				mScripting;
 
 	std::vector<Vector3> spawnPoints;
 	std::vector<PlayerCharacter*> players;

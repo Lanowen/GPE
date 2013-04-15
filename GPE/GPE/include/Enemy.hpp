@@ -9,13 +9,15 @@
 #include <GameObject.hpp>
 #include <GameState.hpp>
 
+#include <Projectile.hpp>
+
 using namespace Ogre;
 using namespace physx;
 
 class Enemy : public physx::PxUserControllerHitReport/*, public physx::PxControllerBehaviorCallback*/, public GameObject {
 	friend class V8Enemy;
 public:
-    Enemy(GameState* owner, std::string mesh, std::string script);
+    Enemy(GameState* owner, std::string mesh/*, std::string script*/);
 	virtual ~Enemy();
 
 	virtual void Update(Real deltaTime);
@@ -35,13 +37,17 @@ protected:
 	static void addForceAtLocalPos(physx::PxRigidBody& body, const physx::PxVec3& force, const physx::PxVec3& pos, physx::PxForceMode::Enum mode, bool wakeup=true);
 	static inline void addForceAtPosInternal(physx::PxRigidBody& body, const physx::PxVec3& force, const physx::PxVec3& pos, physx::PxForceMode::Enum mode, bool wakeup);
 
+	void OnDamage(const EventData* data);
+
 private:
 	Entity* ent;
     AnimationStateSet* m_aniStates;
 	SceneNode* node, * childNode;
 	PxController* mCCT;
 	PxScene* mPhysScene;
-	PxVec3 displacement;
 	PxVec3 moveDir, castDir;
 	PxQuat rotRight, rotLeft;
+	int rotCount;
+	bool falling;
+	int life;
 };

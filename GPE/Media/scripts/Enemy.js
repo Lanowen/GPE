@@ -49,8 +49,6 @@ function AdvancePhysics(deltaTime) {
         return;
 
     time += deltaTime;
-   
-
     disp.x = 0;
     disp.y = 0;
     disp.z = 0;
@@ -69,8 +67,7 @@ function AdvancePhysics(deltaTime) {
     }
 
     if (!Enemy.physScene.raycastSingle(PhysX.toVec3(Enemy.CCT.getPosition()).subtract(moveDir.multiply(HALFEXTENT)), castDir, 1 + HALFEXTENT, PhysX.PxSceneQueryFlag.eBLOCKING_HIT, hit1, new PxSceneQueryFilterData(PhysX.PxSceneQueryFilterFlag.eSTATIC)) &&
-        !Enemy.physScene.raycastSingle(PhysX.toVec3(Enemy.CCT.getPosition()).add(moveDir.multiply(HALFEXTENT)), castDir, 1 + HALFEXTENT, PhysX.PxSceneQueryFlag.eBLOCKING_HIT, hit1, new PxSceneQueryFilterData(PhysX.PxSceneQueryFilterFlag.eSTATIC)))
-    {
+        !Enemy.physScene.raycastSingle(PhysX.toVec3(Enemy.CCT.getPosition()).add(moveDir.multiply(HALFEXTENT)), castDir, 1 + HALFEXTENT, PhysX.PxSceneQueryFlag.eBLOCKING_HIT, hit1, new PxSceneQueryFilterData(PhysX.PxSceneQueryFilterFlag.eSTATIC))) {
         moveDir = rotRight.rotate(moveDir);
         castDir = rotRight.rotate(castDir);
 
@@ -94,7 +91,7 @@ function AdvancePhysics(deltaTime) {
 
     disp = disp.multiply(deltaTime);
 
-   // Enemy.CCT.move(disp, 0, deltaTime, PhysX.PxSceneQueryHitType.eBLOCK);
+    // Enemy.CCT.move(disp, 0, deltaTime, PhysX.PxSceneQueryHitType.eBLOCK);
 
     tempPos = Enemy.CCT.getPosition();
 

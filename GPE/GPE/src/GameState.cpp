@@ -9,9 +9,8 @@
 #include <PlayerCharacter.hpp>
 #include <Enemy.hpp>
 
-#include <Scripting_Helpers.hpp>
-#include <Scripting_ExposeGPE.hpp>
-
+//#include <Scripting_Helpers.hpp>
+//#include <Scripting_ExposeGPE.hpp>
 
 //|||||||||||||||||||||||||||||||||||||||||||||||
 
@@ -86,7 +85,7 @@ GameState::GameState()
 	mCudaContextManager	= 0;
 
 	mEventHandler		= 0;
-	mScripting			= 0;
+	//mScripting			= 0;
 	pxVisualDebuggerHidden = false;
 	fetchingResults = false;
 }
@@ -323,7 +322,8 @@ GameState::createScene()
 	//mPhysRenderSystem = new Critter::RenderSystem(mPhysScene, m_pSceneMgr);
 
 //================================================================================================================
-	mScripting = new V8Scripting();
+	//mScripting = new V8Scripting();
+
 //================================================================================================================
 
 	//PlayerCharacter* playerChar = new PlayerCharacter(m_pKeyboard, m_pJoyStick, m_pJoyDeadZone, this);
@@ -348,7 +348,7 @@ GameState::createScene()
 	struct EnemyDef {
 		std::string classID;
 		std::string model;
-		std::string script;
+		//std::string script;
 	};
 
 	std::map<char, EnemyDef> enemyDefs;
@@ -371,7 +371,7 @@ GameState::createScene()
 				std::stringstream ss;
 				ss << buf;
 
-				ss >> id >> id >> ed.classID >> ed.model >> ed.script;
+				ss >> id >> id >> ed.classID >> ed.model;// >> ed.script;
 
 				enemyDefs[id] = ed;
 				x = length_read;
@@ -407,7 +407,7 @@ GameState::createScene()
 				for(itr = enemyDefs.begin(); itr != enemyDefs.end(); itr++){
 					if(buf[x] == itr->first){
 						if(itr->second.classID == "Enemy"){
-							Enemy *nme = new Enemy(this, itr->second.model, itr->second.script);
+							Enemy *nme = new Enemy(this, itr->second.model);//, itr->second.script);
 							nme->setPosition(PxVec3(x,y,0));
 							AddGameObject(nme);
 						}
@@ -836,6 +836,7 @@ void GameState::advanceSimulation(float dtime)
 	}
 }
 
+
 bool GameState::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
     if(m_pRenderWnd->isClosed())
@@ -851,15 +852,12 @@ bool GameState::frameRenderingQueued(const Ogre::FrameEvent& evt)
         m_pJoyStick->capture();
     }
 
-	SceneWideEvent::dispatch_SceneWide(SceneWideEvent::ONFRAMEQUEUED);
-
-	
-
     update(evt.timeSinceLastFrame);
 
 	advanceSimulation(evt.timeSinceLastFrame);
 
 	//while(!V8::IdleNotification(1)) {};
+	
 
 	if(!pxVisualDebuggerHidden)
 		mVisualDebugger->update(mPxScene->getRenderBuffer());
@@ -908,11 +906,14 @@ void GameState::onContact(const PxContactPairHeader& pairHeader, const PxContact
 					otherGO->release();
 				}
 				else{
-					HandleScope scope(Isolate::GetCurrent());
+					/*HandleScope scope(Isolate::GetCurrent());
 					GameObject*  otherGO = reinterpret_cast<GameObject*>(pairHeader.actors[1]->userData);
 					Handle<Value> args[1];
 					args[0] = wrapPtr<GameObject, V8GameObject>(otherGO);
-					go->dispatchEvent("Projectile_Hit", 1, args);
+					go->dispatchEvent("Projectile_Hit", 1, args);*/
+					EventData d;
+					d.data = pairHeader.actors[1]->userData;
+					go->dispatchEvent("Projectile_Hit", &d);
 				}
 			}
 
@@ -929,11 +930,14 @@ void GameState::onContact(const PxContactPairHeader& pairHeader, const PxContact
 					otherGO->release();
 				}
 				else{
-					HandleScope scope(Isolate::GetCurrent());
+					/*HandleScope scope(Isolate::GetCurrent());
 					GameObject*  otherGO = reinterpret_cast<GameObject*>(pairHeader.actors[0]->userData);
 					Handle<Value> args[1];
 					args[0] = wrapPtr<GameObject, V8GameObject>(otherGO);
-					go->dispatchEvent("Projectile_Hit", 1, args);
+					go->dispatchEvent("Projectile_Hit", 1, args);*/
+					EventData d;
+					d.data = pairHeader.actors[0]->userData;
+					go->dispatchEvent("Projectile_Hit", &d);
 				}
 			}
 

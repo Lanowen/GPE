@@ -12,7 +12,7 @@
 #include <PlayerCharacter.hpp>
 
 
-Enemy::Enemy(GameState* owner, std::string mesh, std::string script) : GameObject(owner)
+Enemy::Enemy(GameState* owner, std::string mesh/*, std::string script*/) : GameObject(owner)
 {
 	float scale = 0.5;
 
@@ -68,18 +68,24 @@ Enemy::Enemy(GameState* owner, std::string mesh, std::string script) : GameObjec
 	childNode->setPosition(Vector3::ZERO);
 	childNode->attachObject(ent);
 
-	displacement = PxVec3(0,0,0);
-
 	mPhysScene = owner->getMainPhysicsScene();
-
     m_aniStates = ent->getAllAnimationStates();
 
 
-	HandleScope scope(Isolate::GetCurrent());
+	moveDir = PxVec3(1,0,0);
+	castDir = PxVec3(0,-1,0);
 
-	exposeObject("Enemy", wrapPtr<Enemy, V8Enemy>(this));
+	rotLeft = PxQuat(Math::HALF_PI, PxVec3(0,0,1));
+	rotRight = PxQuat(-Math::HALF_PI, PxVec3(0, 0, 1));
 
-	loadScript(script);
+	rotCount = 0;
+	falling = false;
+
+	registerEventCallback("OnDamage", boost::bind(&Enemy::OnDamage, this, _1));
+
+	//HandleScope scope(Isolate::GetCurrent());
+	//exposeObject("Enemy", wrapPtr<Enemy, V8Enemy>(this));
+	//loadScript(script);
 }
 
 Enemy::~Enemy()
@@ -113,18 +119,87 @@ void Enemy::UpdateAnimation(Real deltaTime){
     }
 }
 void Enemy::AdvancePhysics(Real deltaTime){ 
-	HandleScope handleScope(Isolate::GetCurrent());
+	/*HandleScope handleScope(Isolate::GetCurrent());
 	Handle<Value> args[1];
 	args[0] = Number::New(deltaTime);
-	dispatchEvent("AdvancePhysics", 1, args);
+	dispatchEvent("AdvancePhysics", 1, args);*/
+
+	PxVec3 disp(0);
+
+    if (falling) {
+
+        disp.y = -9.81* deltaTime;
+
+        mCCT->move(disp, 0, deltaTime, PxSceneQueryHitType::eBLOCK);
+
+        node->setPosition(Util::vec_from_to<PxExtendedVec3, Vector3>(mCCT->getPosition()));
+        return;
+    }
+
+	bool hitRes1=false, hitRes2 = false;
+	PxRaycastHit hit1, hit2;
+    if (!(hitRes1 = mPhysScene->raycastSingle(toVec3(mCCT->getPosition()) - (moveDir*HALFEXTENT), castDir, 1 + HALFEXTENT, PxSceneQueryFlag::eBLOCKING_HIT, hit1, PxSceneQueryFilterData(PxSceneQueryFilterFlag::eSTATIC))) &&
+        !(hitRes2 = mPhysScene->raycastSingle(toVec3(mCCT->getPosition()) + (moveDir*HALFEXTENT), castDir, 1 + HALFEXTENT, PxSceneQueryFlag::eBLOCKING_HIT, hit1, PxSceneQueryFilterData(PxSceneQueryFilterFlag::eSTATIC))))
+    {
+        moveDir = rotRight.rotate(moveDir);
+        castDir = rotRight.rotate(castDir);
+
+        //mCCT->move(moveDir*0.05, 0, deltaTime, PxSceneQueryHitType::eBLOCK);
+        //print("lol off edge,", time);
+        rotCount++;
+        if (rotCount > 4) {
+			falling = true;
+            moveDir.x = 1;
+            moveDir.y = 0;
+            castDir.x = 0;
+            castDir.y = -1;
+        }
+
+    }
+    else {
+		if(hitRes1 && hit1.distance > HALFEXTENT){
+			mCCT->move(castDir*(hit1.distance-HALFEXTENT), 0, deltaTime, PxSceneQueryHitType::eTOUCH);
+		}
+		else if(!hitRes1 && hitRes2 && hit2.distance > HALFEXTENT){
+			mCCT->move(castDir*(hit2.distance-HALFEXTENT), 0, deltaTime, PxSceneQueryHitType::eTOUCH);
+		}
+        rotCount = 0;
+    }
+
+    disp += moveDir *MOVESPEED;
+
+    disp *= deltaTime;
+
+    mCCT->move(disp, 0, deltaTime, PxSceneQueryHitType::eBLOCK);
+
+	node->setPosition(Util::vec_from_to<PxExtendedVec3, Vector3>(mCCT->getPosition()));
+}
+
+void Enemy::OnDamage(const EventData* data){
+	const ProjectileEvent* pe = static_cast<const ProjectileEvent*>(data);
+	Util::dout << "On Damage eventttt" << std::endl;
+	life -= pe->power;
+
+    if (life <= 0)
+        release();
 }
 
 
 void Enemy::onShapeHit(const PxControllerShapeHit & hit){
-	HandleScope handleScope(Isolate::GetCurrent());
+	/*HandleScope handleScope(Isolate::GetCurrent());
 	Handle<Value> args[1];
 	args[0] = wrapByVal<PxControllerShapeHit, V8PxControllerShapeHit>(const_cast<PxControllerShapeHit&>(hit));
-	dispatchEvent("onShapeHit", 1, args);
+	dispatchEvent("onShapeHit", 1, args);*/
+
+	if(hit.dir.dot(moveDir) > .95){
+        moveDir = rotLeft.rotate(moveDir);
+        castDir = rotLeft.rotate(castDir);
+    }
+
+    if (falling) {
+        falling = false;
+        rotCount = 0;
+    }
 }
 
 void Enemy::onControllerHit(const PxControllersHit& hit){
@@ -136,8 +211,7 @@ void Enemy::onControllerHit(const PxControllersHit& hit){
 		GameObject* go = reinterpret_cast<GameObject*>(hit.other->getActor()->userData);
 		if(go->getType() == GO_TYPE::PLAYER)
 			owner->RegisterHit((PlayerCharacter*)go, hit);
-	}
-	
+	}	
 }
 
 void Enemy::onObstacleHit(const PxControllerObstacleHit& hit){

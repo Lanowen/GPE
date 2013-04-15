@@ -9,6 +9,14 @@
 using namespace physx;
 using namespace Ogre;
 
+class ProjectileEvent: public EventData {
+public:
+	ProjectileEvent(){};
+	virtual ~ProjectileEvent(){};
+
+	int power;
+};
+
 class Projectile : public GameObject {
 public:
 	Projectile(GameState* owner, GameObject* spawner, Vector3 pos, Quaternion dir);
@@ -20,6 +28,7 @@ public:
 private:
 	void Initialize(PxVec3 pos, PxQuat dir);
 
+	void OnProjectileHit(const EventData* other);
 
 private:
 	PxRigidDynamic* actor;

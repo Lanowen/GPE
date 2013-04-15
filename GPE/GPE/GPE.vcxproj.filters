@@ -48,15 +48,6 @@
     <ClCompile Include="src\SceneWideEvent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ScriptingManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ScriptingObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\V8Scripting.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\VisualDebugger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -66,13 +57,7 @@
     <ClCompile Include="src\Projectile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scripting_ExposePx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting_ExposeGPE.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Scripting_ExposeOGRE.cpp">
+    <ClCompile Include="src\EventData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -125,15 +110,6 @@
     <ClInclude Include="include\SceneWideEvent.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ScriptingManager.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ScriptingObject.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\V8Scripting.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\VisualDebugger.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -146,16 +122,7 @@
     <ClInclude Include="include\IInputListener.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Scripting_ExposePx.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Scripting_ExposeGPE.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Scripting_ExposeOGRE.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Scripting_Helpers.hpp">
+    <ClInclude Include="include\EventData.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
