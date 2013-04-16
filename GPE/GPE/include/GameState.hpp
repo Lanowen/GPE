@@ -30,8 +30,11 @@
 #include <DynamicConstraints.hpp>
 //#include <V8Scripting.hpp>
 #include <SceneWideEvent.hpp>
+#include <NetworkedObjectManager.hpp>
 
 #include <list>
+
+#include <GPENet.hpp>
 
 class PlayerCharacter;
 class GameObject;
@@ -71,8 +74,16 @@ public:
 
 	void RespawnPlayer(PlayerCharacter* player);
 	PlayerCharacter* SpawnPlayer();
+	PlayerCharacter* SpawnMainPlayer();
+
+	void RespawnPlayer(PlayerCharacter* player,Vector3 pos);
+	PlayerCharacter* SpawnPlayer(Vector3 pos);
+	PlayerCharacter* SpawnMainPlayer(Vector3 pos);
 
 	void RegisterHit(PlayerCharacter* player, PxControllersHit hit);
+
+	static std::string ip;
+	static bool isServer;
 
 private:
 
@@ -138,7 +149,7 @@ private:
 	OIS::Mouse*				    m_pMouse;
 	OIS::JoyStick*              m_pJoyStick;
 
-    int                         m_pJoyDeadZone;
+    int                         m_JoyDeadZone;
 
     Ogre::String                mResourcesCfg;
     Ogre::String                mPluginsCfg;
@@ -161,6 +172,14 @@ private:
 	std::vector<PlayerCharacter*> players;
 	std::list<PlayerHit> hitsThisFrame;
 
+////#ifdef CLIENT
+//	boost::shared_ptr<GPENet::Client> client;
+////#endif
+////#ifdef SERVER
+//	boost::shared_ptr<GPENet::Server> server;
+////#endif
+
+	boost::shared_ptr<GPENet::SocketBase> socket;
 
 protected:
 
@@ -170,8 +189,18 @@ protected:
 	virtual void onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs);
 	virtual void onTrigger(PxTriggerPair* pairs, PxU32 count);
 
+	//Netwak stuff
+	void createEnemy(GPENet::Datagram dg);
+	void createMainPlayer(GPENet::Datagram dg);
+	void createPlayer(GPENet::Datagram dg);
+	void createBullet(GPENet::Datagram dg);
+	void getNetEvent(GPENet::Datagram dg);
+
+	void onClientConnect(GPENet::Datagram dg);
+	
+
 private:
-    //PlayerCharacter*                m_pPlayerChar;
+    PlayerCharacter*                m_pPlayerChar;
 	//std::vector<Enemy*> mEnemies;
 
 	std::vector<GameObject*> mGameObjects;
@@ -195,7 +224,6 @@ private:
 	ManualObject*         m_Grid;
 
 	void						advanceSimulation(float dtime);
-
 	bool				        m_bLMouseDown, m_bRMouseDown;
 
 	Camera*		        m_pCamera;
@@ -206,6 +234,8 @@ private:
 	bool fetchingResults;
 
 	std::list<GameObject*> toDelete;
+
+	NetworkedObjectManager netMan;
 
 };
 

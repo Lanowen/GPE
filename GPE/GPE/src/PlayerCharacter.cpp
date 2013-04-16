@@ -90,7 +90,7 @@ PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_
 
     SceneManager* gameSceneMgr = Root::getSingletonPtr()->getSceneManager("GameSceneMgr");
 	//ent = gameSceneMgr->createEntity("Samus", "Samus.mesh" );
-	ent = gameSceneMgr->createEntity("Samus", "samustestSamus.mesh" );
+	ent = gameSceneMgr->createEntity("samustestSamus.mesh" );
 	ent->getSkeleton()->setBlendMode(SkeletonAnimationBlendMode::ANIMBLEND_CUMULATIVE);
 
 
@@ -541,7 +541,7 @@ void PlayerCharacter::addTimeToAnimations(Real deltaTime){
 }
 
 bool PlayerCharacter::keyPressed(const OIS::KeyEvent &keyEventRef){
-
+	if(m_pKeyboard){
 	if(keyEventRef.key == OIS::KC_SPACE && mGrounded && !m_aniStates->getAnimationState("Jump_up")->getEnabled())
     {
 		m_aniStates->getAnimationState("Jump_up")->setTimePosition(0);
@@ -577,16 +577,18 @@ bool PlayerCharacter::keyPressed(const OIS::KeyEvent &keyEventRef){
 			}
 		}
 	}
+	}
 
 	return(true);
 }
 
 bool PlayerCharacter::keyReleased(const OIS::KeyEvent &keyEventRef){
-
+	if(m_pKeyboard){
     if(keyEventRef.key == OIS::KC_SPACE && !mGrounded && mVelocity.y > 0)
     {
 		mVelocity.y = 0;
     }
+	}
 	return(true);
 }
 
@@ -614,6 +616,7 @@ bool PlayerCharacter::sliderMoved( const OIS::JoyStickEvent &e, int sliderID ) {
 		//					0
 
 bool PlayerCharacter::buttonPressed( const OIS::JoyStickEvent &e, int button ) {
+	if(m_pJoyStick){
 	if(button == 1 && mGrounded && !m_aniStates->getAnimationState("Jump_up")->getEnabled())
     {
 		m_aniStates->getAnimationState("Jump_up")->setTimePosition(0);
@@ -658,15 +661,18 @@ bool PlayerCharacter::buttonPressed( const OIS::JoyStickEvent &e, int button ) {
 
 		
 	}
+	}
 
     return true;
 }
 
 bool PlayerCharacter::buttonReleased( const OIS::JoyStickEvent &e, int button ) {
+	if(m_pJoyStick){
 	if(button == 1 && !mGrounded && mVelocity.y > 0)
     {
 		mVelocity.y = 0;
     }
+	}
 
     return true;
 }
@@ -750,7 +756,7 @@ void PlayerCharacter::getInput(Real deltaTime){
 				mGunDirection = FORWARD;
 		}
     }
-	else {
+	else if(m_pKeyboard) {
 		if(m_pKeyboard->isKeyDown(OIS::KC_D) && !m_pKeyboard->isKeyDown(OIS::KC_A)){
 			if(!mFlipping){
 				mDirection = RIGHT;

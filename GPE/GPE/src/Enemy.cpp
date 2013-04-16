@@ -106,6 +106,10 @@ void Enemy::Update(Real deltaTime){
 	UpdateAnimation(deltaTime);
 }
 
+Vector3 Enemy::getPosition(){
+	return Util::vec_from_to<PxExtendedVec3, Vector3>(mCCT->getPosition());
+}
+
 void Enemy::setPosition(PxVec3 pos){
 	mCCT->setPosition(Util::vec_from_to<PxVec3, PxExtendedVec3>(pos));
 }

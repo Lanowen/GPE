@@ -13,23 +13,34 @@
 #include "OgreString.h"
 #endif
 
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+//#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR cmdLine, INT)
-#else
-int main(int argc, char *argv[])
-#endif
+//#else
+//int main(int argc, char *argv[])
+//#endif
 {
 	try
 	{
-        bool nograb = false;
-#if OGRE_PLATFORM != OGRE_PLATFORM_WIN32
-        if (argc >= 2 && Ogre::String(argv[1]) == "nograb")
-            nograb = true;
-#else
+		std::string ip = "";
+		bool isServer = false;
+//        bool nograb = false;
+//#if OGRE_PLATFORM != OGRE_PLATFORM_WIN32
+//        if (argc >= 2 && Ogre::String(argv[1]) == "nograb")
+//            nograb = true;
+//#else
         // somewhat hacky, but much simpler than other solutions
-        if (Ogre::String(cmdLine).find("nograb") != Ogre::String::npos)
-            nograb = true;
-#endif
+        //if (Ogre::String(cmdLine).find("nograb") != Ogre::String::npos)
+            //nograb = true;
+		size_t pos;
+		if ((pos = Ogre::String(cmdLine).find("server")) != Ogre::String::npos)
+			GameState::isServer = true;
+		if ((pos = Ogre::String(cmdLine).find("client")) != Ogre::String::npos)
+			GameState::isServer = false;
+		if ((pos = Ogre::String(cmdLine).find("ip")) != Ogre::String::npos){
+			size_t space = Ogre::String(cmdLine).find(" ", pos);
+			GameState::ip = Ogre::String(cmdLine).substr(pos + 3, space);
+		}
+//#endif
 		Game gpeGame;
 		gpeGame.go();
 	}

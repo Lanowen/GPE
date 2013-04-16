@@ -168,6 +168,12 @@ namespace GPENet {
 		friend class Server;
 		friend class Client;
 
+	private:
+		struct QueuedCallback {
+			boost::function<void (Datagram)> callback;
+			Datagram param;
+		};
+
 	protected:
 
 		SocketBase(udp::endpoint local_endPoint, bool reuse_address = false) : /*io_service(new boost::asio::io_service),*/ work(new boost::asio::io_service::work(io_service)),worker_thread(nullptr), socket(new udp::socket(io_service)) {
@@ -199,13 +205,28 @@ namespace GPENet {
 			work.reset();
 		}
 
-		
-
 		void Initialize(){
 
 			worker_thread = std::auto_ptr<boost::thread>(new boost::thread(boost::bind(serviceRunner, boost::ref(io_service))));
 		}
 
+		void tryCallCallbacks(Datagram& dg){
+			if(callbacks.find(dg.updateType) != callbacks.end() ){
+				//Util::dout << "Trying to call func" << std::endl;
+				callbacks[dg.updateType](dg);
+			}	
+
+			if(queuedCallbackLookup.find(dg.updateType) != queuedCallbackLookup.end() ){
+				//Util::dout << "Queueing func" << std::endl;
+				//queuedCallbacks[dg.updateType](dg);
+				QueuedCallback qcb;
+				qcb.callback = queuedCallbackLookup[dg.updateType];
+				qcb.param = dg;
+				queuedCallbacks.push_back(qcb);
+			}		
+		}
+
+		
 		Datagram parseDatagram(size_t bytes_transferred){
 			boost::asio::streambuf b;
 			std::iostream s(&b);
@@ -220,7 +241,40 @@ namespace GPENet {
 			return data;
 		}
 
-		
+	public:
+
+		template<class T>
+		void Send(T& data, UINT32 updateType, DatagramImportance importance = DatagramImportance::UNRELIABLE){
+			boost::shared_ptr<T> temp = boost::make_shared<T>(data);
+			Send(boost::shared_dynamic_cast<SerializableData>(temp), updateType, importance);
+		}
+
+		virtual void Send(const boost::shared_ptr<SerializableData> data, UINT32 updateType, DatagramImportance importance = DatagramImportance::UNRELIABLE) = 0;
+
+		void AddQueuedCallback(UINT32 type, boost::function<void (Datagram)> callback){
+			queuedCallbackLookup[type] = callback;
+		}
+
+		void RemoveQueuedCallback(UINT32 type){
+			queuedCallbackLookup.erase(type);
+		}	
+
+		void AddCallback(UINT32 type, boost::function<void (Datagram)> callback){
+			callbacks[type] = callback;
+		}
+
+		void RemoveCallback(UINT32 type){
+			callbacks.erase(type);
+		}	
+
+		void fetchCallbacks(){
+			std::list<QueuedCallback>::iterator itr = queuedCallbacks.begin();
+			for(;itr != queuedCallbacks.end(); itr++){
+				itr->callback(itr->param);
+			}
+			queuedCallbacks.clear();
+		}
+
 
 	protected:
 		//boost::shared_ptr<boost::asio::io_service> io_service;
@@ -230,6 +284,11 @@ namespace GPENet {
 
 		std::auto_ptr<boost::asio::io_service::work> work;
 		boost::array<char, MAXBUFFSIZE> dataBuff;
+		
+		std::map<UINT32, boost::function<void (Datagram)>> callbacks;
+		std::map<UINT32, boost::function<void (Datagram)>> queuedCallbackLookup;
+		
+		std::list<QueuedCallback> queuedCallbacks;
 	};
 
 	
@@ -328,7 +387,7 @@ namespace GPENet {
 			Send(boost::shared_dynamic_cast<SerializableData>(temp), updateType, importance);
 		}
 
-		void Send(const boost::shared_ptr<SerializableData> data, UINT32 updateType, DatagramImportance importance = DatagramImportance::UNRELIABLE){
+		virtual void Send(const boost::shared_ptr<SerializableData> data, UINT32 updateType, DatagramImportance importance = DatagramImportance::UNRELIABLE){
 			Datagram dg;
 			dg.updateType = updateType;
 			dg.importance = importance;
@@ -370,6 +429,8 @@ namespace GPENet {
 		virtual ~Client(){
 		}
 
+		private:
+
 		virtual void sent_handler(const boost::system::error_code& error, std::size_t bytes_transferred, Datagram dg){
 			//std::cout << "Sent_handler" << std::endl;
 			//Util::dout << "Sent_handler" << std::endl;
@@ -401,7 +462,8 @@ namespace GPENet {
 					switch(dg.updateType){
 					case UPDATE_TYPE::PING:
 						dg.senderid = senderID;
-						Send(dg, UPDATE_TYPE::PONG);
+						dg.updateType = UPDATE_TYPE::PONG;
+						SendDatagram(dg);
 						break;
 					case UPDATE_TYPE::REQUEST_CONNECT:
 						//do nothing, drop packet;
@@ -429,15 +491,13 @@ namespace GPENet {
 						//do nothing
 						break;
 					default:
-						if(callbacks.find(dg.updateType) != callbacks.end() ){
-							Util::dout << "Trying to call func" << std::endl;
-							callbacks[dg.updateType](dg);
-						}
-						else {
-							Util::dout << "Update type not found... " << dg.updateType << std::endl;
-						}
+						
 						break;
 					}
+					tryCallCallbacks(dg);
+					//else {
+					//	Util::dout << "Update type not found... " << dg.updateType << std::endl;
+					//}
 				//}
 			}
 			else {
@@ -450,18 +510,13 @@ namespace GPENet {
 
 			socket->async_receive(boost::asio::buffer(dataBuff, MAXBUFFSIZE), boost::bind(&Client::recieved_handler, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred, endpoint));
 		}
-
-		void AddCallback(UINT32 type, boost::function<void (Datagram)> callback){
-			callbacks[type] = callback;
-		}
-
-		void RemoveCallback(UINT32 type){
-			callbacks.erase(type);
-		}
+		
 
 		/*void RemoveCallback(boost::function<void (Datagram)> callback){
 			callbacks.erase(callbacks.find(callback));
 		}*/
+
+		public:
 
 		bool isConnected(){
 			return connected;
@@ -485,14 +540,13 @@ namespace GPENet {
 		OrderedDatagamHistory history;
 		std::deque<Datagram> sendQueue;
 
-		std::map<UINT32, boost::function<void (Datagram)>> callbacks;
 	};
 
 	class Server : public SocketBase, public boost::enable_shared_from_this<Server> {
 
 	private:
 
-		Server() : SocketBase(udp::endpoint(boost::asio::ip::address_v4::any(), 1774)), clientIDCounter(0), pinger_timer( new boost::asio::deadline_timer(io_service, boost::posix_time::milliseconds(200))){
+		Server() : SocketBase(udp::endpoint(boost::asio::ip::address_v4::any(), 1774)), clientIDCounter(1), pinger_timer( new boost::asio::deadline_timer(io_service, boost::posix_time::milliseconds(200))){
 			
 		}
 
@@ -544,6 +598,30 @@ namespace GPENet {
 			}
 		}
 
+		template<class T>
+		void Send(T& data, UINT32 updateType, DatagramImportance importance = DatagramImportance::UNRELIABLE){
+			boost::shared_ptr<T> temp = boost::make_shared<T>(data);
+			Send(boost::shared_dynamic_cast<SerializableData>(temp), updateType, importance);
+		}
+
+		virtual void Send(const boost::shared_ptr<SerializableData> data, UINT32 updateType, DatagramImportance importance = DatagramImportance::UNRELIABLE){
+			Datagram dg;
+			dg.updateType = updateType;
+			dg.importance = importance;
+
+			//addAckInfo(dg);
+			dg.senderid = 0;
+
+			dg.data = data;
+
+			std::map<UINT32, boost::shared_ptr<Client>>::iterator itr = clients.begin();
+			for(;itr != clients.end(); itr++){
+				itr->second->SendDatagram(dg);
+			}
+		}
+
+	private:
+
 		virtual void recieved_handler(const boost::system::error_code& error, std::size_t bytes_transferred, boost::shared_ptr<udp::endpoint> endpoint){
 			//Util::dout << "Server got packet" << std::endl;
 			//std::cout << "Server got packet" << std::endl;
@@ -584,32 +662,36 @@ namespace GPENet {
 					}
 					break;
 				case UPDATE_TYPE::DISCONNECT:
-					
-					std::map<UINT32, boost::shared_ptr<Client>>::iterator itr = clients.begin(), toRemove;
-					for(;itr != clients.end(); itr++){
-						if(itr->first == dg.senderid){
-							toRemove = itr;
-							continue;
-						}
+					{
+						std::map<UINT32, boost::shared_ptr<Client>>::iterator itr = clients.begin(), toRemove;
+						for(;itr != clients.end(); itr++){
+							if(itr->first == dg.senderid){
+								toRemove = itr;
+								continue;
+							}
 
-						itr->second->SendDatagram(dg);
+							itr->second->SendDatagram(dg);
+						}
+						std::cout << "Client with ID " << toRemove->first << " disconnected..." << std::endl;
+						clients.erase(toRemove);
 					}
-					std::cout << "Client with ID " << toRemove->first << " disconnected..." << std::endl;
-					clients.erase(toRemove);
 					break;
 				case UPDATE_TYPE::NONE:
 					//do nothing
 					break;
 				default:
-					std::map<UINT32, boost::shared_ptr<Client>>::iterator itr = clients.begin();
-					for(;itr != clients.end(); itr++){
-						if(itr->first == dg.senderid)
-							continue;
+					{
+						std::map<UINT32, boost::shared_ptr<Client>>::iterator itr = clients.begin();
+						for(;itr != clients.end(); itr++){
+							if(itr->first == dg.senderid)
+								continue;
 
-						itr->second->SendDatagram(dg);
+							itr->second->SendDatagram(dg);
+						}
 					}
 					break;
 				}
+				tryCallCallbacks(dg);
 			}
 			else {
 				std::cout << error.value() << ": " << error.message() << " " << bytes_transferred << std::endl;

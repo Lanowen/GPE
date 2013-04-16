@@ -43,8 +43,18 @@ template<> GameState* Ogre::Singleton<GameState>::msSingleton = 0;
 PxSimulationFilterShader gDefaultFilterShader = FilterShader;
 
 
+enum newUpdates {
+	CREATE_ENEMY= GPENet::UPDATE_TYPE::E_LAST + 1,
+	CREATE_MAINPLAYER,
+	CREATE_PLAYER,
+	CREATE_BULLET,
+	PLAYER_INPUTVEL,
+	PLAYER_INPUT_BUTTON,
+	NET_EVENT
+};
 
-
+std::string GameState::ip = "";
+bool GameState::isServer = false;
 
 //|||||||||||||||||||||||||||||||||||||||||||||||
 
@@ -92,9 +102,9 @@ GameState::GameState()
 }
 
 GameState::~GameState() {
-	if(m_pBackPlane){
-		delete m_pBackPlane;
-	}
+	//if(m_pBackPlane){
+	//	delete m_pBackPlane;
+	//}
 
 	for(int i = 0; i < mGameObjects.size(); i++){
 		delete mGameObjects[i];
@@ -161,6 +171,11 @@ bool GameState::initOgre(Ogre::String wndTitle, OIS::KeyListener *pKeyListener, 
     OIS::ParamList paramList;
     m_pRenderWnd->getCustomAttribute("WINDOW", &hWnd);
 
+	paramList.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_FOREGROUND" )));
+	paramList.insert(std::make_pair(std::string("w32_mouse"), std::string("DISCL_NONEXCLUSIVE")));
+	paramList.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_FOREGROUND")));
+	paramList.insert(std::make_pair(std::string("w32_keyboard"), std::string("DISCL_NONEXCLUSIVE")));
+
     paramList.insert(OIS::ParamList::value_type("WINDOW", Ogre::StringConverter::toString(hWnd)));
 
     m_pInputMgr = OIS::InputManager::createInputSystem(paramList);
@@ -197,7 +212,7 @@ bool GameState::initOgre(Ogre::String wndTitle, OIS::KeyListener *pKeyListener, 
 
         //m_pJoyDeadZone1 = (Ogre::Math.Abs(m_pJoyStick->getJoyStickState()->mAxes[0].abs) + Ogre::Math.Abs(m_pJoyStick->getJoyStickState()->mAxes[1].abs))/2
         //m_pJoyDeadZone2 = (Ogre::Math.Abs(m_pJoyStick->getJoyStickState()->mAxes[2].abs) + Ogre::Math.Abs(m_pJoyStick->getJoyStickState()->mAxes[3].abs))/2
-        m_pJoyDeadZone = m_pJoyStick->MAX_AXIS*0.2;
+        m_JoyDeadZone = m_pJoyStick->MAX_AXIS*0.4;
     }
 
     m_pRoot->addFrameListener(this);
@@ -221,12 +236,128 @@ bool GameState::initOgre(Ogre::String wndTitle, OIS::KeyListener *pKeyListener, 
 
     m_pRSQ = m_pSceneMgr->createRayQuery(Ogre::Ray());
 
+	if(isServer){
+		socket = GPENet::Server::Create();
+
+		socket->AddQueuedCallback(GPENet::CONNECT, boost::bind(&GameState::onClientConnect, this, _1));
+	}
+	else {
+		socket = GPENet::Client::Create(boost::asio::ip::udp::endpoint(boost::asio::ip::address_v4::any(), 0), boost::asio::ip::udp::endpoint(boost::asio::ip::address_v4::from_string(ip), 1774));
+
+		socket->AddQueuedCallback(CREATE_ENEMY, boost::bind(&GameState::createEnemy, this, _1));
+		socket->AddQueuedCallback(CREATE_MAINPLAYER, boost::bind(&GameState::createMainPlayer, this, _1));
+		socket->AddQueuedCallback(CREATE_PLAYER, boost::bind(&GameState::createPlayer, this, _1));
+		socket->AddQueuedCallback(CREATE_BULLET, boost::bind(&GameState::createBullet, this, _1));
+		socket->AddQueuedCallback(NET_EVENT, boost::bind(&GameState::getNetEvent, this, _1));
+	}	
+
     m_pRoot->startRendering();
 
     return true;
 }
 
 //|||||||||||||||||||||||||||||||||||||||||||||||
+
+void GameState::createEnemy(GPENet::Datagram dg){
+	boost::shared_ptr<IDandPos> ce = dg.getData<IDandPos>();
+	Enemy *nme = new Enemy(this, "SimpleBox.mesh");
+	nme->setPosition(PxVec3(ce->px,ce->py,ce->pz));
+	AddGameObject(nme);
+	netMan.addGameObject(ce->id, nme);
+}
+
+void GameState::onClientConnect(GPENet::Datagram dg){
+	std::map<int, GameObject*>::iterator itr = netMan.objects.begin();
+	for(;itr != netMan.objects.end(); itr++){
+		int id = itr->first;
+		GameObject* go = itr->second;
+
+		switch(go->getType()){
+		case GO_TYPE::ENEMY:
+			{
+			Enemy* nme = (Enemy*)go;
+			IDandPos idp;
+			idp.id = id;
+			Vector3 pos = nme->getPosition();
+			idp.px = pos.x;
+			idp.py = pos.y;
+			idp.pz = pos.z;
+
+			socket->Send(idp,CREATE_ENEMY,GPENet::RELIABLE_ORDERED);
+			}
+			break;
+		case GO_TYPE::PLAYER:
+			{
+			PlayerCharacter* pl = (PlayerCharacter*)go;
+			IDandPos idp;
+			idp.id = id;
+			Vector3 pos = pl->getPosition();
+			idp.px = pos.x;
+			idp.py = pos.y;
+			idp.pz = pos.z;
+
+			socket->Send(idp,CREATE_PLAYER,GPENet::RELIABLE_ORDERED);
+			}
+			break;
+		}
+	}
+
+	PlayerCharacter* player = SpawnPlayer();
+
+	int id = netMan.addGameObject(player);
+
+	IDandPos idp;
+	idp.id = id;
+	Vector3 pos = player->getPosition();
+	idp.px = pos.x;
+	idp.py = pos.y;
+	idp.pz = pos.z;
+
+	socket->Send(idp,CREATE_MAINPLAYER,GPENet::RELIABLE_ORDERED);
+}
+
+void GameState::createMainPlayer(GPENet::Datagram dg){
+	boost::shared_ptr<IDandPos> cpl = dg.getData<IDandPos>();
+
+	PlayerCharacter* player;
+	if((player = (PlayerCharacter*)netMan.getGameObject(cpl->id)) == 0){
+		player = SpawnMainPlayer(Vector3(cpl->px, cpl->py, cpl->pz));
+		player->giveGamera(m_pCamera);
+		netMan.addGameObject(cpl->id, player);
+	}
+	else {
+		RespawnPlayer(player, Vector3(cpl->px, cpl->py, cpl->pz));
+	}
+}
+
+void GameState::createPlayer(GPENet::Datagram dg){
+	boost::shared_ptr<IDandPos> cpl = dg.getData<IDandPos>();
+
+	PlayerCharacter* player;
+	if((player = (PlayerCharacter*)netMan.getGameObject(cpl->id)) == 0){
+		player = SpawnPlayer(Vector3(cpl->px, cpl->py, cpl->pz));
+		AddGameObject(player);
+		netMan.addGameObject(cpl->id, player);
+	}
+	else {
+		RespawnPlayer(player, Vector3(cpl->px, cpl->py, cpl->pz));
+	}
+}
+
+void GameState::createBullet(GPENet::Datagram dg){
+	boost::shared_ptr<CreateBullet> cb = dg.getData<CreateBullet>();
+
+	PlayerCharacter* player = (PlayerCharacter*)netMan.getGameObject(cb->parentid);
+	Projectile* proj = new Projectile(this, player, PxVec3(cb->px, cb->py, cb->pz), PxQuat(cb->dx, cb->dy, cb->dz, cb->dw));
+	AddGameObject(proj);
+}
+
+void GameState::getNetEvent(GPENet::Datagram dg){
+	boost::shared_ptr<NetEvent> ne = dg.getData<NetEvent>();
+
+	GameObject* go = netMan.getGameObject(ne->targetid);
+	go->dispatchEvent(ne->eventName, 0);
+}
 
 void
 GameState::createScene()
@@ -241,8 +372,8 @@ GameState::createScene()
     m_pSceneMgr->setAmbientLight(Ogre::ColourValue(1.f, 1.f, 1.f));
 
     m_pCamera = m_pSceneMgr->createCamera("GameCamera");
-    m_pCamera->setPosition(Ogre::Vector3(0,5,10));
-    m_pCamera->lookAt(Ogre::Vector3::ZERO);
+    m_pCamera->setPosition(Ogre::Vector3(65,-18,100));
+    m_pCamera->setDirection(0,0,-1);
     m_pCamera->setNearClipDistance(1);
 
     m_pCamera->setAspectRatio(Ogre::Real(m_pViewport->getActualWidth()) /
@@ -407,11 +538,17 @@ GameState::createScene()
 				std::map<char, EnemyDef>::iterator itr;
 				for(itr = enemyDefs.begin(); itr != enemyDefs.end(); itr++){
 					if(buf[x] == itr->first){
+
 						if(itr->second.classID == "Enemy"){
-							Enemy *nme = new Enemy(this, itr->second.model);//, itr->second.script);
-							nme->setPosition(PxVec3(x,y,0));
-							AddGameObject(nme);
+							if(isServer){
+								Enemy *nme = new Enemy(this, itr->second.model);
+								nme->setPosition(PxVec3(x,y,0));
+								AddGameObject(nme);
+								netMan.addGameObject(nme);
+							}
+
 						}
+
 						break;
 					}
 				}
@@ -428,8 +565,9 @@ GameState::createScene()
 
 	srand(time(0));
 
-	PlayerCharacter* player = SpawnPlayer();
-	player->giveGamera(m_pCamera);
+	//PlayerCharacter* player = SpawnPlayer();
+	//player->giveGamera(m_pCamera);
+
 	//Create Level Ends Here
 
 	Projectile::Initialize(m_pSceneMgr);
@@ -483,9 +621,46 @@ void GameState::RespawnPlayer(PlayerCharacter* player){
 }
 
 
-PlayerCharacter* GameState::SpawnPlayer(){
-	PlayerCharacter* newPlayer = new PlayerCharacter(m_pKeyboard, m_pJoyStick, m_pJoyDeadZone, this);
+PlayerCharacter* GameState::SpawnMainPlayer(){
+	PlayerCharacter* newPlayer = new PlayerCharacter(m_pKeyboard, m_pJoyStick, m_JoyDeadZone, this);
+
 	newPlayer->setPosition(GetBestSpawnpoint());
+	players.push_back(newPlayer);
+	AddGameObject(newPlayer);
+
+	return newPlayer;
+}
+
+PlayerCharacter* GameState::SpawnPlayer(){
+	PlayerCharacter* newPlayer = new PlayerCharacter(0, 0, m_JoyDeadZone, this);
+
+	newPlayer->setPosition(GetBestSpawnpoint());
+	players.push_back(newPlayer);
+	AddGameObject(newPlayer);
+
+	return newPlayer;
+}
+
+void GameState::RespawnPlayer(PlayerCharacter* player, Vector3 pos){
+	player->setPosition(pos);
+}
+
+
+PlayerCharacter* GameState::SpawnPlayer(Vector3 pos){
+	PlayerCharacter* newPlayer = new PlayerCharacter(0, 0, m_JoyDeadZone, this);
+	
+	newPlayer->setPosition(pos);
+	players.push_back(newPlayer);
+	AddGameObject(newPlayer);
+
+	return newPlayer;
+}
+
+PlayerCharacter* GameState::SpawnMainPlayer(Vector3 pos){
+	PlayerCharacter* newPlayer = new PlayerCharacter(m_pKeyboard, m_pJoyStick, m_JoyDeadZone, this);
+	
+	newPlayer->setPosition(pos);
+	players.push_back(newPlayer);
 	AddGameObject(newPlayer);
 
 	return newPlayer;
@@ -889,6 +1064,8 @@ bool GameState::frameRenderingQueued(const Ogre::FrameEvent& evt)
     if( m_pJoyStick ) {
         m_pJoyStick->capture();
     }
+
+	socket->fetchCallbacks();
 
     update(evt.timeSinceLastFrame);
 

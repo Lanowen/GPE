@@ -66,34 +66,12 @@ typedef unsigned int UINT32;
 		}
 	};
 
-	class CreateEnemy : public SerializableData {
+	class IDandPos : public SerializableData {
 	public:
 
-		CreateEnemy(){}
+		IDandPos(){}
 
-		virtual ~CreateEnemy(){}
-
-		int id;
-		float px, py, pz;
-
-	private:
-		friend class boost::serialization::access;
-
-		template<class Archive>
-		void serialize(Archive & ar, const unsigned int version){
-			ar & boost::serialization::base_object<SerializableData>(*this);
-			ar & px;
-			ar & py;
-			ar & pz;
-		}
-	};
-
-	class CreatePlayer : public SerializableData {
-	public:
-
-		CreatePlayer(){}
-
-		virtual ~CreatePlayer(){}
+		virtual ~IDandPos(){}
 
 		int id;
 		float px, py, pz;
@@ -111,6 +89,27 @@ typedef unsigned int UINT32;
 		}
 	};
 
+	class ButtonPress : public SerializableData {
+	public:
+
+		ButtonPress(){}
+
+		virtual ~ButtonPress(){}
+
+		int id;
+		float bid;
+
+	private:
+		friend class boost::serialization::access;
+
+		template<class Archive>
+		void serialize(Archive & ar, const unsigned int version){
+			ar & boost::serialization::base_object<SerializableData>(*this);
+			ar & id;
+			ar & bid;
+		}
+	};
+
 	class CreateBullet : public SerializableData {
 	public:
 
@@ -120,7 +119,7 @@ typedef unsigned int UINT32;
 
 		int id, parentid;
 		float px, py, pz;
-		float dx, dy, dz;
+		float dx, dy, dz, dw;
 
 	private:
 		friend class boost::serialization::access;
@@ -136,6 +135,7 @@ typedef unsigned int UINT32;
 			ar & dx;
 			ar & dy;
 			ar & dz;
+			ar & dw;
 		}
 	};
 
@@ -146,7 +146,7 @@ typedef unsigned int UINT32;
 
 		virtual ~NetEvent(){}
 
-		int targetid, parentid;
+		int targetid;
 		std::string eventName;
 
 	private:
@@ -155,8 +155,7 @@ typedef unsigned int UINT32;
 		template<class Archive>
 		void serialize(Archive & ar, const unsigned int version){
 			ar & boost::serialization::base_object<SerializableData>(*this);
-			ar & id;
-			ar & parentid;
+			ar & targetid;
 			ar & eventName;
 		}
 	};

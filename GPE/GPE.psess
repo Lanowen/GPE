@@ -78,10 +78,7 @@
       <Path>ScriptsWithoutWeakCleanup.vsp</Path>
     </Report>
     <Report>
-      <Path>GPE130414(3).vsp</Path>
-    </Report>
-    <Report>
-      <Path>GPE130415.vsp</Path>
+      <Path>JustCpp.vsp</Path>
     </Report>
   </Reports>
   <Launches>

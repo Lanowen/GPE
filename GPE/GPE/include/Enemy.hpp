@@ -23,6 +23,7 @@ public:
 	virtual void Update(Real deltaTime);
 	virtual void release();
 
+	Vector3 getPosition();
 	void setPosition(PxVec3 pos);
 
 	virtual GO_TYPE getType() { return GO_TYPE::ENEMY; }

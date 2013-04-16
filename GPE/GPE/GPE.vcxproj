@@ -69,7 +69,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>NDEBUG;WIN32;PHYSX_PROFILE_SDK;PX_SUPPORT_VISUAL_DEBUGGER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;PHYSX_PROFILE_SDK;PX_SUPPORT_VISUAL_DEBUGGER;CLIENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -89,6 +89,7 @@
     <ClCompile Include="src\GameState.cpp" />
     <ClCompile Include="src\GPENet.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\NetworkedObjectManager.cpp" />
     <ClCompile Include="src\Physics.cpp" />
     <ClCompile Include="src\PlayerCharacter.cpp" />
     <ClCompile Include="src\Projectile.cpp" />
@@ -110,6 +111,7 @@
     <ClInclude Include="include\GPENet.hpp" />
     <ClInclude Include="include\IKeyListener.hpp" />
     <ClInclude Include="include\IJoyStickListener.hpp" />
+    <ClInclude Include="include\NetworkedObjectManager.hpp" />
     <ClInclude Include="include\Physics.hpp" />
     <ClInclude Include="include\PlayerCharacter.hpp" />
     <ClInclude Include="include\Projectile.hpp" />

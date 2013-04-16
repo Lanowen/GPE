@@ -21,7 +21,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -42,9 +42,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <SourcePath>$(ProjectDir)/src;$(SolutionDir)\GPE\src;$(SourcePath)</SourcePath>
-    <IncludePath>$(ProjectDir)/include;$(BOOST_1_52_0);$(SolutionDir)\GPE\include;C:\Dev\OgreSDK_vc10_v1-8-1\include\OGRE;T:\achmilen\boost_1_52_0\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(BOOST_1_52_0)\stage\lib;T:\achmilen\boost_1_52_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <SourcePath>$(SolutionDir)\GPE\src;$(ProjectDir)/src;$(OGRE_SRC_1_8_1)/OgreMain/src;$(SourcePath)</SourcePath>
+    <IncludePath>$(SolutionDir)\GPE\include;$(ProjectDir)/include;$(BOOST_1_52_0);$(OGRE_SRC_1_8_1)/OgreMain/include;$(OGRE_SRC_1_8_1)/Dependencies/include;C:/Dev/OgreSDK_vc11_v1-8-1/include;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Include;$(V8_DIR)/include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BOOST_1_52_0)/stage/lib;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Lib/win32;$(OGRE_SRC_1_8_1)/Dependencies/lib/Debug;C:/Dev/OgreSDK_vc11_v1-8-1\lib\Debug;$(V8_DIR)\build\Debug\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -54,15 +54,16 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;PHYSX_PROFILE_SDK;PX_CHECKED;PX_SUPPORT_VISUAL_DEBUGGER;SERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>OgreMain_d.lib;OgrePaging_d.lib;OgreProperty_d.lib;OgreRTShaderSystem_d.lib;OgreTerrain_d.lib;OIS_d.lib;WINMM.LIB;v8_base.lib;preparser_lib.lib;v8_nosnapshot.lib;PhysX3DEBUG_x86.lib;PhysX3CommonDEBUG_x86.lib;PhysX3CookingDEBUG_x86.lib;RepXUpgrader3DEBUG.lib;PhysXVisualDebuggerSDKDEBUG.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;PhysX3CharacterKinematicDEBUG_x86.lib;RepX3DEBUG.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCMTD.lib;libcpmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,7 +74,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;SERVER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -83,9 +84,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\GPE\src\Enemy.cpp" />
+    <ClCompile Include="..\GPE\src\EventData.cpp" />
+    <ClCompile Include="..\GPE\src\EventDispatcherHelper.cpp" />
+    <ClCompile Include="..\GPE\src\Game.cpp" />
+    <ClCompile Include="..\GPE\src\GameObject.cpp" />
+    <ClCompile Include="..\GPE\src\GameState.cpp" />
     <ClCompile Include="..\GPE\src\GPENet.cpp" />
+    <ClCompile Include="..\GPE\src\NetworkedObjectManager.cpp" />
+    <ClCompile Include="..\GPE\src\Physics.cpp" />
+    <ClCompile Include="..\GPE\src\PlayerCharacter.cpp" />
+    <ClCompile Include="..\GPE\src\Projectile.cpp" />
+    <ClCompile Include="..\GPE\src\SceneWideEvent.cpp" />
     <ClCompile Include="..\GPE\src\SerializeableData.cpp" />
+    <ClCompile Include="..\GPE\src\VisualDebugger.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\NetGameState.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\NetGame.hpp" />
+    <ClInclude Include="include\NetGameState.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
