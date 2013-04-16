@@ -101,6 +101,9 @@ protected:
 	void OnDamage(const EventData* data);
 	void getHurt(PxVec3 direction);
 
+	void updateFlipping(Real deltaTime);
+	void addTimeToAnimations(Real deltaTime);
+
 public:
 	bool isAlive;
     int m_pJoyDeadZone;

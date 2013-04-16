@@ -25,6 +25,10 @@ public:
 
 	virtual GO_TYPE getType() { return GO_TYPE::PROJECTILE; }
 
+	virtual void Update(Real deltaTime);
+
+	static void Initialize(SceneManager* sceneMgr);
+
 private:
 	void Initialize(PxVec3 pos, PxQuat dir);
 
@@ -34,4 +38,11 @@ private:
 	PxRigidDynamic* actor;
 	SceneNode* node;
 	GameObject* spawner;
+
+	AnimationState* mAnimState;
+
+	RibbonTrail* mTrail;
+	Billboard* mFlare;
+	Light* light;
+	static BillboardSet* bbs;
 };

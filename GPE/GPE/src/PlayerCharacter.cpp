@@ -313,8 +313,6 @@ void PlayerCharacter::setPosition(Vector3 pos){
 	mCCT->setPosition(Util::vec_from_to<Vector3,PxExtendedVec3>(pos));
 }
 
-
-
 void PlayerCharacter::UpdateAnimation(Real deltaTime){
 	/*HandleScope handleScope(Isolate::GetCurrent());
 	Handle<Value> args[1];
@@ -512,6 +510,11 @@ void PlayerCharacter::UpdateAnimation(Real deltaTime){
 		node->yaw(yaw * (mDirection == LEFT ? -1 : 1));
 	}
 
+	updateFlipping(deltaTime);
+	addTimeToAnimations(deltaTime);
+}
+
+void PlayerCharacter::updateFlipping(Real deltaTime){
 	if(mFlipping){
 		childNode->pitch(Radian(FLIP_SPEED * deltaTime));
 	}
@@ -520,7 +523,9 @@ void PlayerCharacter::UpdateAnimation(Real deltaTime){
 		childNode->pitch(-deltaAngle);
 		
 	}
+}
 
+void PlayerCharacter::addTimeToAnimations(Real deltaTime){
 	if(m_aniStates->hasEnabledAnimationState()){
         ConstEnabledAnimationStateIterator itrAnim = m_aniStates->getEnabledAnimationStateIterator();
 
@@ -557,7 +562,7 @@ bool PlayerCharacter::keyPressed(const OIS::KeyEvent &keyEventRef){
 			dir = node->_getDerivedOrientation()/*node->_getDerivedOrientation()*m_GunTip->_getDerivedOrientation()*/;
 		}
 
-		new Projectile(owner, this, node->_getFullTransform()*m_GunTip->_getDerivedPosition(), dir);
+		owner->AddGameObject(new Projectile(owner, this, node->_getFullTransform()*m_GunTip->_getDerivedPosition(), dir));
 
 		if(!mGrounded){
 			if(m_aniStates->getAnimationState("Jump_up")->getEnabled()){
@@ -615,6 +620,22 @@ bool PlayerCharacter::buttonPressed( const OIS::JoyStickEvent &e, int button ) {
 		m_aniStates->getAnimationState("Jump_up")->setEnabled(true);
     }
 
+	bool wasFlipping = false;
+
+	if(!mGrounded){
+		if(m_aniStates->getAnimationState("Jump_up")->getEnabled()){
+			m_aniStates->getAnimationState("Jump_up")->setEnabled(false);
+				
+		}
+
+		if(mFlipping){
+			wasFlipping = true;
+			mFlipping = false;
+			m_aniStates->getAnimationState("Flipping")->setEnabled(false);
+			m_aniStates->getAnimationState("Falling")->setEnabled(true);
+		}		
+	}
+
 
 	if((button == 2 || button == 3) && !mIsTurning){
 		timeSinceLastShot = 0;
@@ -628,28 +649,24 @@ bool PlayerCharacter::buttonPressed( const OIS::JoyStickEvent &e, int button ) {
 		else {
 			dir = node->_getDerivedOrientation()/*node->_getDerivedOrientation()*m_GunTip->_getDerivedOrientation()*/;
 		}
-
-		new Projectile(owner, this, node->_getFullTransform()*m_GunTip->_getDerivedPosition(), dir);
-
-		if(!mGrounded){
-			if(m_aniStates->getAnimationState("Jump_up")->getEnabled()){
-				m_aniStates->getAnimationState("Jump_up")->setEnabled(false);
-				
-			}
-
-			if(mFlipping){
-				mFlipping = false;
-				m_aniStates->getAnimationState("Flipping")->setEnabled(false);
-				m_aniStates->getAnimationState("Falling")->setEnabled(true);
-			}
+		if(!wasFlipping){
+			owner->AddGameObject(new Projectile(owner, this, node->_getFullTransform()*m_GunTip->_getDerivedPosition(), dir));
 		}
+		else {
+			owner->AddGameObject(new Projectile(owner, this, node->_getDerivedPosition()+(mDirection == LEFT? Vector3(-1,0,0) : Vector3(1,0,0)), dir));
+		}
+
+		
 	}
 
     return true;
 }
 
 bool PlayerCharacter::buttonReleased( const OIS::JoyStickEvent &e, int button ) {
-
+	if(button == 1 && !mGrounded && mVelocity.y > 0)
+    {
+		mVelocity.y = 0;
+    }
 
     return true;
 }
@@ -658,10 +675,9 @@ void PlayerCharacter::getInput(Real deltaTime){
 
 	Vector3 forward = node->getOrientation()*Vector3::UNIT_Z;
 
-
     if(m_pJoyStick){
 		OIS::JoyStickState joyState = m_pJoyStick->getJoyStickState();
-        int joyx =joyState.mAxes[1].abs;
+        int joyx = joyState.mAxes[1].abs;
         if (Math::Abs(joyx) > m_pJoyDeadZone && Math::Abs(joyx)){
 			if(Math::Sign(joyx) > 0){
                 if(!mFlipping){
@@ -690,7 +706,7 @@ void PlayerCharacter::getInput(Real deltaTime){
 		}
 
 		//dpad
-		if((joyState.mPOV[0].direction == OIS::Pov::East) != 0){
+		if((joyState.mPOV[0].direction & OIS::Pov::East) != 0){
 			if(!mFlipping){
 				mDirection = RIGHT;
 				if(forward.dotProduct(Vector3::UNIT_X) < 0.95) {

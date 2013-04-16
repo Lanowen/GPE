@@ -21,12 +21,8 @@ typedef unsigned int UINT32;
 
 		template<class Archive>
 		void serialize(Archive & ar, const unsigned int version){
-			//std::cout<< "BASE SERIALIZATION" << std::endl;
-			//ar.register_type(static_cast<SerializableUINT32 *>(NULL));
 		}
 	};
-
-	//
 
 	class SerializableUINT32 : public SerializableData {
 	public:
@@ -42,7 +38,6 @@ typedef unsigned int UINT32;
 
 		template<class Archive>
 		void serialize(Archive & ar, const unsigned int version){
-			//std::cout<< "Serialized this UINT32" << std::endl;
 			ar & boost::serialization::base_object<SerializableData>(*this);
 			ar & val;
 		}
@@ -64,7 +59,6 @@ typedef unsigned int UINT32;
 
 		template<class Archive>
 		void serialize(Archive & ar, const unsigned int version){
-			//std::cout<< "Serialized this Vector3" << std::endl;
 			ar & boost::serialization::base_object<SerializableData>(*this);
 			ar & x;
 			ar & y;
@@ -72,38 +66,97 @@ typedef unsigned int UINT32;
 		}
 	};
 
-	class SerializableCharacterData : public SerializableData {
+	class CreateEnemy : public SerializableData {
 	public:
 
-		SerializableCharacterData(){}
+		CreateEnemy(){}
 
-		virtual ~SerializableCharacterData(){}
+		virtual ~CreateEnemy(){}
 
+		int id;
 		float px, py, pz;
-		float vx, vy, vz;
-		float yaw;
-		int baseAnim;
-		int topAnim;
-		//int what;
 
 	private:
 		friend class boost::serialization::access;
 
 		template<class Archive>
 		void serialize(Archive & ar, const unsigned int version){
-			//std::cout<< "Serialized this Vector3" << std::endl;
 			ar & boost::serialization::base_object<SerializableData>(*this);
 			ar & px;
 			ar & py;
 			ar & pz;
-			ar & vx;
-			ar & vy;
-			ar & vz;
-			ar & yaw;
-			ar & baseAnim;
-			ar & topAnim;
-			//ar & what;
 		}
 	};
 
-//}
+	class CreatePlayer : public SerializableData {
+	public:
+
+		CreatePlayer(){}
+
+		virtual ~CreatePlayer(){}
+
+		int id;
+		float px, py, pz;
+
+	private:
+		friend class boost::serialization::access;
+
+		template<class Archive>
+		void serialize(Archive & ar, const unsigned int version){
+			ar & boost::serialization::base_object<SerializableData>(*this);
+			ar & id;
+			ar & px;
+			ar & py;
+			ar & pz;
+		}
+	};
+
+	class CreateBullet : public SerializableData {
+	public:
+
+		CreateBullet(){}
+
+		virtual ~CreateBullet(){}
+
+		int id, parentid;
+		float px, py, pz;
+		float dx, dy, dz;
+
+	private:
+		friend class boost::serialization::access;
+
+		template<class Archive>
+		void serialize(Archive & ar, const unsigned int version){
+			ar & boost::serialization::base_object<SerializableData>(*this);
+			ar & id;
+			ar & parentid;
+			ar & px;
+			ar & py;
+			ar & pz;
+			ar & dx;
+			ar & dy;
+			ar & dz;
+		}
+	};
+
+	class NetEvent : public SerializableData {
+	public:
+
+		NetEvent(){}
+
+		virtual ~NetEvent(){}
+
+		int targetid, parentid;
+		std::string eventName;
+
+	private:
+		friend class boost::serialization::access;
+
+		template<class Archive>
+		void serialize(Archive & ar, const unsigned int version){
+			ar & boost::serialization::base_object<SerializableData>(*this);
+			ar & id;
+			ar & parentid;
+			ar & eventName;
+		}
+	};

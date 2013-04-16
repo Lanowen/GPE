@@ -4,6 +4,8 @@
 
 #define PROJECTILESPEED 20
 
+BillboardSet* Projectile::bbs;
+
 
 Projectile::Projectile(GameState* owner, GameObject* spawner, Vector3 pos, Quaternion dir) : GameObject(owner), spawner(spawner) {
 	Initialize(Util::vec_from_to<Vector3, PxVec3>(pos), Util::quat_from_to<Quaternion, PxQuat>(dir));
@@ -11,6 +13,13 @@ Projectile::Projectile(GameState* owner, GameObject* spawner, Vector3 pos, Quate
 
 Projectile::Projectile(GameState* owner, GameObject* spawner, PxVec3 pos, PxQuat dir) : GameObject(owner), spawner(spawner) {
 	Initialize(pos, dir);
+}
+
+void Projectile::Initialize(SceneManager* sceneMgr){
+	bbs = sceneMgr->createBillboardSet(1);
+	bbs->setDefaultDimensions(1,1);
+	bbs->setMaterialName("Examples/Flare");
+	sceneMgr->getRootSceneNode()->attachObject(bbs);
 }
 
 
@@ -38,12 +47,40 @@ void Projectile::Initialize(PxVec3 pos, PxQuat dir){
 
 	//loadScript("BasicProjectile.js");
 
+	SceneManager* gameSceneMgr = Root::getSingletonPtr()->getSceneManager("GameSceneMgr");
+
+	NameValuePairList params;
+	params["numberOfChains"] = "2";
+	params["maxElements"] = "10";
+
+	mTrail = (RibbonTrail*)gameSceneMgr->createMovableObject("RibbonTrail", &params);
+	node = gameSceneMgr->getRootSceneNode()->createChildSceneNode();
+	gameSceneMgr->getRootSceneNode()->attachObject(mTrail);
+
+	mTrail->setMaterialName("Examples/LightRibbonTrail");
+	mTrail->setTrailLength(1);
+
+	mTrail->setInitialColour(0, 1.0, 0.8, 0);
+	mTrail->setColourChange(0, 0.5, 0.5, 0.5, 0.5);
+	mTrail->setInitialWidth(0, 0.5);
+
+	//light = gameSceneMgr->createLight();
+	//light->setDiffuseColour(mTrail->getInitialColour(0));
+	//node->attachObject(light);
+	mFlare = bbs->createBillboard(Vector3::ZERO, mTrail->getInitialColour(0));
+	
+
+	node->setPosition(Util::vec_from_to<PxVec3, Vector3>(actor->getGlobalPose().p));
+	mTrail->addNode(node);
+
 	registerEventCallback("Projectile_Hit", boost::bind(&Projectile::OnProjectileHit, this, _1));
 }
 
 Projectile::~Projectile(){
-	//node->removeAndDestroyAllChildren();
-	//Root::getSingletonPtr()->getSceneManager("GameSceneMgr")->destroySceneNode(node);
+	bbs->removeBillboard(mFlare);
+	Root::getSingletonPtr()->getSceneManager("GameSceneMgr")->destroyRibbonTrail(mTrail);
+	node->removeAndDestroyAllChildren();
+	Root::getSingletonPtr()->getSceneManager("GameSceneMgr")->destroySceneNode(node);
 	actor->release();
 }
 
@@ -52,4 +89,10 @@ void Projectile::OnProjectileHit(const EventData* other){
 	ProjectileEvent pe;
 	pe.power = 1;
 	otherGO->dispatchEvent("OnDamage", &pe);
+}
+
+void Projectile::Update(Real deltaTime){
+	node->translate(Util::vec_from_to<PxVec3, Vector3>(actor->getGlobalPose().p) - node->getPosition());
+	mFlare->setPosition(node->getPosition());
+	//node->setPosition(Util::vec_from_to<PxVec3, Vector3>(actor->getGlobalPose().p));	
 }

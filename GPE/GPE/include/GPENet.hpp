@@ -49,6 +49,7 @@ namespace GPENet {
 		PONG,
 		REQUEST_CONNECT,
 		CONNECT,
+		DISCONNECT,
 		E_LAST
 	};
 
@@ -581,6 +582,20 @@ namespace GPENet {
 
 						std::cout << "Client connected with ip: " << endpoint->address().to_string() << ":" << endpoint->port() << std::endl;
 					}
+					break;
+				case UPDATE_TYPE::DISCONNECT:
+					
+					std::map<UINT32, boost::shared_ptr<Client>>::iterator itr = clients.begin(), toRemove;
+					for(;itr != clients.end(); itr++){
+						if(itr->first == dg.senderid){
+							toRemove = itr;
+							continue;
+						}
+
+						itr->second->SendDatagram(dg);
+					}
+					std::cout << "Client with ID " << toRemove->first << " disconnected..." << std::endl;
+					clients.erase(toRemove);
 					break;
 				case UPDATE_TYPE::NONE:
 					//do nothing

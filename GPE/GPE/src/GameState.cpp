@@ -432,7 +432,7 @@ GameState::createScene()
 	player->giveGamera(m_pCamera);
 	//Create Level Ends Here
 
-
+	Projectile::Initialize(m_pSceneMgr);
 
 	/*physx::PxRigidDynamic* derp2 = mPhysics->createRigidDynamic(PxTransform(PxVec3(3.2,5.0f,0.f)));
 	physx::PxShape* hmm = derp2->createShape(PxBoxGeometry(0.5f,0.5f,0.5f), *mMaterial);
