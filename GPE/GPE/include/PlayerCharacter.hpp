@@ -14,7 +14,8 @@
 #include <characterkinematic/PxControllerManager.h>
 
 #include <GameObject.hpp>
-#include <IInputListener.hpp>
+#include <IKeyListener.hpp>
+#include <IJoyStickListener.hpp>
 
 enum DIRECTION {
 	LEFT = 0,
@@ -54,7 +55,7 @@ enum ARM_STATE {
 using namespace Ogre;
 using namespace physx;
 
-class PlayerCharacter : public physx::PxUserControllerHitReport/*, public physx::PxControllerBehaviorCallback*/, public GameObject, public IInputListener
+class PlayerCharacter : public physx::PxUserControllerHitReport/*, public physx::PxControllerBehaviorCallback*/, public GameObject, public IKeyListener, public IJoyStickListener
 {
 	friend class V8PlayerCharacter;
 public:
@@ -64,8 +65,14 @@ public:
 	virtual void release();
 	virtual void Update(Real deltaTime);
 
-	bool keyPressed(const OIS::KeyEvent &keyEventRef);
-    bool keyReleased(const OIS::KeyEvent &keyEventRef);
+	virtual bool keyPressed(const OIS::KeyEvent &keyEventRef);
+    virtual bool keyReleased(const OIS::KeyEvent &keyEventRef);
+
+	virtual bool povMoved( const OIS::JoyStickEvent &e, int pov );
+    virtual bool axisMoved( const OIS::JoyStickEvent &e, int axis );
+    virtual bool sliderMoved( const OIS::JoyStickEvent &e, int sliderID );
+    virtual bool buttonPressed( const OIS::JoyStickEvent &e, int button );
+    virtual bool buttonReleased( const OIS::JoyStickEvent &e, int button );
 
 	void giveGamera(Camera* cam);
 
@@ -76,6 +83,9 @@ public:
 	void DoHit(PxControllersHit hit);
 
 	virtual GO_TYPE getType() { return GO_TYPE::PLAYER; }
+
+	bool isInvulnerable();
+	bool PlayerCharacter::canMove();
 
 protected:		
     void getInput(Real deltaTime);
@@ -88,7 +98,8 @@ protected:
 	void AdvancePhysics(Real deltaTime);
 	void UpdateAnimation(Real deltaTime);
 
-	
+	void OnDamage(const EventData* data);
+	void getHurt(PxVec3 direction);
 
 public:
 	bool isAlive;
@@ -106,7 +117,7 @@ public:
 	DIRECTION mDirection;
 	GUNDIRECTION mGunDirection;
 	Real timeSinceLastShot;
-	bool     mGrounded, mIsTurning, mShiftPressed, mFlipping;
+	bool     mGrounded, mIsTurning, mRunningPressed, mFlipping;
 	//Real     mMaxGroundSpeed, mMaxAirSpeed, mMaxTurnSpeed, mAirMovement;
 	Radian   mYaw_Target;
 	PxVec3	 mInputVel, mVelocity;
@@ -116,4 +127,8 @@ public:
 	PxScene* mPhysScene;
 	//std::map<STATE, Animation> animations;
 	Camera* m_pCamera;
+
+	Real timeSinceHurt;
+	int life;
+	PxVec3 hurtTravelDir;
 };

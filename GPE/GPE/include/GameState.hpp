@@ -52,7 +52,8 @@ using namespace physx;
 
 class GameState : public Singleton<GameState>, public FrameListener, public WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener, public PxSimulationEventCallback//, OgreBites::SdkTrayListener
 {
-	friend class IInputListener;
+	friend class IKeyListener;
+	friend class IJoyStickListener;
 
 public:
 	GameState();
@@ -94,8 +95,10 @@ private:
 	void getInput(double timeSinceLastFrame);
     //void buildGUI();
 
-    void RegisterInputListener(IInputListener* listener);
-	void DeregisterInputListener(IInputListener* listener);
+    void RegisterKeyListener(IKeyListener* listener);
+	void DeregisterKeyListener(IKeyListener* listener);
+	void RegisterJoyListener(IJoyStickListener* listener);
+	void DeregisterJoyListener(IJoyStickListener* listener);
 
 	// FrameListener
     virtual bool frameRenderingQueued(const FrameEvent& evt);
@@ -172,7 +175,8 @@ private:
 	//std::vector<Enemy*> mEnemies;
 
 	std::vector<GameObject*> mGameObjects;
-	std::vector<IInputListener*> mInputListeners;
+	std::vector<IKeyListener*> mKeyListeners;
+	std::vector<IJoyStickListener*> mJoyListeners;
 
 	Vector3			    m_TranslateVector;
 	Real			        m_MoveSpeed;

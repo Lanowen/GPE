@@ -80,6 +80,7 @@ Enemy::Enemy(GameState* owner, std::string mesh/*, std::string script*/) : GameO
 
 	rotCount = 0;
 	falling = false;
+	life = 3;
 
 	registerEventCallback("OnDamage", boost::bind(&Enemy::OnDamage, this, _1));
 

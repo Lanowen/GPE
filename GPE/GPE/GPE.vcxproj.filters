@@ -119,10 +119,13 @@
     <ClInclude Include="include\Projectile.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\IInputListener.hpp">
+    <ClInclude Include="include\EventData.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\EventData.hpp">
+    <ClInclude Include="include\IJoyStickListener.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\IKeyListener.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

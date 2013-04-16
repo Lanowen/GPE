@@ -1,9 +1,9 @@
 #include "PlayerCharacter.hpp"
 #include <Util.hpp>
 
-#include <Scripting_Helpers.hpp>
-#include <Scripting_ExposePx.hpp>
-#include <Scripting_ExposeGPE.hpp>
+//#include <Scripting_Helpers.hpp>
+//#include <Scripting_ExposePx.hpp>
+//#include <Scripting_ExposeGPE.hpp>
 
 #include <Projectile.hpp>
 
@@ -16,8 +16,12 @@
 #define GRAVITY -20
 #define JUMP_VEL 20
 #define SHOOT_ANIMATION_LENGTH 3
+#define MAX_LIFE 8
+#define INVULNERABILITY_TIME 1
+#define HURTSPEED 20
+#define HURTANIMTIME 0.2
 
-PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_pJoyStick, int im_pJoyDeadZone, GameState* owner) : GameObject(owner), IInputListener(owner), m_pCamera(0)
+PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_pJoyStick, int im_pJoyDeadZone, GameState* owner) : GameObject(owner), IKeyListener(owner), IJoyStickListener(owner), m_pCamera(0)
 {
 	mPhys = owner->getPhysics();
 	mPhysScene = owner->getMainPhysicsScene();
@@ -72,6 +76,7 @@ PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_
 	//mMaxTurnSpeed = 30.0f;
 	mIsTurning = false;
 	mFlipping = false;
+	mRunningPressed = false;
 	mVelocity = mInputVel = PxVec3(0,0,0);
 	mGunDirection = FORWARD;
 	timeSinceLastShot = 1000;
@@ -114,7 +119,11 @@ PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_
 
 	m_GunTip = ent->getSkeleton()->getBone("Bone_Gun_Tip");
 
-	HandleScope scope(Isolate::GetCurrent());
+	timeSinceHurt = 100000;
+	life = MAX_LIFE;
+	hurtTravelDir = PxVec3(0);
+
+	//HandleScope scope(Isolate::GetCurrent());
 
 	//Persistent<Object> bo = Persistent<Object>::New(Isolate::GetCurrent(),BooleanObject::New(mGrounded )->ToObject());
 	//bo->SetInternalField(0, External::New( &mGrounded ));
@@ -142,6 +151,8 @@ PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_
 	exposeObject("Player", wrapPtr<PlayerCharacter, V8PlayerCharacter>(this));
 	loadScript("playerController.js");*/
 
+	registerEventCallback("OnDamage", boost::bind(&PlayerCharacter::OnDamage, this, _1));
+
 }
 
 PlayerCharacter::~PlayerCharacter()
@@ -155,14 +166,61 @@ void PlayerCharacter::release(){
 	GameObject::release();
 }
 
+bool PlayerCharacter::isInvulnerable(){
+	return timeSinceHurt < INVULNERABILITY_TIME;
+}
+
+bool PlayerCharacter::canMove(){
+	return timeSinceHurt > HURTANIMTIME;
+}
+
 void PlayerCharacter::giveGamera(Camera* cam){
 	m_pCamera = cam;
+}
+
+
+void PlayerCharacter::getHurt(PxVec3 direction){
+	if(!isInvulnerable()){
+		life --;
+		timeSinceHurt = 0;
+
+		mVelocity.y = 0;
+		mVelocity.x = 0;
+
+		if(direction.x >= 0){
+			hurtTravelDir.x = 0.9009009;
+		}
+		else {
+			hurtTravelDir.x = -0.9009009;
+		}
+
+		if(direction.y >= 0){
+			hurtTravelDir.y = 0.45045045;
+		}
+		else {
+			hurtTravelDir.y = -0.45045045;
+		}
+	}
+}
+
+void PlayerCharacter::DoHit(PxControllersHit hit){
+	//Util::dout << "Thats a hit on me" << std::endl;
+	
+	getHurt(mCCT->getPosition()-hit.worldPos);
+}
+
+void PlayerCharacter::OnDamage(const EventData* data){
+
 }
 
 void PlayerCharacter::Update(Real deltaTime){
 	//runScripts();
 	timeSinceLastShot += deltaTime;
-	getInput(deltaTime);
+	timeSinceHurt += deltaTime;
+
+	if(canMove()){
+		getInput(deltaTime);
+	}
 	AdvancePhysics(deltaTime);
 	UpdateAnimation(deltaTime);
 
@@ -180,7 +238,7 @@ void PlayerCharacter::AdvancePhysics(Real deltaTime){
 	Vector3 pos = Util::vec_from_to<PxExtendedVec3, Vector3>(mCCT->getPosition());
 
 	if(!mIsTurning && mGrounded){
-		if(mShiftPressed)
+		if(mRunningPressed)
 			disp += mInputVel * RUN_SPEED;
 		else
 			disp += mInputVel * WALK_SPEED;
@@ -231,6 +289,10 @@ void PlayerCharacter::AdvancePhysics(Real deltaTime){
 	}
 
 	disp += mVelocity;
+	
+	if(timeSinceHurt < HURTANIMTIME){
+		disp += hurtTravelDir*HURTSPEED;
+	}
 
 	mCCT->move(disp*deltaTime,0,deltaTime,PxSceneQueryHitType::eBLOCK,0);
 
@@ -269,8 +331,11 @@ void PlayerCharacter::UpdateAnimation(Real deltaTime){
 			m_aniStates->getAnimationState("Walk_full_upper_shoot")->setEnabled(false);
 			m_aniStates->getAnimationState("Run_step_upper_shoot")->setEnabled(false);
 			m_aniStates->getAnimationState("Walk_step_upper_shoot")->setEnabled(false);
-			m_aniStates->getAnimationState("Jump_up")->setEnabled(false);
-			m_aniStates->getAnimationState("Jump_peaking")->setEnabled(false);
+
+			if(!mGrounded){
+				m_aniStates->getAnimationState("Jump_up")->setEnabled(false);
+				//m_aniStates->getAnimationState("Jump_peaking")->setEnabled(false);
+			}
 
 			m_aniStates->getAnimationState("Aim_up_angled")->setEnabled(true);
 			m_aniStates->getAnimationState("Aim_down_angled")->setEnabled(false);
@@ -284,8 +349,11 @@ void PlayerCharacter::UpdateAnimation(Real deltaTime){
 			m_aniStates->getAnimationState("Walk_full_upper_shoot")->setEnabled(false);
 			m_aniStates->getAnimationState("Run_step_upper_shoot")->setEnabled(false);
 			m_aniStates->getAnimationState("Walk_step_upper_shoot")->setEnabled(false);
-			m_aniStates->getAnimationState("Jump_up")->setEnabled(false);
-			m_aniStates->getAnimationState("Jump_peaking")->setEnabled(false);
+			
+			if(!mGrounded){
+				m_aniStates->getAnimationState("Jump_up")->setEnabled(false);
+				//m_aniStates->getAnimationState("Jump_peaking")->setEnabled(false);
+			}
 
 			m_aniStates->getAnimationState("Aim_up_angled")->setEnabled(false);
 			m_aniStates->getAnimationState("Aim_down_angled")->setEnabled(true);
@@ -373,7 +441,7 @@ void PlayerCharacter::UpdateAnimation(Real deltaTime){
 				m_aniStates->getAnimationState("Run_step_upper_shoot")->setEnabled(false);
 				m_aniStates->getAnimationState("Walk_step_upper_shoot")->setEnabled(false);
 			}
-			else if(mShiftPressed){
+			else if(mRunningPressed){
 				if(!m_aniStates->getAnimationState("Run_full")->getEnabled() && !m_aniStates->getAnimationState("Run_step")->getEnabled() ){
 					m_aniStates->getAnimationState("Run_step")->setEnabled(true);
 					m_aniStates->getAnimationState("Run_step")->setTimePosition(0);
@@ -505,38 +573,6 @@ bool PlayerCharacter::keyPressed(const OIS::KeyEvent &keyEventRef){
 		}
 	}
 
-	//if(keyEventRef.key == OIS::KC_ADD){
-	//	if(mController->getType() == 0) {
-	//		NxBoxController* cerp = (NxBoxController*)this->mController;
-	//		NxVec3 derp = cerp->getExtents();
-	//		derp.y += 0.1f;
-	//		cerp->setExtents(derp);
-	//		//std::cout << derp.x << " " << derp.y << " " << derp.x << std::endl;
-	//	}
-	//	else if(mController->getType() == 1){ //capsule
-	//		//NxCapsule* derp = (NxCapsule*)getShape(0);
-	//		//derp->setDimensions(derp->getRadius(), derp->getHeight()+0.1f);
-	//		NxCapsuleController* cerp = (NxCapsuleController*)this->mController;
-	//		cerp->setHeight(cerp->getHeight()+0.1f);
-	//	}
-	//}
-
-	//if(keyEventRef.key == OIS::KC_SUBTRACT){
-	//	if(mController->getType() == 0) {
-	//		NxBoxController* cerp = (NxBoxController*)this->mController;
-	//		NxVec3 derp = cerp->getExtents();
-	//		derp.y -= 0.1f;
-	//		cerp->setExtents(derp);
-	//		//std::cout << derp.x << " " << derp.y << " " << derp.x << std::endl;
-	//	}
-	//	else if(mController->getType() == 1){ //capsule
-	//		//NxCapsule* derp = (NxCapsule*)getShape(0);
-	//		//derp->setDimensions(derp->getRadius(), derp->getHeight()-0.1f);
-	//		NxCapsuleController* cerp = (NxCapsuleController*)this->mController;
-	//		cerp->setHeight(cerp->getHeight()-0.1f);
-	//	}
-	//}
-
 	return(true);
 }
 
@@ -549,99 +585,208 @@ bool PlayerCharacter::keyReleased(const OIS::KeyEvent &keyEventRef){
 	return(true);
 }
 
-void PlayerCharacter::getInput(Real deltaTime){
-    if(m_pJoyStick){
-        int joyx = m_pJoyStick->getJoyStickState().mAxes[1].abs;
-        if (Math::Abs(joyx) > m_pJoyDeadZone && Math::Abs(joyx) < m_pJoyStick->MAX_AXIS*0.5){
-            //m_aniStates->getAnimationState("Run_full")->setEnabled(false);
-            //m_aniStates->getAnimationState("Walk_full")->setEnabled(true);
-            //m_aniStates->getAnimationState("Walk_full")->setLoop(true);
-            //node->showBoundingBox(true);
-            if(joyx/Math::Abs(joyx) > 0){
-                //node->setDirection(Vector3::NEGATIVE_UNIT_X, SceneNode::TS_WORLD);
-                //node->translate(2.f*timeSinceLastFrame,0,0,SceneNode::TS_WORLD);
-            }
-            else {
-                //node->setDirection(Vector3::UNIT_X, SceneNode::TS_WORLD);
-                //node->translate(-2.f*timeSinceLastFrame,0,0,SceneNode::TS_WORLD);
-            }
-        }
-        else if (Math::Abs(joyx) >= m_pJoyStick->MAX_AXIS*0.5){
-            //m_aniStates->getAnimationState("Walk_full")->setEnabled(false);
-            //m_aniStates->getAnimationState("Run_full")->setEnabled(true);
-            //m_aniStates->getAnimationState("Run_full")->setLoop(true);
-            //node->showBoundingBox(true);
-            if(joyx/Math::Abs(joyx) > 0){
-                //node->setDirection(Vector3::NEGATIVE_UNIT_X, SceneNode::TS_WORLD);
-                //node->translate(8.f*timeSinceLastFrame,0,0,SceneNode::TS_WORLD);
-            }
-            else {
-                //node->setDirection(Vector3::UNIT_X, SceneNode::TS_WORLD);
-                //node->translate(-8.f*timeSinceLastFrame,0,0,SceneNode::TS_WORLD);
-            }
-        }
-        else {
-            //m_aniStates->getAnimationState("Walk_full")->setEnabled(false);
-            //m_aniStates->getAnimationState("Run_full")->setEnabled(false);
-        }
+bool PlayerCharacter::povMoved( const OIS::JoyStickEvent &e, int pov ) {
+
+    return true;
+}
+
+bool PlayerCharacter::axisMoved( const OIS::JoyStickEvent &e, int axis ) {
+
+
+    return true;
+}
+
+bool PlayerCharacter::sliderMoved( const OIS::JoyStickEvent &e, int sliderID ) {
+
+    return true;
+}
+
+		//
+		//	4					5
+		//		6		7	
+		//	9				3
+		//				8 2   1
+		//					0
+
+bool PlayerCharacter::buttonPressed( const OIS::JoyStickEvent &e, int button ) {
+	if(button == 1 && mGrounded && !m_aniStates->getAnimationState("Jump_up")->getEnabled())
+    {
+		m_aniStates->getAnimationState("Jump_up")->setTimePosition(0);
+		m_aniStates->getAnimationState("Jump_up")->setEnabled(true);
     }
+
+
+	if((button == 2 || button == 3) && !mIsTurning){
+		timeSinceLastShot = 0;
+		Quaternion dir;
+		if(mGunDirection == UPANGLED){
+			dir = Quaternion(Radian(Math::HALF_PI*0.5), Vector3::UNIT_Z*(mDirection?1:-1))*node->_getDerivedOrientation()/*node->_getDerivedOrientation()*m_GunTip->_getDerivedOrientation()*/;
+		}
+		else if(mGunDirection == DOWNANGLED){
+			dir = Quaternion(Radian(-Math::HALF_PI*0.5), Vector3::UNIT_Z*(mDirection?1:-1))*node->_getDerivedOrientation()/*node->_getDerivedOrientation()*m_GunTip->_getDerivedOrientation()*/;
+		}
+		else {
+			dir = node->_getDerivedOrientation()/*node->_getDerivedOrientation()*m_GunTip->_getDerivedOrientation()*/;
+		}
+
+		new Projectile(owner, this, node->_getFullTransform()*m_GunTip->_getDerivedPosition(), dir);
+
+		if(!mGrounded){
+			if(m_aniStates->getAnimationState("Jump_up")->getEnabled()){
+				m_aniStates->getAnimationState("Jump_up")->setEnabled(false);
+				
+			}
+
+			if(mFlipping){
+				mFlipping = false;
+				m_aniStates->getAnimationState("Flipping")->setEnabled(false);
+				m_aniStates->getAnimationState("Falling")->setEnabled(true);
+			}
+		}
+	}
+
+    return true;
+}
+
+bool PlayerCharacter::buttonReleased( const OIS::JoyStickEvent &e, int button ) {
+
+
+    return true;
+}
+
+void PlayerCharacter::getInput(Real deltaTime){
 
 	Vector3 forward = node->getOrientation()*Vector3::UNIT_Z;
 
-    if(m_pKeyboard->isKeyDown(OIS::KC_D) && !m_pKeyboard->isKeyDown(OIS::KC_A)){
-		if(!mFlipping){
-			mDirection = RIGHT;
-			if(forward.dotProduct(Vector3::UNIT_X) < 0.95) {
-				mIsTurning = true;
-				mYaw_Target = Math::PI/2;
-			}
+
+    if(m_pJoyStick){
+		OIS::JoyStickState joyState = m_pJoyStick->getJoyStickState();
+        int joyx =joyState.mAxes[1].abs;
+        if (Math::Abs(joyx) > m_pJoyDeadZone && Math::Abs(joyx)){
+			if(Math::Sign(joyx) > 0){
+                if(!mFlipping){
+					mDirection = RIGHT;
+					if(forward.dotProduct(Vector3::UNIT_X) < 0.95) {
+						mIsTurning = true;
+						mYaw_Target = Math::PI/2;
+					}
+				}
+				mInputVel.x = 1;
+            }
+            else {
+               if(!mFlipping){
+					mDirection = LEFT;
+					if(forward.dotProduct(Vector3::NEGATIVE_UNIT_X) < 0.95){
+						mIsTurning = true;
+						mYaw_Target = -Math::PI/2;
+					}
+				}
+				mInputVel.x = -1;
+            }
+			
+        }
+		else {
+			mInputVel.x = 0;
 		}
 
-		mInputVel.x = 1;
-    }
-
-
-    if(m_pKeyboard->isKeyDown(OIS::KC_A) && !m_pKeyboard->isKeyDown(OIS::KC_D)){
-		if(!mFlipping){
-			mDirection = LEFT;
-			if(forward.dotProduct(Vector3::NEGATIVE_UNIT_X) < 0.95){
-				mIsTurning = true;
-				mYaw_Target = -Math::PI/2;
+		//dpad
+		if((joyState.mPOV[0].direction == OIS::Pov::East) != 0){
+			if(!mFlipping){
+				mDirection = RIGHT;
+				if(forward.dotProduct(Vector3::UNIT_X) < 0.95) {
+					mIsTurning = true;
+					mYaw_Target = Math::PI/2;
+				}
 			}
+
+			mInputVel.x = 1;
+		}
+		else if((joyState.mPOV[0].direction & OIS::Pov::West) != 0){
+			if(!mFlipping){
+				mDirection = LEFT;
+				if(forward.dotProduct(Vector3::NEGATIVE_UNIT_X) < 0.95){
+					mIsTurning = true;
+					mYaw_Target = -Math::PI/2;
+				}
+			}
+			mInputVel.x = -1;
 		}
 
-		mInputVel.x = -1;
-    }
+		//
+		//	4					5
+		//		6		7	
+		//	9				3
+		//				8 2   1
+		//					0
 
-	if(m_pKeyboard->isKeyDown(OIS::KC_LSHIFT)){
-		mShiftPressed = true;
-    }
-    else {
-		mShiftPressed = false;
-    }
+		mRunningPressed = joyState.mButtons[0];
 
-    if(m_pKeyboard->isKeyDown(OIS::KC_D) == m_pKeyboard->isKeyDown(OIS::KC_A)){
-		mInputVel.x = 0;
+		if(joyState.mButtons[5] && !joyState.mButtons[4]){
+			mGunDirection = UPANGLED;
+		}
+		else if(!joyState.mButtons[5] && joyState.mButtons[4]){
+			mGunDirection = DOWNANGLED;
+		}
+		else if(joyState.mButtons[5] == joyState.mButtons[4]){
+			//if(m_pKeyboard->isKeyDown(OIS::KC_W))
+			//	mGunDirection = UP;
+			//else
+				mGunDirection = FORWARD;
+		}
     }
+	else {
+		if(m_pKeyboard->isKeyDown(OIS::KC_D) && !m_pKeyboard->isKeyDown(OIS::KC_A)){
+			if(!mFlipping){
+				mDirection = RIGHT;
+				if(forward.dotProduct(Vector3::UNIT_X) < 0.95) {
+					mIsTurning = true;
+					mYaw_Target = Math::PI/2;
+				}
+			}
 
-	if(m_pKeyboard->isKeyDown(OIS::KC_Q) && !m_pKeyboard->isKeyDown(OIS::KC_E)){
-		mGunDirection = UPANGLED;
-	}
-	else if(!m_pKeyboard->isKeyDown(OIS::KC_Q) && m_pKeyboard->isKeyDown(OIS::KC_E)){
-		mGunDirection = DOWNANGLED;
-	}
-	else if(m_pKeyboard->isKeyDown(OIS::KC_Q) == m_pKeyboard->isKeyDown(OIS::KC_E)){
-		if(m_pKeyboard->isKeyDown(OIS::KC_W))
-			mGunDirection = UP;
-		else
-			mGunDirection = FORWARD;
+			mInputVel.x = 1;
+		}
+
+
+		if(m_pKeyboard->isKeyDown(OIS::KC_A) && !m_pKeyboard->isKeyDown(OIS::KC_D)){
+			if(!mFlipping){
+				mDirection = LEFT;
+				if(forward.dotProduct(Vector3::NEGATIVE_UNIT_X) < 0.95){
+					mIsTurning = true;
+					mYaw_Target = -Math::PI/2;
+				}
+			}
+
+			mInputVel.x = -1;
+		}
+
+		if(m_pKeyboard->isKeyDown(OIS::KC_LSHIFT)){
+			mRunningPressed = true;
+		}
+		else {
+			mRunningPressed = false;
+		}
+
+		if(m_pKeyboard->isKeyDown(OIS::KC_D) == m_pKeyboard->isKeyDown(OIS::KC_A)){
+			mInputVel.x = 0;
+		}
+
+		if(m_pKeyboard->isKeyDown(OIS::KC_Q) && !m_pKeyboard->isKeyDown(OIS::KC_E)){
+			mGunDirection = UPANGLED;
+		}
+		else if(!m_pKeyboard->isKeyDown(OIS::KC_Q) && m_pKeyboard->isKeyDown(OIS::KC_E)){
+			mGunDirection = DOWNANGLED;
+		}
+		else if(m_pKeyboard->isKeyDown(OIS::KC_Q) == m_pKeyboard->isKeyDown(OIS::KC_E)){
+			if(m_pKeyboard->isKeyDown(OIS::KC_W))
+				mGunDirection = UP;
+			else
+				mGunDirection = FORWARD;
+		}
 	}
 
 }
 
-void PlayerCharacter::DoHit(PxControllersHit hit){
-	Util::dout << "Thats a hit on me" << std::endl;
-}
 
 void PlayerCharacter::onShapeHit(const PxControllerShapeHit & hit){
 	/*HandleScope handleScope(Isolate::GetCurrent());
@@ -684,6 +829,7 @@ void PlayerCharacter::onShapeHit(const PxControllerShapeHit & hit){
 		}
 		
 	}
+	
 }
 
 void PlayerCharacter::onControllerHit(const PxControllersHit& hit){

@@ -108,7 +108,8 @@
     <ClInclude Include="include\GameObject.hpp" />
     <ClInclude Include="include\GameState.hpp" />
     <ClInclude Include="include\GPENet.hpp" />
-    <ClInclude Include="include\IInputListener.hpp" />
+    <ClInclude Include="include\IKeyListener.hpp" />
+    <ClInclude Include="include\IJoyStickListener.hpp" />
     <ClInclude Include="include\Physics.hpp" />
     <ClInclude Include="include\PlayerCharacter.hpp" />
     <ClInclude Include="include\Projectile.hpp" />

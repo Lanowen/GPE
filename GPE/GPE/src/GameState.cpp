@@ -4,7 +4,8 @@
 #include <OgreManualObject.h>
 #include <PxConstraint.h>
 
-#include <IInputListener.hpp>
+#include <IKeyListener.hpp>
+#include <IJoyStickListener.hpp>
 #include <GameObject.hpp>
 #include <PlayerCharacter.hpp>
 #include <Enemy.hpp>
@@ -431,6 +432,8 @@ GameState::createScene()
 	player->giveGamera(m_pCamera);
 	//Create Level Ends Here
 
+
+
 	/*physx::PxRigidDynamic* derp2 = mPhysics->createRigidDynamic(PxTransform(PxVec3(3.2,5.0f,0.f)));
 	physx::PxShape* hmm = derp2->createShape(PxBoxGeometry(0.5f,0.5f,0.5f), *mMaterial);
 	physx::PxRigidBodyExt::setMassAndUpdateInertia(*derp2,10.0f);
@@ -453,10 +456,7 @@ GameState::createScene()
 	
 	testConn->freezeXRot();
 	testConn->freezeYRot();
-	testConn->freezeZPos();
-
-	Enemy *testEnemy = new Enemy(this, "SimpleBox.mesh");
-	AddGameObject(testEnemy);*/
+	testConn->freezeZPos();*/
 }
 
 Vector3 GameState::GetBestSpawnpoint(){
@@ -491,14 +491,24 @@ PlayerCharacter* GameState::SpawnPlayer(){
 	return newPlayer;
 }
 
-void GameState::RegisterInputListener(IInputListener* listener){
-	mInputListeners.push_back(listener);
+void GameState::RegisterKeyListener(IKeyListener* listener){
+	mKeyListeners.push_back(listener);
 }
 
-void GameState::DeregisterInputListener(IInputListener* listener){
-	std::vector<IInputListener*>::iterator itr = std::find<std::vector<IInputListener*>::iterator, IInputListener*>(mInputListeners.begin(), mInputListeners.end(), listener);
-	if(itr != mInputListeners.end())
-		mInputListeners.erase(itr);
+void GameState::DeregisterKeyListener(IKeyListener* listener){
+	std::vector<IKeyListener*>::iterator itr = std::find<std::vector<IKeyListener*>::iterator, IKeyListener*>(mKeyListeners.begin(), mKeyListeners.end(), listener);
+	if(itr != mKeyListeners.end())
+		mKeyListeners.erase(itr);
+}
+
+void GameState::RegisterJoyListener(IJoyStickListener* listener){
+	mJoyListeners.push_back(listener);
+}
+
+void GameState::DeregisterJoyListener(IJoyStickListener* listener){
+	std::vector<IJoyStickListener*>::iterator itr = std::find<std::vector<IJoyStickListener*>::iterator, IJoyStickListener*>(mJoyListeners.begin(), mJoyListeners.end(), listener);
+	if(itr != mJoyListeners.end())
+		mJoyListeners.erase(itr);
 }
 
 PxPhysics* GameState::getPhysics(){
@@ -579,8 +589,8 @@ bool GameState::keyPressed(const OIS::KeyEvent &keyEventRef){
 	}
 
     //m_pPlayerChar->keyPressed(keyEventRef);
-	std::vector<IInputListener*>::iterator itr = mInputListeners.begin();
-	for(;itr != mInputListeners.end(); itr++){
+	std::vector<IKeyListener*>::iterator itr = mKeyListeners.begin();
+	for(;itr != mKeyListeners.end(); itr++){
 		(*itr)->keyPressed(keyEventRef);
 	}
 
@@ -598,8 +608,8 @@ bool GameState::keyPressed(const OIS::KeyEvent &keyEventRef){
 bool GameState::keyReleased(const OIS::KeyEvent &keyEventRef){
     //CEGUI::System::getSingleton().injectKeyUp(keyEventRef.key);
     //m_pPlayerChar->keyReleased(keyEventRef);
-	std::vector<IInputListener*>::iterator itr = mInputListeners.begin();
-	for(;itr != mInputListeners.end(); itr++){
+	std::vector<IKeyListener*>::iterator itr = mKeyListeners.begin();
+	for(;itr != mKeyListeners.end(); itr++){
 		(*itr)->keyReleased(keyEventRef);
 	}
     return true;
@@ -677,7 +687,13 @@ bool GameState::povMoved( const OIS::JoyStickEvent &e, int pov ) {
 //        if(!itJoystickListener->second->povMoved( e, pov ))
 //            break;
 //    }
-    printf("povMoved: %d   %d\n", pov, e.state.mPOV[pov].direction);
+
+	std::vector<IJoyStickListener*>::iterator itr = mJoyListeners.begin();
+	for(;itr != mJoyListeners.end(); itr++){
+		(*itr)->povMoved(e, pov);
+	}
+
+    //printf("povMoved: %d   %d\n", pov, e.state.mPOV[pov].direction);
 
     return true;
 }
@@ -696,7 +712,12 @@ bool GameState::axisMoved( const OIS::JoyStickEvent &e, int axis ) {
 //
 //    }
 
-    switch(axis){
+	std::vector<IJoyStickListener*>::iterator itr = mJoyListeners.begin();
+	for(;itr != mJoyListeners.end(); itr++){
+		(*itr)->axisMoved(e, axis);
+	}
+
+    /*switch(axis){
         case 0: case 1:
             if ( Ogre::Math::Abs(e.state.mAxes[0].abs) > m_pJoyDeadZone || Ogre::Math::Abs(e.state.mAxes[1].abs) > m_pJoyDeadZone){
                 printf("1 axisMoved: x:%d y:%d\n",e.state.mAxes[1].abs, e.state.mAxes[0].abs);
@@ -710,7 +731,7 @@ bool GameState::axisMoved( const OIS::JoyStickEvent &e, int axis ) {
         case 4:
             printf("3 axisMoved: %d\n", e.state.mAxes[4].abs);
             break;
-    }
+    }*/
 
     return true;
 }
@@ -723,7 +744,12 @@ bool GameState::sliderMoved( const OIS::JoyStickEvent &e, int sliderID ) {
 //            break;
 //    }
 
-    printf("sliderMoved: %d\n", sliderID);
+    //printf("sliderMoved: %d\n", sliderID);
+
+	std::vector<IJoyStickListener*>::iterator itr = mJoyListeners.begin();
+	for(;itr != mJoyListeners.end(); itr++){
+		(*itr)->sliderMoved(e, sliderID);
+	}
 
     return true;
 }
@@ -736,7 +762,13 @@ bool GameState::buttonPressed( const OIS::JoyStickEvent &e, int button ) {
 //            break;
 //    }
 
-    printf("buttonPressed: %d\n", button);
+	std::vector<IJoyStickListener*>::iterator itr = mJoyListeners.begin();
+	for(;itr != mJoyListeners.end(); itr++){
+		(*itr)->buttonPressed(e, button);
+	}
+
+	//Util::dout << "buttonPressed: " << button <<std::endl;
+    //printf("buttonPressed: %d\n", button);
 
     return true;
 }
@@ -749,7 +781,13 @@ bool GameState::buttonReleased( const OIS::JoyStickEvent &e, int button ) {
 //            break;
 //    }
 
-    printf("buttonReleased: %d\n", button);
+
+	std::vector<IJoyStickListener*>::iterator itr = mJoyListeners.begin();
+	for(;itr != mJoyListeners.end(); itr++){
+		(*itr)->buttonReleased(e, button);
+	}
+
+    //printf("buttonReleased: %d\n", button);
 
     return true;
 }
@@ -899,7 +937,7 @@ void GameState::onContact(const PxContactPairHeader& pairHeader, const PxContact
 		if(pairHeader.actors[0]->getName() == "Projectile"){
 			GameObject* go = reinterpret_cast<GameObject*>(pairHeader.actors[0]->userData);
 
-			if(pairHeader.actors[1]->userData != 0){
+			if(pairHeader.actors[1]->userData != 0 && pairHeader.actors[0]->userData != pairHeader.actors[1]->userData){
 				if(pairHeader.actors[1]->getName() == "Projectile"){
 					go->release();
 					GameObject*  otherGO = reinterpret_cast<GameObject*>(pairHeader.actors[1]->userData);
@@ -923,7 +961,7 @@ void GameState::onContact(const PxContactPairHeader& pairHeader, const PxContact
 		if(pairHeader.actors[1]->getName() == "Projectile"){
 			GameObject* go = reinterpret_cast<GameObject*>(pairHeader.actors[1]->userData);
 
-			if(pairHeader.actors[0]->userData != 0){
+			if(pairHeader.actors[0]->userData != 0 && pairHeader.actors[0]->userData != pairHeader.actors[1]->userData){
 				if(pairHeader.actors[0]->getName() == "Projectile"){
 					go->release();
 					GameObject*  otherGO = reinterpret_cast<GameObject*>(pairHeader.actors[0]->userData);
