@@ -39,14 +39,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)/include;$(BOOST_1_52_0);$(OGRE_SRC_1_8_1)/OgreMain/include;$(OGRE_SRC_1_8_1)/Dependencies/include;C:/Dev/OgreSDK_vc11_v1-8-1/include;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Include;$(V8_DIR)/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(BOOST_1_52_0)/stage/lib;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Lib/win32;$(OGRE_SRC_1_8_1)/Dependencies/lib/Debug;C:/Dev/OgreSDK_vc11_v1-8-1\lib\Debug;$(V8_DIR)\build\Debug\lib;$(LibraryPath)</LibraryPath>
-    <SourcePath>$(ProjectDir)/src;$(OGRE_SRC_1_8_1)/OgreMain/src;$(SourcePath)</SourcePath>
+    <IncludePath>$(ProjectDir)/include;C:\boost_1_52_0;C:\Dev\ogre_src_v1-8-1/OgreMain/include;C:\Dev\ogre_src_v1-8-1/Dependencies/include;C:/Dev/OgreSDK_vc11_v1-8-1/include;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Include;C:\Dev\v8\trunk/include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\boost_1_52_0/stage/lib;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Lib/win32;C:/Dev/OgreSDK_vc11_v1-8-1\lib\Debug;C:\Dev\v8\trunk\build\Debug\lib;C:\Dev\ogre_src_v1-8-1\Dependencies\lib\Debug;$(LibraryPath)</LibraryPath>
+    <SourcePath>$(ProjectDir)/src;C:\Dev\ogre_src_v1-8-1/OgreMain/src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)/include;$(BOOST_1_52_0);$(OGRE_SRC_1_8_1)/OgreMain/include;$(OGRE_SRC_1_8_1)/Dependencies/include;C:/Dev/OgreSDK_vc11_v1-8-1/include;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Include;$(V8_DIR)/include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(BOOST_1_52_0)/stage/lib;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Lib/win32;$(OGRE_SRC_1_8_1)/Dependencies/lib/Release;C:/Dev/OgreSDK_vc11_v1-8-1\lib\Release;$(V8_DIR)\build\Release\lib;$(LibraryPath)</LibraryPath>
-    <SourcePath>$(ProjectDir)/src;$(OGRE_SRC_1_8_1)/OgreMain/src;$(SourcePath)</SourcePath>
+    <IncludePath>$(ProjectDir)/include;C:\boost_1_52_0;C:\Dev\ogre_src_v1-8-1/OgreMain/include;C:\Dev\ogre_src_v1-8-1/Dependencies/include;C:/Dev/OgreSDK_vc11_v1-8-1/include;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Include;C:\Dev\v8\trunk/include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\boost_1_52_0/stage/lib;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Lib/win32;C:/Dev/OgreSDK_vc11_v1-8-1\lib\Release;C:\Dev\v8\trunk\build\Debug\lib;C:\Dev\ogre_src_v1-8-1\Dependencies\lib\Release;$(LibraryPath)</LibraryPath>
+    <SourcePath>$(ProjectDir)/src;C:\Dev\ogre_src_v1-8-1/OgreMain/src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

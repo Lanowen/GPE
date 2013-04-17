@@ -95,7 +95,7 @@ PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_
 
     SceneManager* gameSceneMgr = Root::getSingletonPtr()->getSceneManager("GameSceneMgr");
 	//ent = gameSceneMgr->createEntity("Samus", "Samus.mesh" );
-	ent = gameSceneMgr->createEntity("SamusSamus.mesh" );
+	ent = gameSceneMgr->createEntity("samustestSamus.mesh" );
 	ent->getSkeleton()->setBlendMode(SkeletonAnimationBlendMode::ANIMBLEND_CUMULATIVE);
 
 
@@ -1009,7 +1009,7 @@ void PlayerCharacter::onShapeHit(const PxControllerShapeHit & hit){
 			mVelocity.x = 0;
 			mVelocity.y = 0;
 		}
-		else{
+		else if(mVelocity.y > 0){
 			mVelocity.y = 0;
 		}
 		

@@ -38,7 +38,7 @@ INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR cmdLine, INT)
 			GameState::isServer = false;
 		if ((pos = Ogre::String(cmdLine).find("ip")) != Ogre::String::npos){
 			size_t space = Ogre::String(cmdLine).find(" ", pos);
-			GameState::ip = Ogre::String(cmdLine).substr(pos + 3, space);
+			GameState::ip = Ogre::String(cmdLine).substr(pos + 3, space-(pos + 3));
 		}
 //#endif
 		Game gpeGame;

@@ -750,7 +750,7 @@ namespace GPENet {
 					id.val = cid;
 					c->Send<SerializableUINT32>(id, UPDATE_TYPE::CONNECT, DatagramImportance::RELIABLE_UNORDERED);
 
-					std::cout << "Recieved connection request with ip: " << endpoint->address().to_string() << ":" << endpoint->port() << std::endl;
+					Util::dout << "Recieved connection request with ip: " << endpoint->address().to_string() << ":" << endpoint->port() << std::endl;
 					}
 					break;
 				case UPDATE_TYPE::CONNECT:
@@ -758,7 +758,7 @@ namespace GPENet {
 						clients[dg.senderid] = tempClients[dg.senderid];
 						tempClients.erase(dg.senderid);
 
-						std::cout << "Client connected with ip: " << endpoint->address().to_string() << ":" << endpoint->port() << std::endl;
+						Util::dout << "Client connected with ip: " << endpoint->address().to_string() << ":" << endpoint->port() << std::endl;
 					}
 					break;
 				case UPDATE_TYPE::DISCONNECT:
@@ -772,7 +772,7 @@ namespace GPENet {
 
 							itr->second->SendDatagram(dg);
 						}
-						std::cout << "Client with ID " << toRemove->first << " disconnected..." << std::endl;
+						Util::dout << "Client with ID " << toRemove->first << " disconnected..." << std::endl;
 						clientMtx.lock();
 						clients.erase(toRemove);
 						clientMtx.unlock();

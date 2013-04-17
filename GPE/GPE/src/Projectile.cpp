@@ -65,6 +65,7 @@ void Projectile::Initialize(PxVec3 pos, PxQuat dir){
 	mTrail->setInitialColour(0, 1.0, 0.8, 0);
 	mTrail->setColourChange(0, 0.5, 0.5, 0.5, 0.5);
 	mTrail->setInitialWidth(0, 0.5);
+	mTrail->setWidthChange(0, 10);
 
 	//light = gameSceneMgr->createLight();
 	//light->setDiffuseColour(mTrail->getInitialColour(0));
