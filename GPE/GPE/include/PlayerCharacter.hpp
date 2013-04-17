@@ -17,6 +17,9 @@
 #include <IKeyListener.hpp>
 #include <IJoyStickListener.hpp>
 
+#include <PowerUp.hpp>
+
+
 enum DIRECTION {
 	LEFT = 0,
 	RIGHT
@@ -57,9 +60,9 @@ using namespace physx;
 
 class PlayerCharacter : public physx::PxUserControllerHitReport/*, public physx::PxControllerBehaviorCallback*/, public GameObject, public IKeyListener, public IJoyStickListener
 {
-	friend class V8PlayerCharacter;
+	//friend class V8PlayerCharacter;
 public:
-    PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_pJoyStick, int im_pJoyDeadZone, GameState* owner);
+    PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_pJoyStick, int im_pJoyDeadZone, GameState* owner, bool netOwned = true);
     virtual ~PlayerCharacter();
 
 	virtual void release();
@@ -87,6 +90,16 @@ public:
 	bool isInvulnerable();
 	bool PlayerCharacter::canMove();
 
+	
+	void setInputVel(PxVec3 vel);
+	void doButtonPressed( int button );
+	void doButtonReleased( int button );
+	void getHurt(PxVec3 direction);
+
+	void resetLife();
+
+	void getPowerUp(POWERUP_TYPE type);
+
 protected:		
     void getInput(Real deltaTime);
 	virtual void onShapeHit(const physx::PxControllerShapeHit & hit);
@@ -99,12 +112,11 @@ protected:
 	void UpdateAnimation(Real deltaTime);
 
 	void OnDamage(const EventData* data);
-	void getHurt(PxVec3 direction);
 
 	void updateFlipping(Real deltaTime);
 	void addTimeToAnimations(Real deltaTime);
 
-public:
+private:
 	bool isAlive;
     int m_pJoyDeadZone;
     OIS::Keyboard* m_pKeyboard;
@@ -124,6 +136,7 @@ public:
 	//Real     mMaxGroundSpeed, mMaxAirSpeed, mMaxTurnSpeed, mAirMovement;
 	Radian   mYaw_Target;
 	PxVec3	 mInputVel, mVelocity;
+	PxVec3 mLastInputVel;
 
 	PxController* mCCT;
 	PxPhysics* mPhys;
@@ -134,4 +147,7 @@ public:
 	Real timeSinceHurt;
 	int life;
 	PxVec3 hurtTravelDir;
+	
+	bool mButtons[10];
+	Real netUpdateTimer;
 };

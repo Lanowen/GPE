@@ -251,6 +251,8 @@ namespace GPENet {
 
 		virtual void Send(const boost::shared_ptr<SerializableData> data, UINT32 updateType, DatagramImportance importance = DatagramImportance::UNRELIABLE) = 0;
 
+		virtual void Update(double deltaTime) = 0;
+
 		void AddQueuedCallback(UINT32 type, boost::function<void (Datagram)> callback){
 			queuedCallbackLookup[type] = callback;
 		}
@@ -274,6 +276,9 @@ namespace GPENet {
 			}
 			queuedCallbacks.clear();
 		}
+	public:
+		boost::shared_ptr<void*> userData;
+		UINT32 hackedInt;
 
 
 	protected:
@@ -299,7 +304,7 @@ namespace GPENet {
 	
 	private:
 
-		Client(udp::endpoint local_endPoint, bool resuse_address = false) : connected(false), SocketBase(local_endPoint, resuse_address), currentPacketsequenceIDuence(0), senderID(MAXUINT32), lastAck(0), ack_bitfield(0), history(this) {
+		Client(udp::endpoint local_endPoint, bool resuse_address = false) : connected(false), timeSinceLastAck(0), SocketBase(local_endPoint, resuse_address), currentPacketsequenceID(0), senderID(MAXUINT32), lastAck(0), ack_bitfield(0), history(this) {
 			
 		}
 
@@ -332,7 +337,7 @@ namespace GPENet {
 			int offset = dg.sequenceID - lastAck;
 
 			int bitfieldSize = sizeof(ack_bitfield) * 8;
-			if(offset > 0){
+			if(offset > 0){ //this means lastack is less than sequenceID, this is a newer packet
 				//push in previous ack
 				ack_bitfield <<= 1;
 				ack_bitfield |= 1;
@@ -346,10 +351,13 @@ namespace GPENet {
 
 				lastAck = dg.sequenceID;
 			}
-			else if(offset <= bitfieldSize) {
+			//else if(offset <= bitfieldSize) { //I don't know why I did this...
+			else if(offset < 0 && offset > -bitfieldSize) {
 				ack_bitfield |= 1<<(-offset - 2); //-1 for lastAck and -1 becuase 1 is already in first bit position
 			}
 			// else too bad
+
+			timeSinceLastAck = 0;
 
 			//TODO:
 			history.Update(dg.ack, dg.ack_bitfield);
@@ -365,7 +373,7 @@ namespace GPENet {
 
 		void SendDatagram(Datagram dg){
 
-			dg.sequenceID = currentPacketsequenceIDuence++;
+			dg.sequenceID = currentPacketsequenceID++;
 
 			addAckInfo(dg);
 			//dg.senderid = senderID;
@@ -401,8 +409,8 @@ namespace GPENet {
 		}
 
 		
-		void Update(double deltaTime){
-
+		virtual void Update(double deltaTime){
+			timeSinceLastAck += deltaTime;
 		}
 		
 		static boost::shared_ptr<Client> Create(udp::endpoint local_endPoint, udp::endpoint remote_endPoint){
@@ -533,7 +541,9 @@ namespace GPENet {
 		UINT32 lastAck;
 		UINT32 ack_bitfield;
 
-		UINT32 currentPacketsequenceIDuence;
+		double timeSinceLastAck;
+
+		UINT32 currentPacketsequenceID;
 
 		udp::endpoint remote_endPoint;
 
@@ -572,6 +582,43 @@ namespace GPENet {
 
 	public:
 
+		virtual void Update(double deltaTime){
+			std::map<UINT32, boost::shared_ptr<Client>>::iterator itr = clients.begin();
+			std::list<UINT32> toRemove;
+			for(;itr != clients.end(); itr++){
+				itr->second->Update(deltaTime);
+				if(itr->second->timeSinceLastAck > 5){
+					toRemove.push_back(itr->first);
+					//Util::dout << "Id : " << itr->first << " has lost connection! " << itr->second->timeSinceLastAck << std::endl;
+					SerializableUINT32 data;
+					data.val = itr->second->hackedInt;
+					SendToExcluding(itr->first, data, UPDATE_TYPE::DISCONNECT, DatagramImportance::RELIABLE_ORDERED);
+
+
+					//HACK
+					Datagram dg;
+					dg.updateType = UPDATE_TYPE::DISCONNECT;
+					dg.data = boost::shared_dynamic_cast<SerializableData>(boost::make_shared<SerializableUINT32>(data));
+					dg.senderid = 0;
+					dg.importance = DatagramImportance::RELIABLE_ORDERED;
+
+					tryCallCallbacks(dg);
+				}
+			}
+
+			if(toRemove.size() > 0){
+				clientMtx.lock();
+				std::list<UINT32>::iterator removeItr = toRemove.begin();
+				for(;removeItr != toRemove.end(); removeItr++){
+					itr = clients.find(*removeItr);
+					if(itr != clients.end()){
+						clients.erase(itr);
+					}
+				}
+				clientMtx.unlock();
+			}
+		}
+
 		static boost::shared_ptr<Server> Create(){
 			boost::shared_ptr<Server> server(new Server());
 
@@ -593,9 +640,11 @@ namespace GPENet {
 			std::map<UINT32, boost::shared_ptr<Client>>::iterator itr = clients.begin();
 			Datagram dg;
 			dg.updateType = UPDATE_TYPE::PING;
+			clientMtx.lock();
 			for(;itr != clients.end(); itr++){
 				itr->second->SendDatagram(dg);
 			}
+			clientMtx.unlock();
 		}
 
 		template<class T>
@@ -616,6 +665,57 @@ namespace GPENet {
 
 			std::map<UINT32, boost::shared_ptr<Client>>::iterator itr = clients.begin();
 			for(;itr != clients.end(); itr++){
+				itr->second->SendDatagram(dg);
+			}
+		}
+
+		template<class T>
+		void SendTo(UINT32 clientID, T& data, UINT32 updateType, DatagramImportance importance = DatagramImportance::UNRELIABLE){
+			boost::shared_ptr<T> temp = boost::make_shared<T>(data);
+			SendTo(clientID, boost::shared_dynamic_cast<SerializableData>(temp), updateType, importance);
+		}
+
+		virtual void SendTo(UINT32 clientID, const boost::shared_ptr<SerializableData> data, UINT32 updateType, DatagramImportance importance = DatagramImportance::UNRELIABLE){
+			Datagram dg;
+			dg.updateType = updateType;
+			dg.importance = importance;
+
+			//addAckInfo(dg);
+			dg.senderid = 0;
+
+			dg.data = data;
+
+			std::map<UINT32, boost::shared_ptr<Client>>::iterator itr = clients.find(clientID);
+			if(itr != clients.end()){
+				itr->second->SendDatagram(dg);
+			}
+		}
+
+		boost::shared_ptr<Client> getClient(UINT32 index){
+			return clients[index];
+		}
+
+		template<class T>
+		void SendToExcluding(UINT32 clientID, T& data, UINT32 updateType, DatagramImportance importance = DatagramImportance::UNRELIABLE){
+			boost::shared_ptr<T> temp = boost::make_shared<T>(data);
+			SendToExcluding(clientID, boost::shared_dynamic_cast<SerializableData>(temp), updateType, importance);
+		}
+
+		virtual void SendToExcluding(UINT32 clientID, const boost::shared_ptr<SerializableData> data, UINT32 updateType, DatagramImportance importance = DatagramImportance::UNRELIABLE){
+			Datagram dg;
+			dg.updateType = updateType;
+			dg.importance = importance;
+
+			//addAckInfo(dg);
+			dg.senderid = 0;
+
+			dg.data = data;
+
+			std::map<UINT32, boost::shared_ptr<Client>>::iterator itr = clients.begin();
+			for(;itr != clients.end(); itr++){
+				if(itr->first == clientID)
+					continue;
+
 				itr->second->SendDatagram(dg);
 			}
 		}
@@ -673,7 +773,9 @@ namespace GPENet {
 							itr->second->SendDatagram(dg);
 						}
 						std::cout << "Client with ID " << toRemove->first << " disconnected..." << std::endl;
+						clientMtx.lock();
 						clients.erase(toRemove);
+						clientMtx.unlock();
 					}
 					break;
 				case UPDATE_TYPE::NONE:
@@ -709,5 +811,6 @@ namespace GPENet {
 		std::map<UINT32, boost::shared_ptr<Client>> clients;
 
 		boost::shared_ptr<boost::asio::deadline_timer> pinger_timer;
+		boost::recursive_mutex clientMtx;
 	};
 }

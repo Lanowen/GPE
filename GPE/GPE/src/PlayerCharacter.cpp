@@ -6,6 +6,7 @@
 //#include <Scripting_ExposeGPE.hpp>
 
 #include <Projectile.hpp>
+#include <GameState.hpp>
 
 #define TURN_SPEED 15
 #define WALK_SPEED 2
@@ -21,8 +22,9 @@
 #define HURTSPEED 20
 #define HURTANIMTIME 0.2
 
-PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_pJoyStick, int im_pJoyDeadZone, GameState* owner) : GameObject(owner), IKeyListener(owner), IJoyStickListener(owner), m_pCamera(0)
+PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_pJoyStick, int im_pJoyDeadZone, GameState* owner, bool netOwned) : GameObject(owner), IKeyListener(owner), IJoyStickListener(owner), m_pCamera(0)
 {
+	netOwned = netOwned;
 	mPhys = owner->getPhysics();
 	mPhysScene = owner->getMainPhysicsScene();
 
@@ -53,7 +55,8 @@ PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_
 
 	PxFilterData filterData;
 	filterData.word0 = 1; // word0 = own ID
-	filterData.word1 = 2;	// word1 = ID mask to filter pairs that trigger a contact callback;
+					//bullets and powerups
+	filterData.word1 = 2|16;	// word1 = ID mask to filter pairs that trigger a contact callback;
 
 	const PxU32 numShapes = mCCT->getActor()->getNbShapes();
 	PxShape** shapes = new PxShape*[numShapes];
@@ -64,6 +67,8 @@ PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_
 		shape->setSimulationFilterData(filterData);
 	}
 	delete[] shapes;
+
+	ZeroMemory(mButtons, 10);
 
 	//mActiveGroups = 1;
 	mGrounded = false;
@@ -122,6 +127,7 @@ PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_
 	timeSinceHurt = 100000;
 	life = MAX_LIFE;
 	hurtTravelDir = PxVec3(0);
+	netUpdateTimer = 0;
 
 	//HandleScope scope(Isolate::GetCurrent());
 
@@ -178,39 +184,89 @@ void PlayerCharacter::giveGamera(Camera* cam){
 	m_pCamera = cam;
 }
 
+void PlayerCharacter::resetLife(){
+	life = MAX_LIFE;
+}
+
+void PlayerCharacter::getPowerUp(POWERUP_TYPE type){
+	switch(type){
+	case POWERUP_TYPE::ENERGY_LARGE:
+		life+=4;
+		if(life > MAX_LIFE)
+			life = MAX_LIFE;
+		break;
+	case POWERUP_TYPE::ENERGY_SMALL:
+		life++;
+		if(life > MAX_LIFE)
+			life = MAX_LIFE;
+		break;
+	case POWERUP_TYPE::MISSILE:
+
+		break;
+	}
+}
+
 
 void PlayerCharacter::getHurt(PxVec3 direction){
-	if(!isInvulnerable()){
+	if(netOwned){ //don't want to mess with this on other players for now...
 		life --;
-		timeSinceHurt = 0;
 
-		mVelocity.y = 0;
-		mVelocity.x = 0;
+		if(life <= 0){
+			SerializableUINT32 i;
+			i.val = netId;
 
-		if(direction.x >= 0){
-			hurtTravelDir.x = 0.9009009;
+			socket->Send(i, NEW_NETUPDATES::PLAYER_DEATH, GPENet::DatagramImportance::RELIABLE_ORDERED);
 		}
-		else {
-			hurtTravelDir.x = -0.9009009;
-		}
+	}
 
-		if(direction.y >= 0){
-			hurtTravelDir.y = 0.45045045;
-		}
-		else {
-			hurtTravelDir.y = -0.45045045;
-		}
+	timeSinceHurt = 0;
+
+	mVelocity.y = 0;
+	mVelocity.x = 0;
+
+	if(direction.x >= 0){
+		hurtTravelDir.x = 0.9009009;
+	}
+	else {
+		hurtTravelDir.x = -0.9009009;
+	}
+
+	if(direction.y >= 0){
+		hurtTravelDir.y = 0.45045045;
+	}
+	else {
+		hurtTravelDir.y = -0.45045045;
+	}
+
+	if(socket.get() != 0){
+		IDandPos idp;
+		idp.id = netId;
+		idp.px = hurtTravelDir.x;
+		idp.py = hurtTravelDir.y;
+		idp.pz = hurtTravelDir.z;
+
+		socket->Send(idp, NEW_NETUPDATES::PLAYER_HURT, GPENet::DatagramImportance::RELIABLE_ORDERED);
 	}
 }
 
 void PlayerCharacter::DoHit(PxControllersHit hit){
 	//Util::dout << "Thats a hit on me" << std::endl;
-	
-	getHurt(mCCT->getPosition()-hit.worldPos);
+	if(netOwned && !isInvulnerable()){
+		getHurt(mCCT->getPosition()-hit.worldPos);
+	}
 }
 
 void PlayerCharacter::OnDamage(const EventData* data){
+	if(netOwned && !isInvulnerable()){
+		ProjectileEvent* pevt = (ProjectileEvent*)data;
+		GameObject* go = (GameObject*)pevt->data;
 
+		if(go->getType() == GO_TYPE::PROJECTILE){
+			Projectile* proj = (Projectile*)go;
+			if(proj->getSpawner() != (GameObject*)this)
+				getHurt(toVec3(mCCT->getPosition())-(proj->getPosition() - PxVec3(0,1,0)));
+		}
+	}
 }
 
 void PlayerCharacter::Update(Real deltaTime){
@@ -221,12 +277,57 @@ void PlayerCharacter::Update(Real deltaTime){
 	if(canMove()){
 		getInput(deltaTime);
 	}
+
+	if(!mFlipping){
+		if(mInputVel.x > 0){
+			mDirection = RIGHT;
+			if((node->getOrientation()*Vector3::UNIT_Z).dotProduct(Vector3::UNIT_X) < 0.95) {
+				mIsTurning = true;
+				mYaw_Target = Math::PI/2;
+			}
+		}
+		else if(mInputVel.x < 0){
+			mDirection = LEFT;
+			if((node->getOrientation()*Vector3::UNIT_Z).dotProduct(Vector3::NEGATIVE_UNIT_X) < 0.95){
+				mIsTurning = true;
+				mYaw_Target = -Math::PI/2;
+			}
+		}
+	}
+
 	AdvancePhysics(deltaTime);
 	UpdateAnimation(deltaTime);
 
 	if(m_pCamera){
 		m_pCamera->setPosition(ent->getParentSceneNode()->_getDerivedPosition() + Vector3(0,0,20));
 		m_pCamera->lookAt(ent->getParentSceneNode()->_getDerivedPosition());
+	}
+
+	if(socket.get() != 0){
+		netUpdateTimer += deltaTime;
+		if(mInputVel != mLastInputVel){
+			IDandPos idp;
+			idp.id = netId;
+			idp.px = mInputVel.x;
+			idp.py = mInputVel.y;
+			idp.pz = mInputVel.z;
+			mLastInputVel = mInputVel;
+
+			socket->Send(idp, NEW_NETUPDATES::PLAYER_INPUTVEL, GPENet::DatagramImportance::RELIABLE_ORDERED);
+		}
+
+		if(netUpdateTimer >= 0.5){
+			netUpdateTimer -= 0.5;
+
+			IDandPos idp;
+			idp.id = netId;
+			PxExtendedVec3 cctPos = mCCT->getPosition();
+			idp.px = cctPos.x;
+			idp.py = cctPos.y;
+			idp.pz = cctPos.z;
+
+			socket->Send(idp, NEW_NETUPDATES::SET_POS, GPENet::DatagramImportance::RELIABLE_ORDERED);
+		}
 	}
 }
 
@@ -294,7 +395,11 @@ void PlayerCharacter::AdvancePhysics(Real deltaTime){
 		disp += hurtTravelDir*HURTSPEED;
 	}
 
-	mCCT->move(disp*deltaTime,0,deltaTime,PxSceneQueryHitType::eBLOCK,0);
+	disp *= deltaTime;
+
+	disp.z = -mCCT->getPosition().z; //keep it at ZERO_ZZZZZz
+
+	mCCT->move(disp,0,deltaTime,PxSceneQueryHitType::eBLOCK,0);
 
 	pos = Util::vec_from_to<PxExtendedVec3, Vector3>(mCCT->getPosition());
 
@@ -397,6 +502,7 @@ void PlayerCharacter::UpdateAnimation(Real deltaTime){
 	else {
 		m_aniStates->getAnimationState("Flipping")->setEnabled(false);
 		m_aniStates->getAnimationState("Falling")->setEnabled(false);
+		m_aniStates->getAnimationState("Jump_peaking")->setEnabled(false);
 		if(mInputVel.isZero()){
 			m_aniStates->getAnimationState("Run_full")->setEnabled(false);
 			m_aniStates->getAnimationState("Walk_full")->setEnabled(false);
@@ -447,6 +553,11 @@ void PlayerCharacter::UpdateAnimation(Real deltaTime){
 					if(timeSinceLastShot > SHOOT_ANIMATION_LENGTH && mGunDirection == FORWARD){
 						m_aniStates->getAnimationState("Run_step_upper")->setEnabled(true);
 						m_aniStates->getAnimationState("Run_step_upper")->setTimePosition(m_aniStates->getAnimationState("Run_step")->getTimePosition());
+						m_aniStates->getAnimationState("Run_step_upper_shoot")->setEnabled(false);
+					}
+					else {
+						m_aniStates->getAnimationState("Run_step_upper_shoot")->setEnabled(true);
+						m_aniStates->getAnimationState("Run_step_upper_shoot")->setTimePosition(m_aniStates->getAnimationState("Run_step_upper")->getTimePosition());
 					}
 				}
 				if(m_aniStates->getAnimationState("Run_step")->getEnabled() && m_aniStates->getAnimationState("Run_step")->hasEnded()){
@@ -460,12 +571,19 @@ void PlayerCharacter::UpdateAnimation(Real deltaTime){
 						m_aniStates->getAnimationState("Run_full_upper")->setEnabled(true);
 						m_aniStates->getAnimationState("Run_full_upper")->setTimePosition(m_aniStates->getAnimationState("Run_full")->getTimePosition());
 					}
+					else {
+						m_aniStates->getAnimationState("Run_full_upper_shoot")->setEnabled(true);
+						m_aniStates->getAnimationState("Run_full_upper_shoot")->setTimePosition(m_aniStates->getAnimationState("Run_full_upper")->getTimePosition());
+					}
 				}
 				m_aniStates->getAnimationState("Walk_full")->setEnabled(false);
 				m_aniStates->getAnimationState("Walk_step")->setEnabled(false);
 
 				m_aniStates->getAnimationState("Walk_step_upper")->setEnabled(false);
 				m_aniStates->getAnimationState("Walk_full_upper")->setEnabled(false);
+
+				m_aniStates->getAnimationState("Walk_full_upper_shoot")->setEnabled(false);
+				m_aniStates->getAnimationState("Walk_step_upper_shoot")->setEnabled(false);
 			}
 			else{
 				if(!m_aniStates->getAnimationState("Walk_full")->getEnabled() && !m_aniStates->getAnimationState("Walk_step")->getEnabled() ){
@@ -475,6 +593,11 @@ void PlayerCharacter::UpdateAnimation(Real deltaTime){
 					if(timeSinceLastShot > SHOOT_ANIMATION_LENGTH && mGunDirection == FORWARD){
 						m_aniStates->getAnimationState("Walk_step_upper")->setEnabled(true);
 						m_aniStates->getAnimationState("Walk_step_upper")->setTimePosition(m_aniStates->getAnimationState("Walk_step")->getTimePosition());
+						m_aniStates->getAnimationState("Walk_step_upper_shoot")->setEnabled(false);
+					}
+					else {
+						m_aniStates->getAnimationState("Walk_step_upper_shoot")->setEnabled(true);
+						m_aniStates->getAnimationState("Walk_step_upper_shoot")->setTimePosition(m_aniStates->getAnimationState("Walk_step_upper")->getTimePosition());
 					}
 				}
 				if(m_aniStates->getAnimationState("Walk_step")->getEnabled() && m_aniStates->getAnimationState("Walk_step")->hasEnded() ){
@@ -487,13 +610,21 @@ void PlayerCharacter::UpdateAnimation(Real deltaTime){
 					if(timeSinceLastShot > SHOOT_ANIMATION_LENGTH && mGunDirection == FORWARD){
 						m_aniStates->getAnimationState("Walk_full_upper")->setEnabled(true);
 						m_aniStates->getAnimationState("Walk_full_upper")->setTimePosition(m_aniStates->getAnimationState("Walk_full")->getTimePosition());
+						m_aniStates->getAnimationState("Walk_full_upper_shoot")->setEnabled(false);
+					}
+					else {
+						m_aniStates->getAnimationState("Walk_full_upper_shoot")->setEnabled(true);
+						m_aniStates->getAnimationState("Walk_full_upper_shoot")->setTimePosition(m_aniStates->getAnimationState("Walk_full_upper")->getTimePosition());
 					}
 				}
 				m_aniStates->getAnimationState("Run_full")->setEnabled(false);
 				m_aniStates->getAnimationState("Run_step")->setEnabled(false);
 
 				m_aniStates->getAnimationState("Run_full_upper")->setEnabled(false);
-				m_aniStates->getAnimationState("Run_step_upper")->setEnabled(false);				
+				m_aniStates->getAnimationState("Run_step_upper")->setEnabled(false);			
+
+				m_aniStates->getAnimationState("Run_full_upper_shoot")->setEnabled(false);
+				m_aniStates->getAnimationState("Run_step_upper_shoot")->setEnabled(false);
 			}
 		}
 	}
@@ -617,11 +748,28 @@ bool PlayerCharacter::sliderMoved( const OIS::JoyStickEvent &e, int sliderID ) {
 
 bool PlayerCharacter::buttonPressed( const OIS::JoyStickEvent &e, int button ) {
 	if(m_pJoyStick){
+		ButtonPress bp; //no oil spills here
+		bp.id = netId;
+		bp.bid = button;
+
+		socket->Send(bp, NEW_NETUPDATES::PLAYER_INPUT_BUTTON_PRESS, GPENet::DatagramImportance::RELIABLE_ORDERED);
+
+		doButtonPressed(button);
+	}
+
+    return true;
+}
+
+
+void PlayerCharacter::doButtonPressed( int button ) {
+
+	mButtons[button] = true;
+	
 	if(button == 1 && mGrounded && !m_aniStates->getAnimationState("Jump_up")->getEnabled())
-    {
+	{
 		m_aniStates->getAnimationState("Jump_up")->setTimePosition(0);
 		m_aniStates->getAnimationState("Jump_up")->setEnabled(true);
-    }
+	}
 
 	bool wasFlipping = false;
 
@@ -660,21 +808,31 @@ bool PlayerCharacter::buttonPressed( const OIS::JoyStickEvent &e, int button ) {
 		}
 
 		
-	}
+	}	
+}
+
+bool PlayerCharacter::buttonReleased( const OIS::JoyStickEvent &e, int button ) {
+	if(m_pJoyStick){
+		ButtonPress bp; //no oil spills here EITHER.
+		bp.id = netId;
+		bp.bid = button;
+
+		socket->Send(bp, NEW_NETUPDATES::PLAYER_INPUT_BUTTON_RELEASE, GPENet::DatagramImportance::RELIABLE_ORDERED);
+
+		doButtonReleased(button);
 	}
 
     return true;
 }
 
-bool PlayerCharacter::buttonReleased( const OIS::JoyStickEvent &e, int button ) {
-	if(m_pJoyStick){
-	if(button == 1 && !mGrounded && mVelocity.y > 0)
-    {
-		mVelocity.y = 0;
-    }
-	}
+void PlayerCharacter::doButtonReleased( int button ) {
 
-    return true;
+	mButtons[button] = false;
+
+	if(button == 1 && !mGrounded && mVelocity.y > 0)
+	{
+		mVelocity.y = 0;
+	}
 }
 
 void PlayerCharacter::getInput(Real deltaTime){
@@ -713,24 +871,24 @@ void PlayerCharacter::getInput(Real deltaTime){
 
 		//dpad
 		if((joyState.mPOV[0].direction & OIS::Pov::East) != 0){
-			if(!mFlipping){
+			/*if(!mFlipping){
 				mDirection = RIGHT;
 				if(forward.dotProduct(Vector3::UNIT_X) < 0.95) {
 					mIsTurning = true;
 					mYaw_Target = Math::PI/2;
 				}
-			}
+			}*/
 
 			mInputVel.x = 1;
 		}
 		else if((joyState.mPOV[0].direction & OIS::Pov::West) != 0){
-			if(!mFlipping){
+			/*if(!mFlipping){
 				mDirection = LEFT;
 				if(forward.dotProduct(Vector3::NEGATIVE_UNIT_X) < 0.95){
 					mIsTurning = true;
 					mYaw_Target = -Math::PI/2;
 				}
-			}
+			}*/
 			mInputVel.x = -1;
 		}
 
@@ -741,43 +899,29 @@ void PlayerCharacter::getInput(Real deltaTime){
 		//				8 2   1
 		//					0
 
-		mRunningPressed = joyState.mButtons[0];
-
-		if(joyState.mButtons[5] && !joyState.mButtons[4]){
-			mGunDirection = UPANGLED;
-		}
-		else if(!joyState.mButtons[5] && joyState.mButtons[4]){
-			mGunDirection = DOWNANGLED;
-		}
-		else if(joyState.mButtons[5] == joyState.mButtons[4]){
-			//if(m_pKeyboard->isKeyDown(OIS::KC_W))
-			//	mGunDirection = UP;
-			//else
-				mGunDirection = FORWARD;
-		}
     }
 	else if(m_pKeyboard) {
 		if(m_pKeyboard->isKeyDown(OIS::KC_D) && !m_pKeyboard->isKeyDown(OIS::KC_A)){
-			if(!mFlipping){
+			/*if(!mFlipping){
 				mDirection = RIGHT;
 				if(forward.dotProduct(Vector3::UNIT_X) < 0.95) {
 					mIsTurning = true;
 					mYaw_Target = Math::PI/2;
 				}
-			}
+			}*/
 
 			mInputVel.x = 1;
 		}
 
 
 		if(m_pKeyboard->isKeyDown(OIS::KC_A) && !m_pKeyboard->isKeyDown(OIS::KC_D)){
-			if(!mFlipping){
+			/*if(!mFlipping){
 				mDirection = LEFT;
 				if(forward.dotProduct(Vector3::NEGATIVE_UNIT_X) < 0.95){
 					mIsTurning = true;
 					mYaw_Target = -Math::PI/2;
 				}
-			}
+			}*/
 
 			mInputVel.x = -1;
 		}
@@ -807,6 +951,25 @@ void PlayerCharacter::getInput(Real deltaTime){
 		}
 	}
 
+
+	mRunningPressed = mButtons[0];
+
+	if(mButtons[5] && !mButtons[4]){
+		mGunDirection = UPANGLED;
+	}
+	else if(!mButtons[5] && mButtons[4]){
+		mGunDirection = DOWNANGLED;
+	}
+	else if(mButtons[5] == mButtons[4]){
+		//if(m_pKeyboard->isKeyDown(OIS::KC_W))
+		//	mGunDirection = UP;
+		//else
+			mGunDirection = FORWARD;
+	}
+}
+
+void PlayerCharacter::setInputVel(PxVec3 vel){
+	mInputVel = vel;
 }
 
 
@@ -860,7 +1023,11 @@ void PlayerCharacter::onControllerHit(const PxControllersHit& hit){
 	args[0] = wrapByVal<PxControllersHit, V8PxControllersHit>(const_cast<PxControllersHit&>(hit));
 	dispatchEvent("onControllerHit", 1, args);*/
 
-	owner->RegisterHit(this, hit);
+	if (hit.other->getActor()->userData != 0){
+		GameObject* go = reinterpret_cast<GameObject*>(hit.other->getActor()->userData);
+		if(go->getType() != GO_TYPE::PLAYER)
+			owner->RegisterHit(this, hit);
+	}	
 }
 
 void PlayerCharacter::onObstacleHit(const PxControllerObstacleHit& hit){

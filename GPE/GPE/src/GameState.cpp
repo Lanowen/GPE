@@ -10,6 +10,9 @@
 #include <PlayerCharacter.hpp>
 #include <Enemy.hpp>
 
+#include <PowerUp.hpp>
+#include <EnergyLarge.hpp>
+
 //#include <Scripting_Helpers.hpp>
 //#include <Scripting_ExposeGPE.hpp>
 
@@ -41,17 +44,6 @@ template<> GameState* Ogre::Singleton<GameState>::msSingleton = 0;
 
 //PxSimulationFilterShader gDefaultFilterShader = PxDefaultSimulationFilterShader;
 PxSimulationFilterShader gDefaultFilterShader = FilterShader;
-
-
-enum newUpdates {
-	CREATE_ENEMY= GPENet::UPDATE_TYPE::E_LAST + 1,
-	CREATE_MAINPLAYER,
-	CREATE_PLAYER,
-	CREATE_BULLET,
-	PLAYER_INPUTVEL,
-	PLAYER_INPUT_BUTTON,
-	NET_EVENT
-};
 
 std::string GameState::ip = "";
 bool GameState::isServer = false;
@@ -99,6 +91,7 @@ GameState::GameState()
 	//mScripting			= 0;
 	pxVisualDebuggerHidden = false;
 	fetchingResults = false;
+	hackSendEnemyPosTime = 0;
 }
 
 GameState::~GameState() {
@@ -227,19 +220,14 @@ bool GameState::initOgre(Ogre::String wndTitle, OIS::KeyListener *pKeyListener, 
 //-----------------------------------------------------------------------
 
     m_pRenderWnd->setActive(true);
-
 	mEventHandler = new SceneWideEvent();
-
-    createScene();
-
-    m_pLog->logMessage("Game initialized!");
-
-    m_pRSQ = m_pSceneMgr->createRayQuery(Ogre::Ray());
+    
 
 	if(isServer){
 		socket = GPENet::Server::Create();
 
 		socket->AddQueuedCallback(GPENet::CONNECT, boost::bind(&GameState::onClientConnect, this, _1));
+		socket->AddQueuedCallback(PLAYER_DEATH, boost::bind(&GameState::onPlayerDied, this, _1));
 	}
 	else {
 		socket = GPENet::Client::Create(boost::asio::ip::udp::endpoint(boost::asio::ip::address_v4::any(), 0), boost::asio::ip::udp::endpoint(boost::asio::ip::address_v4::from_string(ip), 1774));
@@ -247,9 +235,28 @@ bool GameState::initOgre(Ogre::String wndTitle, OIS::KeyListener *pKeyListener, 
 		socket->AddQueuedCallback(CREATE_ENEMY, boost::bind(&GameState::createEnemy, this, _1));
 		socket->AddQueuedCallback(CREATE_MAINPLAYER, boost::bind(&GameState::createMainPlayer, this, _1));
 		socket->AddQueuedCallback(CREATE_PLAYER, boost::bind(&GameState::createPlayer, this, _1));
-		socket->AddQueuedCallback(CREATE_BULLET, boost::bind(&GameState::createBullet, this, _1));
-		socket->AddQueuedCallback(NET_EVENT, boost::bind(&GameState::getNetEvent, this, _1));
+		
 	}	
+
+	socket->AddQueuedCallback(NET_EVENT, boost::bind(&GameState::getNetEvent, this, _1));
+	socket->AddQueuedCallback(CREATE_BULLET, boost::bind(&GameState::createBullet, this, _1));
+
+	socket->AddQueuedCallback(PLAYER_INPUTVEL, boost::bind(&GameState::handleInputVel, this, _1));
+	socket->AddQueuedCallback(PLAYER_INPUT_BUTTON_PRESS, boost::bind(&GameState::handleButtonPressed, this, _1));
+	socket->AddQueuedCallback(PLAYER_INPUT_BUTTON_RELEASE, boost::bind(&GameState::handleButtonReleased, this, _1));
+	socket->AddQueuedCallback(PLAYER_HURT, boost::bind(&GameState::handlePlayerHurt, this, _1));
+	socket->AddQueuedCallback(SET_POS, boost::bind(&GameState::setIDPosition, this, _1));
+	socket->AddQueuedCallback(ENEMY_DEATH, boost::bind(&GameState::handleEnemyDeath, this, _1));
+
+	socket->AddQueuedCallback(GPENet::DISCONNECT, boost::bind(&GameState::handleDisconnect, this, _1));
+	socket->AddQueuedCallback(COLLECT_POWERUP, boost::bind(&GameState::handlePowerup, this, _1));
+	socket->AddQueuedCallback(CREATE_POWERUP, boost::bind(&GameState::handleCreatePowerup, this, _1));
+
+	createScene();
+
+	m_pRSQ = m_pSceneMgr->createRayQuery(Ogre::Ray());
+
+    m_pLog->logMessage("Game initialized!");
 
     m_pRoot->startRendering();
 
@@ -258,16 +265,177 @@ bool GameState::initOgre(Ogre::String wndTitle, OIS::KeyListener *pKeyListener, 
 
 //|||||||||||||||||||||||||||||||||||||||||||||||
 
+void GameState::handleCreatePowerup(GPENet::Datagram dg){
+	boost::shared_ptr<CreatePowerUp> cpu = dg.getData<CreatePowerUp>();
+
+	Vector3 pos(cpu->px, cpu->py, cpu->pz);
+
+	switch(cpu->powerupType){
+	case POWERUP_TYPE::ENERGY_LARGE:
+		{
+			EnergyLarge* en = new EnergyLarge(this, pos);
+
+			netMan.addGameObject(cpu->id, en);
+			AddGameObject(en);
+		}
+		break;
+	case POWERUP_TYPE::ENERGY_SMALL:
+
+		break;
+	case POWERUP_TYPE::MISSILE:
+
+		break;
+	}
+}
+
+void GameState::handlePowerup(GPENet::Datagram dg){
+	boost::shared_ptr<GetPowerUp> gpu = dg.getData<GetPowerUp>();
+	GameObject* go = netMan.getGameObject(gpu->targetid);
+	GameObject* puGo = netMan.getGameObject(gpu->puID);
+
+	if(go->getType() == GO_TYPE::PLAYER && go->netOwned){
+		PlayerCharacter* player = (PlayerCharacter*)go;
+
+		player->getPowerUp((POWERUP_TYPE)gpu->powerupType);
+	}
+
+	if(puGo->getType() == GO_TYPE::POWERUP){
+		puGo->release();
+	}	
+}
+
+void GameState::onPlayerDied(GPENet::Datagram dg){
+	boost::shared_ptr<SerializableUINT32> id = dg.getData<SerializableUINT32>();
+	GameObject* go = netMan.getGameObject(id->val);
+
+	if(go->getType() == GO_TYPE::PLAYER){
+		PlayerCharacter* player = (PlayerCharacter*)go;
+
+		Vector3 pos = GetBestSpawnpoint();
+
+		RespawnPlayer(player,pos);
+
+		IDandPos idp;
+		idp.id = id->val;
+
+		idp.px = pos.x;
+		idp.py = pos.y;
+		idp.pz = pos.z;
+
+		socket->Send(idp, NEW_NETUPDATES::CREATE_PLAYER, GPENet::DatagramImportance::RELIABLE_ORDERED);
+	}
+}
+
+void GameState::handleDisconnect(GPENet::Datagram dg){
+	boost::shared_ptr<SerializableUINT32> id = dg.getData<SerializableUINT32>();
+	GameObject* go = netMan.getGameObject(id->val);
+
+	go->release();
+
+	netMan.removeGameObject(id->val);
+}
+
+void GameState::handleEnemyDeath(GPENet::Datagram dg){
+	boost::shared_ptr<SerializableUINT32> id = dg.getData<SerializableUINT32>();
+	GameObject* go = netMan.getGameObject(id->val);
+
+	if(go->getType() == GO_TYPE::ENEMY){
+		Enemy* nme = (Enemy*)go;
+
+		nme->release();
+	}
+}
+
+void GameState::handleEnemyDeathPowerup(Vector3 pos){
+	EnergyLarge* en = new EnergyLarge(this, pos);
+
+	int id = netMan.addGameObject(en);
+	AddGameObject(en);
+
+	CreatePowerUp cpu; //oh no a cpu now!
+	cpu.id = id;
+
+	cpu.powerupType = en->getPowerUpType();
+
+	cpu.px = pos.x;
+	cpu.py = pos.y;
+	cpu.pz = pos.z;
+
+	socket->Send(cpu, NEW_NETUPDATES::CREATE_POWERUP, GPENet::DatagramImportance::RELIABLE_ORDERED);
+}
+
+void GameState::handlePlayerHurt(GPENet::Datagram dg){
+	boost::shared_ptr<IDandPos> idp = dg.getData<IDandPos>();
+	GameObject* go = netMan.getGameObject(idp->id);
+
+	if(go->getType() == GO_TYPE::PLAYER){
+		PlayerCharacter* player = (PlayerCharacter*)go;
+
+		player->getHurt(PxVec3(idp->px, idp->py, idp->pz));
+	}
+}
+
+void GameState::setIDPosition(GPENet::Datagram dg){
+	boost::shared_ptr<IDandPos> idp = dg.getData<IDandPos>();
+	GameObject* go = netMan.getGameObject(idp->id);
+
+	if(go->getType() == GO_TYPE::PLAYER){
+		PlayerCharacter* player = (PlayerCharacter*)go;
+
+		player->setPosition(Vector3(idp->px, idp->py, idp->pz));
+	}
+	else if(go->getType() == GO_TYPE::ENEMY){
+		Enemy* nme = (Enemy*)go;
+
+		nme->setPosition(PxVec3(idp->px, idp->py, idp->pz));
+	}
+}
+
+void GameState::handleInputVel(GPENet::Datagram dg){
+	boost::shared_ptr<IDandPos> idp = dg.getData<IDandPos>();
+	GameObject* go = netMan.getGameObject(idp->id);
+
+	if(go->getType() == GO_TYPE::PLAYER){
+		PlayerCharacter* player = (PlayerCharacter*)go;
+
+		player->setInputVel(PxVec3(idp->px, idp->py, idp->pz));
+	}
+}
+
+void GameState::handleButtonPressed(GPENet::Datagram dg){
+	boost::shared_ptr<ButtonPress> bp = dg.getData<ButtonPress>();
+	GameObject* go = netMan.getGameObject(bp->id);
+
+	if(go->getType() == GO_TYPE::PLAYER){
+		PlayerCharacter* player = (PlayerCharacter*)go;
+
+		player->doButtonPressed(bp->bid);
+	}
+}
+
+void GameState::handleButtonReleased(GPENet::Datagram dg){
+	boost::shared_ptr<ButtonPress> bp = dg.getData<ButtonPress>();
+	GameObject* go = netMan.getGameObject(bp->id);
+
+	if(go->getType() == GO_TYPE::PLAYER){
+		PlayerCharacter* player = (PlayerCharacter*)go;
+
+		player->doButtonReleased(bp->bid);
+	}
+}
+
 void GameState::createEnemy(GPENet::Datagram dg){
 	boost::shared_ptr<IDandPos> ce = dg.getData<IDandPos>();
-	Enemy *nme = new Enemy(this, "SimpleBox.mesh");
+	Enemy *nme = new Enemy(this, "SimpleBox.mesh", false);
 	nme->setPosition(PxVec3(ce->px,ce->py,ce->pz));
+	nme->netOwned = false;
 	AddGameObject(nme);
 	netMan.addGameObject(ce->id, nme);
 }
 
 void GameState::onClientConnect(GPENet::Datagram dg){
 	std::map<int, GameObject*>::iterator itr = netMan.objects.begin();
+	boost::shared_ptr<GPENet::Server> server = boost::shared_static_cast<GPENet::Server>(socket);
 	for(;itr != netMan.objects.end(); itr++){
 		int id = itr->first;
 		GameObject* go = itr->second;
@@ -283,7 +451,7 @@ void GameState::onClientConnect(GPENet::Datagram dg){
 			idp.py = pos.y;
 			idp.pz = pos.z;
 
-			socket->Send(idp,CREATE_ENEMY,GPENet::RELIABLE_ORDERED);
+			server->SendTo(dg.senderid, idp,CREATE_ENEMY,GPENet::RELIABLE_ORDERED);
 			}
 			break;
 		case GO_TYPE::PLAYER:
@@ -296,7 +464,7 @@ void GameState::onClientConnect(GPENet::Datagram dg){
 			idp.py = pos.y;
 			idp.pz = pos.z;
 
-			socket->Send(idp,CREATE_PLAYER,GPENet::RELIABLE_ORDERED);
+			server->SendTo(dg.senderid, idp,CREATE_PLAYER,GPENet::RELIABLE_ORDERED);
 			}
 			break;
 		}
@@ -312,8 +480,13 @@ void GameState::onClientConnect(GPENet::Datagram dg){
 	idp.px = pos.x;
 	idp.py = pos.y;
 	idp.pz = pos.z;
+	player->netOwned = false;
 
-	socket->Send(idp,CREATE_MAINPLAYER,GPENet::RELIABLE_ORDERED);
+	boost::shared_ptr<GPENet::Client> client = server->getClient(dg.senderid);
+	client->hackedInt = id;
+
+	server->SendTo(dg.senderid, idp, CREATE_MAINPLAYER,GPENet::RELIABLE_ORDERED);
+	server->SendToExcluding(dg.senderid, idp, CREATE_PLAYER,GPENet::RELIABLE_ORDERED);
 }
 
 void GameState::createMainPlayer(GPENet::Datagram dg){
@@ -323,6 +496,7 @@ void GameState::createMainPlayer(GPENet::Datagram dg){
 	if((player = (PlayerCharacter*)netMan.getGameObject(cpl->id)) == 0){
 		player = SpawnMainPlayer(Vector3(cpl->px, cpl->py, cpl->pz));
 		player->giveGamera(m_pCamera);
+		player->setSocket(socket);
 		netMan.addGameObject(cpl->id, player);
 	}
 	else {
@@ -336,7 +510,7 @@ void GameState::createPlayer(GPENet::Datagram dg){
 	PlayerCharacter* player;
 	if((player = (PlayerCharacter*)netMan.getGameObject(cpl->id)) == 0){
 		player = SpawnPlayer(Vector3(cpl->px, cpl->py, cpl->pz));
-		AddGameObject(player);
+		player->netOwned = false;
 		netMan.addGameObject(cpl->id, player);
 	}
 	else {
@@ -348,7 +522,7 @@ void GameState::createBullet(GPENet::Datagram dg){
 	boost::shared_ptr<CreateBullet> cb = dg.getData<CreateBullet>();
 
 	PlayerCharacter* player = (PlayerCharacter*)netMan.getGameObject(cb->parentid);
-	Projectile* proj = new Projectile(this, player, PxVec3(cb->px, cb->py, cb->pz), PxQuat(cb->dx, cb->dy, cb->dz, cb->dw));
+	Projectile* proj = new Projectile(this, player, PxVec3(cb->px, cb->py, cb->pz), PxQuat(cb->dx, cb->dy, cb->dz, cb->dw), false);
 	AddGameObject(proj);
 }
 
@@ -372,7 +546,7 @@ GameState::createScene()
     m_pSceneMgr->setAmbientLight(Ogre::ColourValue(1.f, 1.f, 1.f));
 
     m_pCamera = m_pSceneMgr->createCamera("GameCamera");
-    m_pCamera->setPosition(Ogre::Vector3(65,-18,100));
+    m_pCamera->setPosition(Ogre::Vector3(65,-15,120));
     m_pCamera->setDirection(0,0,-1);
     m_pCamera->setNearClipDistance(1);
 
@@ -516,10 +690,10 @@ GameState::createScene()
 				node->attachObject( ent );
 				node->setScale( size );
 
-				physx::PxRigidStatic* derp = mPhysics->createRigidStatic(physx::PxTransform(physx::PxVec3(x,y,0)));
-				physx::PxShape* shape = derp->createShape(physx::PxBoxGeometry(0.5f,0.5f,0.5f), *mMaterial);
+				physx::PxRigidStatic* box = mPhysics->createRigidStatic(physx::PxTransform(physx::PxVec3(x,y,0)));
+				physx::PxShape* shape = box->createShape(physx::PxBoxGeometry(0.5f,0.5f,0.5f), *mMaterial);
 				shape->setSimulationFilterData(filterData);
-				mPxScene->addActor(*derp);
+				mPxScene->addActor(*box);
 
 				static_World->addEntity(ent,Ogre::Vector3(x,y,0),Ogre::Quaternion::IDENTITY,size);
 
@@ -543,6 +717,7 @@ GameState::createScene()
 							if(isServer){
 								Enemy *nme = new Enemy(this, itr->second.model);
 								nme->setPosition(PxVec3(x,y,0));
+								nme->setSocket(socket);
 								AddGameObject(nme);
 								netMan.addGameObject(nme);
 							}
@@ -604,7 +779,7 @@ Vector3 GameState::GetBestSpawnpoint(){
 	for(int i = 0; i < spawnPoints.size(); i++){
 		int tempval = 0;
 		for(int j = 0; j < players.size(); j++){
-			tempval += players[i]->getPosition().squaredDistance(spawnPoints[i]);
+			tempval += players[j]->getPosition().squaredDistance(spawnPoints[i]);
 		}
 
 		if(bestValue < tempval){
@@ -618,6 +793,7 @@ Vector3 GameState::GetBestSpawnpoint(){
 
 void GameState::RespawnPlayer(PlayerCharacter* player){
 	player->setPosition(GetBestSpawnpoint());
+	player->resetLife();
 }
 
 
@@ -643,6 +819,7 @@ PlayerCharacter* GameState::SpawnPlayer(){
 
 void GameState::RespawnPlayer(PlayerCharacter* player, Vector3 pos){
 	player->setPosition(pos);
+	player->resetLife();
 }
 
 
@@ -706,6 +883,7 @@ void GameState::DeleteGameObject(GameObject* go){
 	
 	if(!fetchingResults){	
 		RemoveGameObject(go);
+
 		delete go;
 	}
 	else {
@@ -717,8 +895,19 @@ void GameState::DeleteGameObject(GameObject* go){
 
 void GameState::RemoveGameObject(GameObject* go){
 	std::vector<GameObject*>::iterator itr = std::find<std::vector<GameObject*>::iterator, GameObject*>(mGameObjects.begin(), mGameObjects.end(), go);
-	if(itr != mGameObjects.end())
+	if(itr != mGameObjects.end()){
 		mGameObjects.erase(itr);
+		netMan.removeGameObject(go);
+	}
+
+	if(go->getType() == GO_TYPE::PLAYER){
+		PlayerCharacter* player = (PlayerCharacter*)go;
+
+		std::vector<PlayerCharacter*>::iterator itr = std::find(players.begin(), players.end(), player);
+
+		if(itr != players.end())
+			players.erase(itr);
+	}
 }
 
 void GameState::RegisterHit(PlayerCharacter* player, PxControllersHit hit){
@@ -1005,6 +1194,8 @@ void GameState::update(double timeSinceLastFrame)
 
     m_TranslateVector = Ogre::Vector3::ZERO;
 
+	
+
 	//m_pPlayerChar->Update(timeSinceLastFrame);
 
 	std::vector<GameObject*>::iterator GOItr = mGameObjects.begin();
@@ -1012,6 +1203,33 @@ void GameState::update(double timeSinceLastFrame)
 	for(; GOItr != mGameObjects.end(); GOItr++){
 		(*GOItr)->Update(timeSinceLastFrame);
 	}
+
+	if(isServer){
+		hackSendEnemyPosTime += timeSinceLastFrame;
+
+		if(hackSendEnemyPosTime > 1){
+			hackSendEnemyPosTime -= 1;
+			vector<GameObject*>::iterator itr = mGameObjects.begin();
+			for(;itr != mGameObjects.end(); itr++){
+				if((*itr)->netOwned){
+					if((*itr)->getType() == GO_TYPE::ENEMY){
+						Enemy* nme = (Enemy*)(*itr);
+						IDandPos idp;
+
+						idp.id = (*itr)->netId;
+						Vector3 pos = nme->getPosition();
+						idp.px = pos.x;
+						idp.py = pos.y;
+						idp.pz = pos.z;
+
+						socket->Send(idp, NEW_NETUPDATES::SET_POS, GPENet::DatagramImportance::RELIABLE_ORDERED);
+					}
+				}
+			}
+		}
+	}
+
+	socket->Update(timeSinceLastFrame);
 
     getInput(timeSinceLastFrame);
     moveCamera();
@@ -1186,7 +1404,30 @@ void GameState::onContact(const PxContactPairHeader& pairHeader, const PxContact
 }
 
 void GameState::onTrigger(PxTriggerPair* pairs, PxU32 count){
-	Util::dout << "onTrigger called...." << std::endl;
+	//Util::dout << "onTrigger called...." << std::endl;
+	if(isServer){
+		for(int i = 0; i < count; i++){
+			if(!(pairs[i].flags & (PxTriggerPairFlag::Enum::eDELETED_SHAPE_TRIGGER | PxTriggerPairFlag::Enum::eDELETED_SHAPE_OTHER))){
+				if(pairs[i].triggerShape->getActor().userData != 0 && pairs[i].otherShape->getActor().userData != 0){
+					GameObject* trigggo = reinterpret_cast<GameObject*>(pairs[i].triggerShape->getActor().userData );
+					GameObject* go = reinterpret_cast<GameObject*>(pairs[i].otherShape->getActor().userData );
+
+					if(go->getType() == GO_TYPE::PLAYER && trigggo->getType() == GO_TYPE::POWERUP){
+						PowerUp* pu = (PowerUp*)trigggo;
+						GetPowerUp gpu; //lol
+
+						gpu.targetid = go->netId;
+						gpu.puID = trigggo->netId;
+						gpu.powerupType = pu->getPowerUpType();
+
+						socket->Send(gpu, NEW_NETUPDATES::COLLECT_POWERUP, GPENet::DatagramImportance::RELIABLE_ORDERED);
+
+						trigggo->release();
+					}
+				}
+			}
+		}
+	}
 }
 
 //Adjust mouse clipping area

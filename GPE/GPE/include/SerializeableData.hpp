@@ -97,7 +97,7 @@ typedef unsigned int UINT32;
 		virtual ~ButtonPress(){}
 
 		int id;
-		float bid;
+		int bid;
 
 	private:
 		friend class boost::serialization::access;
@@ -159,3 +159,52 @@ typedef unsigned int UINT32;
 			ar & eventName;
 		}
 	};
+
+	class CreatePowerUp : public SerializableData {
+	public:
+
+		CreatePowerUp(){}
+
+		virtual ~CreatePowerUp(){}
+
+		int id;
+		int powerupType;
+		float px, py, pz;
+
+	private:
+		friend class boost::serialization::access;
+
+		template<class Archive>
+		void serialize(Archive & ar, const unsigned int version){
+			ar & boost::serialization::base_object<SerializableData>(*this);
+			ar & id;
+			ar & powerupType;
+			ar & px;
+			ar & py;
+			ar & pz;
+		}
+	};
+
+	
+	class GetPowerUp : public SerializableData {
+	public:
+
+		GetPowerUp(){}
+
+		virtual ~GetPowerUp(){}
+
+		int targetid, puID;
+		int powerupType;
+
+	private:
+		friend class boost::serialization::access;
+
+		template<class Archive>
+		void serialize(Archive & ar, const unsigned int version){
+			ar & boost::serialization::base_object<SerializableData>(*this);
+			ar & targetid;
+			ar & puID;
+			ar & powerupType;
+		}
+	};
+

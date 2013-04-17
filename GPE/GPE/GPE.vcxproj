@@ -82,6 +82,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Enemy.cpp" />
+    <ClCompile Include="src\EnergyLarge.cpp" />
     <ClCompile Include="src\EventData.cpp" />
     <ClCompile Include="src\EventDispatcherHelper.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -92,6 +93,7 @@
     <ClCompile Include="src\NetworkedObjectManager.cpp" />
     <ClCompile Include="src\Physics.cpp" />
     <ClCompile Include="src\PlayerCharacter.cpp" />
+    <ClCompile Include="src\PowerUp.cpp" />
     <ClCompile Include="src\Projectile.cpp" />
     <ClCompile Include="src\SceneWideEvent.cpp" />
     <ClCompile Include="src\SerializeableData.cpp" />
@@ -102,6 +104,7 @@
     <ClInclude Include="include\DotSceneLoader.hpp" />
     <ClInclude Include="include\DynamicConstraints.hpp" />
     <ClInclude Include="include\Enemy.hpp" />
+    <ClInclude Include="include\EnergyLarge.hpp" />
     <ClInclude Include="include\ErrorStream.h" />
     <ClInclude Include="include\EventData.hpp" />
     <ClInclude Include="include\EventDispatcherHelper.hpp" />
@@ -114,6 +117,7 @@
     <ClInclude Include="include\NetworkedObjectManager.hpp" />
     <ClInclude Include="include\Physics.hpp" />
     <ClInclude Include="include\PlayerCharacter.hpp" />
+    <ClInclude Include="include\PowerUp.hpp" />
     <ClInclude Include="include\Projectile.hpp" />
     <ClInclude Include="include\Sample.h" />
     <ClInclude Include="include\SceneWideEvent.hpp" />

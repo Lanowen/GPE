@@ -19,8 +19,8 @@ public:
 
 class Projectile : public GameObject {
 public:
-	Projectile(GameState* owner, GameObject* spawner, Vector3 pos, Quaternion dir);
-	Projectile(GameState* owner, GameObject* spawner, PxVec3 pos, PxQuat dir);
+	Projectile(GameState* owner, GameObject* spawner, Vector3 pos, Quaternion dir, bool netOwned = true);
+	Projectile(GameState* owner, GameObject* spawner, PxVec3 pos, PxQuat dir, bool netOwned = true);
 	virtual ~Projectile();
 
 	virtual GO_TYPE getType() { return GO_TYPE::PROJECTILE; }
@@ -28,6 +28,10 @@ public:
 	virtual void Update(Real deltaTime);
 
 	static void Initialize(SceneManager* sceneMgr);
+
+	PxVec3 getPosition();
+
+	GameObject* getSpawner();
 
 private:
 	void Initialize(PxVec3 pos, PxQuat dir);

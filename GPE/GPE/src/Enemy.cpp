@@ -12,8 +12,10 @@
 #include <PlayerCharacter.hpp>
 
 
-Enemy::Enemy(GameState* owner, std::string mesh/*, std::string script*/) : GameObject(owner)
-{
+Enemy::Enemy(GameState* owner, std::string mesh/*, std::string script*/, bool netOwned) : GameObject(owner){
+
+	netOwned = netOwned;
+
 	float scale = 0.5;
 
 	PxBoxControllerDesc cDesc;
@@ -181,12 +183,19 @@ void Enemy::AdvancePhysics(Real deltaTime){
 }
 
 void Enemy::OnDamage(const EventData* data){
-	const ProjectileEvent* pe = static_cast<const ProjectileEvent*>(data);
-	Util::dout << "On Damage eventttt" << std::endl;
-	life -= pe->power;
+	if(netOwned){
+		const ProjectileEvent* pe = static_cast<const ProjectileEvent*>(data);
+		life -= pe->power;
 
-    if (life <= 0)
-        release();
+		if (life <= 0){
+			SerializableUINT32 idp;
+			idp.val = netId;
+
+			socket->Send(idp, NEW_NETUPDATES::ENEMY_DEATH, GPENet::DatagramImportance::RELIABLE_ORDERED);
+			owner->handleEnemyDeathPowerup(node->getPosition());
+			release();
+		}
+	}
 }
 
 

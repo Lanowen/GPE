@@ -12,7 +12,8 @@ public:
 
 	int addGameObject(GameObject* obj);
 	void addGameObject(int id, GameObject* obj);
-	void releaseAndRemoveGameObject(int id);
+	void removeGameObject(int id);
+	void removeGameObject(GameObject* go);
 
 	GameObject* getGameObject(int id);
 

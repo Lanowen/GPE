@@ -7,12 +7,14 @@
 BillboardSet* Projectile::bbs;
 
 
-Projectile::Projectile(GameState* owner, GameObject* spawner, Vector3 pos, Quaternion dir) : GameObject(owner), spawner(spawner) {
+Projectile::Projectile(GameState* owner, GameObject* spawner, Vector3 pos, Quaternion dir, bool netOwned) : GameObject(owner), spawner(spawner) {
 	Initialize(Util::vec_from_to<Vector3, PxVec3>(pos), Util::quat_from_to<Quaternion, PxQuat>(dir));
+	netOwned = netOwned;
 }
 
-Projectile::Projectile(GameState* owner, GameObject* spawner, PxVec3 pos, PxQuat dir) : GameObject(owner), spawner(spawner) {
+Projectile::Projectile(GameState* owner, GameObject* spawner, PxVec3 pos, PxQuat dir, bool netOwned) : GameObject(owner), spawner(spawner) {
 	Initialize(pos, dir);
+	netOwned = netOwned;
 }
 
 void Projectile::Initialize(SceneManager* sceneMgr){
@@ -88,6 +90,7 @@ void Projectile::OnProjectileHit(const EventData* other){
 	GameObject*  otherGO = reinterpret_cast<GameObject*>(other->data);
 	ProjectileEvent pe;
 	pe.power = 1;
+	pe.data = this;
 	otherGO->dispatchEvent("OnDamage", &pe);
 }
 
@@ -95,4 +98,12 @@ void Projectile::Update(Real deltaTime){
 	node->translate(Util::vec_from_to<PxVec3, Vector3>(actor->getGlobalPose().p) - node->getPosition());
 	mFlare->setPosition(node->getPosition());
 	//node->setPosition(Util::vec_from_to<PxVec3, Vector3>(actor->getGlobalPose().p));	
+}
+
+PxVec3 Projectile::getPosition(){
+	return actor->getGlobalPose().p;
+}
+
+GameObject* Projectile::getSpawner(){
+	return spawner;
 }

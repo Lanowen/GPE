@@ -50,6 +50,25 @@ enum QueryFlags
 
 //|||||||||||||||||||||||||||||||||||||||||||||||
 
+enum NEW_NETUPDATES {
+	CREATE_ENEMY= GPENet::UPDATE_TYPE::E_LAST + 1,
+	CREATE_MAINPLAYER,
+	CREATE_PLAYER,
+	CREATE_BULLET,
+	PLAYER_INPUTVEL,
+	SET_POS,
+	ENEMY_POS,
+	ENEMY_DEATH,
+	PLAYER_INPUT_BUTTON_PRESS,
+	PLAYER_INPUT_BUTTON_RELEASE,
+	PLAYER_DEATH,
+	PLAYER_HURT,
+	COLLECT_POWERUP,
+	CREATE_POWERUP,
+	NET_EVENT
+};
+
+
 using namespace Ogre;
 using namespace physx;
 
@@ -197,6 +216,23 @@ protected:
 	void getNetEvent(GPENet::Datagram dg);
 
 	void onClientConnect(GPENet::Datagram dg);
+	void onPlayerDied(GPENet::Datagram dg);
+	
+	void handleInputVel(GPENet::Datagram dg);
+	void handleButtonPressed(GPENet::Datagram dg);
+	void handleButtonReleased(GPENet::Datagram dg);
+	void handleEnemyDeath(GPENet::Datagram dg);
+	
+
+	void setIDPosition(GPENet::Datagram dg);
+
+	void handlePlayerHurt(GPENet::Datagram dg);
+	void handleDisconnect(GPENet::Datagram dg);
+	void handlePowerup(GPENet::Datagram dg);
+	void handleCreatePowerup(GPENet::Datagram dg);
+
+public:
+	void handleEnemyDeathPowerup(Vector3 pos);
 	
 
 private:
@@ -236,6 +272,8 @@ private:
 	std::list<GameObject*> toDelete;
 
 	NetworkedObjectManager netMan;
+
+	Real hackSendEnemyPosTime;
 
 };
 

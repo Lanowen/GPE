@@ -9,10 +9,13 @@
 
 #include <GameState.hpp>
 
+#include <GPENet.hpp>
+
 enum GO_TYPE{
 	PLAYER,
 	ENEMY,
-	PROJECTILE
+	PROJECTILE,
+	POWERUP
 };
 
 class GameObject : public EventDispatcherHelper {
@@ -47,15 +50,23 @@ public:
 
 	virtual GO_TYPE getType() = 0;
 
+	int netId;
+	bool netOwned; //this means I own this bitch
+
+	void setSocket(boost::shared_ptr<GPENet::SocketBase> base);
+
 protected:
 	GameState* owner;
-
+	boost::shared_ptr<GPENet::SocketBase> socket;
 	//Persistent<FunctionTemplate> fcnTemplate;
+
+	
 
 private:	
 	//std::vector<ScriptingObject*> attachedScripts;
 	//std::unordered_map<std::string, std::list<v8::Persistent<v8::Function>>> events;
 	std::unordered_map<std::string, std::list<boost::function<void(const EventData*)>>> eventsCpp;
-
+	
 	bool released;
+	
 };

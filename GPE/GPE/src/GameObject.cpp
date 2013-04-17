@@ -4,7 +4,7 @@
 //#include <V8Scripting.hpp>
 #include <SceneWideEvent.hpp>
 
-GameObject::GameObject(GameState* owner) : owner(owner), released(false) {
+GameObject::GameObject(GameState* owner) : owner(owner), netId(-1), released(false), netOwned(true) {
 	//HandleScope scope;
 
 	//fcnTemplate = Persistent<FunctionTemplate>::New(FunctionTemplate::New());
@@ -30,6 +30,11 @@ GameObject::~GameObject(){
 		}
 	}
 }
+
+void GameObject::setSocket(boost::shared_ptr<GPENet::SocketBase> base){
+	socket = base;
+}
+
 
 //v8::Handle<v8::Value> GameObject::v8registerEventCallback(const v8::Arguments& args){
 //	//v8::Locker locker;

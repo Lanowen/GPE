@@ -17,7 +17,7 @@ using namespace physx;
 class Enemy : public physx::PxUserControllerHitReport/*, public physx::PxControllerBehaviorCallback*/, public GameObject {
 	friend class V8Enemy;
 public:
-    Enemy(GameState* owner, std::string mesh/*, std::string script*/);
+    Enemy(GameState* owner, std::string mesh/*, std::string script*/, bool netOwned = true);
 	virtual ~Enemy();
 
 	virtual void Update(Real deltaTime);
