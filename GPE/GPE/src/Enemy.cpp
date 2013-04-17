@@ -150,6 +150,7 @@ void Enemy::AdvancePhysics(Real deltaTime){
     {
         moveDir = rotRight.rotate(moveDir);
         castDir = rotRight.rotate(castDir);
+		node->roll(Degree(-90));
 
         //mCCT->move(moveDir*0.05, 0, deltaTime, PxSceneQueryHitType::eBLOCK);
         //print("lol off edge,", time);
@@ -160,6 +161,7 @@ void Enemy::AdvancePhysics(Real deltaTime){
             moveDir.y = 0;
             castDir.x = 0;
             castDir.y = -1;
+			node->setOrientation(Quaternion::IDENTITY);
         }
 
     }
@@ -208,6 +210,7 @@ void Enemy::onShapeHit(const PxControllerShapeHit & hit){
 	if(hit.dir.dot(moveDir) > .95){
         moveDir = rotLeft.rotate(moveDir);
         castDir = rotLeft.rotate(castDir);
+		node->roll(Degree(90));
     }
 
     if (falling) {

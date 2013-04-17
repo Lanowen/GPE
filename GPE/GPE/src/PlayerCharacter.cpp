@@ -95,7 +95,7 @@ PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_
 
     SceneManager* gameSceneMgr = Root::getSingletonPtr()->getSceneManager("GameSceneMgr");
 	//ent = gameSceneMgr->createEntity("Samus", "Samus.mesh" );
-	ent = gameSceneMgr->createEntity("samustestSamus.mesh" );
+	ent = gameSceneMgr->createEntity("SamusSamus.mesh" );
 	ent->getSkeleton()->setBlendMode(SkeletonAnimationBlendMode::ANIMBLEND_CUMULATIVE);
 
 

@@ -1,75 +1,72 @@
-
-material Samus/Model/TexA
+material "SamusSamus_Model_TexA"
 {
-	technique Map#42
+	technique SamusSamus_Model_TexA_technique
 	{
-		pass Map#43
+		pass SamusSamus_Model_TexA_standard
 		{
-			ambient 0.698039 0.698039 0.698039 1
-			diffuse 0.698039 0.698039 0.698039 1
-			specular 0.898039 0.898039 0.898039 1 20
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
 
-			texture_unit Map#44
+			scene_blend alpha_blend
+
+			texture_unit SamusSamus_Model_TexA_Diffuse#0
 			{
 				texture SamusTexA.tga
-				filtering linear linear linear
-				rotate 180
+				tex_coord_set 0
+				colour_op modulate
+                rotate 180
 				scale -1 1
 			}
 		}
-
 	}
-
 }
-
-
-
-material Samus/Model/TexB
+material "SamusSamus_Model_TexB"
 {
-	technique Map#45
+	technique SamusSamus_Model_TexB_technique
 	{
-		pass Map#46
+		pass SamusSamus_Model_TexB_standard
 		{
-			ambient 0.698039 0.698039 0.698039 1
-			diffuse 0.698039 0.698039 0.698039 1
-			specular 0.898039 0.898039 0.898039 1 20
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
 
-			texture_unit Samus/Model/TexB
+			scene_blend alpha_blend
+
+			texture_unit SamusSamus_Model_TexB_Diffuse#0
 			{
 				texture SamusTexB.tga
-				filtering linear linear linear
-				rotate 180
+				tex_coord_set 0
+				colour_op modulate
+                rotate 180
 				scale -1 1
 			}
 		}
-
 	}
-
 }
-
-
-
-material Samus/Model/TexC
+material "SamusSamus_Model_TexC"
 {
-	technique Map#48
+	technique SamusSamus_Model_TexC_technique
 	{
-		pass Map#49
+		pass SamusSamus_Model_TexC_standard
 		{
-			ambient 0.698039 0.698039 0.698039 1
-			diffuse 0.698039 0.698039 0.698039 1
-			specular 0.898039 0.898039 0.898039 1 20
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
 
-			texture_unit Samus/Model/TexC
+			scene_blend alpha_blend
+            
+			texture_unit SamusSamus_Model_TexC_Diffuse#0
 			{
 				texture SamusTexC.tga
-				filtering linear linear linear
-				rotate 180
+				tex_coord_set 0
+				colour_op modulate
+                rotate 180
 				scale -1 1
 			}
 		}
-
 	}
-
 }
-
-

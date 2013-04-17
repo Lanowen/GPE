@@ -1,0 +1,69 @@
+material "samustest_jeemamat2"
+{
+	technique samustest_jeemamat2_technique
+	{
+		pass samustest_jeemamat2_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit samustest_jeemamat2_Diffuse#0
+			{
+				texture samustestjeema.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "samustest_jeemamat3"
+{
+	technique samustest_jeemamat3_technique
+	{
+		pass samustest_jeemamat3_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit samustest_jeemamat3_Diffuse#0
+			{
+				texture samustesttoge.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "samustest_jeemamat1"
+{
+	technique samustest_jeemamat1_technique
+	{
+		pass samustest_jeemamat1_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 25.5
+			emissive 0 0 0 1
+
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit samustest_jeemamat1_Diffuse#0
+			{
+				texture samustestjeema.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

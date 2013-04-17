@@ -1,5 +1,4 @@
-#e Enemy SimpleBox.mesh Enemy.js
-#r Enemy SimpleBox.mesh Enemy2.js             
+#e Enemy GeemerGeemer.mesh Enemy.js        
 
                                           e                                                                         e
              bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb               bbbbbbbbbbbbbbbbbbbbbbbbbbbbb

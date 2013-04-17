@@ -426,7 +426,7 @@ void GameState::handleButtonReleased(GPENet::Datagram dg){
 
 void GameState::createEnemy(GPENet::Datagram dg){
 	boost::shared_ptr<IDandPos> ce = dg.getData<IDandPos>();
-	Enemy *nme = new Enemy(this, "SimpleBox.mesh", false);
+	Enemy *nme = new Enemy(this, "GeemerGeemer.mesh", false);
 	nme->setPosition(PxVec3(ce->px,ce->py,ce->pz));
 	nme->netOwned = false;
 	AddGameObject(nme);

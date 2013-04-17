@@ -1,0 +1,75 @@
+
+material Samus/Model/TexA
+{
+	technique Map#42
+	{
+		pass Map#43
+		{
+			ambient 0.698039 0.698039 0.698039 1
+			diffuse 0.698039 0.698039 0.698039 1
+			specular 0.898039 0.898039 0.898039 1 20
+
+			texture_unit Map#44
+			{
+				texture SamusTexA.tga
+				filtering linear linear linear
+				rotate 180
+				scale -1 1
+			}
+		}
+
+	}
+
+}
+
+
+
+material Samus/Model/TexB
+{
+	technique Map#45
+	{
+		pass Map#46
+		{
+			ambient 0.698039 0.698039 0.698039 1
+			diffuse 0.698039 0.698039 0.698039 1
+			specular 0.898039 0.898039 0.898039 1 20
+
+			texture_unit Samus/Model/TexB
+			{
+				texture SamusTexB.tga
+				filtering linear linear linear
+				rotate 180
+				scale -1 1
+			}
+		}
+
+	}
+
+}
+
+
+
+material Samus/Model/TexC
+{
+	technique Map#48
+	{
+		pass Map#49
+		{
+			ambient 0.698039 0.698039 0.698039 1
+			diffuse 0.698039 0.698039 0.698039 1
+			specular 0.898039 0.898039 0.898039 1 20
+
+			texture_unit Samus/Model/TexC
+			{
+				texture SamusTexC.tga
+				filtering linear linear linear
+				rotate 180
+				scale -1 1
+			}
+		}
+
+	}
+
+}
+
+
