@@ -152,7 +152,7 @@ void Enemy::AdvancePhysics(Real deltaTime){
         castDir = rotRight.rotate(castDir);
 		node->roll(Degree(-90));
 
-        //mCCT->move(moveDir*0.05, 0, deltaTime, PxSceneQueryHitType::eBLOCK);
+        mCCT->move(moveDir*0.005, 0, deltaTime, PxSceneQueryHitType::eBLOCK);
         //print("lol off edge,", time);
         rotCount++;
         if (rotCount > 4) {
@@ -176,6 +176,7 @@ void Enemy::AdvancePhysics(Real deltaTime){
     }
 
     disp += moveDir *MOVESPEED;
+	//disp += castDir *9.81;
 
     disp *= deltaTime;
 
