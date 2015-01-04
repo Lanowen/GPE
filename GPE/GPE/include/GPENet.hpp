@@ -755,8 +755,10 @@ namespace GPENet {
 					break;
 				case UPDATE_TYPE::CONNECT:
 					if(tempClients.find(dg.senderid) != tempClients.end()){
+						clientMtx.lock();
 						clients[dg.senderid] = tempClients[dg.senderid];
 						tempClients.erase(dg.senderid);
+						clientMtx.unlock();
 
 						Util::dout << "Client connected with ip: " << endpoint->address().to_string() << ":" << endpoint->port() << std::endl;
 					}
