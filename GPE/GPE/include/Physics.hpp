@@ -22,6 +22,5 @@ public:
 	void init(bool mCreateCudaCtxManager);
 	PxPhysics*						mPhysics;
 	PxCooking*						mCooking;
-	pxtask::CudaContextManager*		mCudaContextManager;
-
+	PxCudaContextManager*		mCudaContextManager;
 };

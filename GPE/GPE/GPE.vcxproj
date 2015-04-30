@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -39,14 +39,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)/include;C:\boost_1_52_0;C:\Dev\ogre_src_v1-8-1/OgreMain/include;C:\Dev\ogre_src_v1-8-1/Dependencies/include;C:/Dev/OgreSDK_vc11_v1-8-1/include;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Include;C:\Dev\v8\trunk/include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\boost_1_52_0/stage/lib;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Lib/win32;C:/Dev/OgreSDK_vc11_v1-8-1\lib\Debug;C:\Dev\v8\trunk\build\Debug\lib;C:\Dev\ogre_src_v1-8-1\Dependencies\lib\Debug;$(LibraryPath)</LibraryPath>
-    <SourcePath>$(ProjectDir)/src;C:\Dev\ogre_src_v1-8-1/OgreMain/src;$(SourcePath)</SourcePath>
+    <IncludePath>$(ProjectDir)/include;C:\Dev\Libraries\Boost\boost_1_57_0;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\OgreMain\include;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\include;C:\Dev\Libraries\nVidia\PhysX-3.3.2_WINDOWS_SDK_Core\Include;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\includes;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Dev\Libraries\Boost\boost_1_57_0\stage\lib;C:\Dev\Libraries\nVidia\PhysX-3.3.2_WINDOWS_SDK_Core\Lib\vc11win32;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\lib\$(Configuration);C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\$(Configuration);$(LibraryPath)</LibraryPath>
+    <SourcePath>$(ProjectDir)/src;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\OgreMain\src;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)/include;C:\boost_1_52_0;C:\Dev\ogre_src_v1-8-1/OgreMain/include;C:\Dev\ogre_src_v1-8-1/Dependencies/include;C:/Dev/OgreSDK_vc11_v1-8-1/include;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Include;C:\Dev\v8\trunk/include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\boost_1_52_0/stage/lib;C:\Dev\PhysX-3.2.3_PC_SDK_Core_patched_MSC_VER/Lib/win32;C:/Dev/OgreSDK_vc11_v1-8-1\lib\Release;C:\Dev\v8\trunk\build\Debug\lib;C:\Dev\ogre_src_v1-8-1\Dependencies\lib\Release;$(LibraryPath)</LibraryPath>
-    <SourcePath>$(ProjectDir)/src;C:\Dev\ogre_src_v1-8-1/OgreMain/src;$(SourcePath)</SourcePath>
+    <IncludePath>$(ProjectDir)/include;C:\Dev\Libraries\Boost\boost_1_57_0;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\OgreMain\include;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\include;C:\Dev\Libraries\nVidia\PhysX-3.3.2_WINDOWS_SDK_Core\Include;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\includes;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Dev\Libraries\Boost\boost_1_57_0\stage\lib;C:\Dev\Libraries\nVidia\PhysX-3.3.2_WINDOWS_SDK_Core\Lib\vc11win32;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\lib\$(Configuration);C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\$(Configuration);$(LibraryPath)</LibraryPath>
+    <SourcePath>$(ProjectDir)/src;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\OgreMain\src;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\src;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -57,11 +57,15 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OgreMain_d.lib;OgrePaging_d.lib;OgreProperty_d.lib;OgreRTShaderSystem_d.lib;OgreTerrain_d.lib;OIS_d.lib;WINMM.LIB;v8_base.lib;preparser_lib.lib;v8_nosnapshot.lib;PhysX3DEBUG_x86.lib;PhysX3CommonDEBUG_x86.lib;PhysX3CookingDEBUG_x86.lib;RepXUpgrader3DEBUG.lib;PhysXVisualDebuggerSDKDEBUG.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;PhysX3CharacterKinematicDEBUG_x86.lib;RepX3DEBUG.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain_d.lib;OgrePaging_d.lib;OgreProperty_d.lib;OgreRTShaderSystem_d.lib;OgreTerrain_d.lib;OIS_d.lib;WINMM.LIB;PhysX3DEBUG_x86.lib;PhysX3CommonDEBUG_x86.lib;PhysX3CookingDEBUG_x86.lib;PhysXVisualDebuggerSDKDEBUG.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;PhysX3CharacterKinematicDEBUG_x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>
       </IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>LIBCMTD.lib;libcpmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT.lib;LIBCPMTD.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -76,7 +80,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>OgreMain.lib;OgrePaging.lib;OgreProperty.lib;OgreRTShaderSystem.lib;OgreTerrain.lib;OIS.lib;WINMM.LIB;v8_base.lib;preparser_lib.lib;v8_nosnapshot.lib;PhysX3_x86.lib;PhysX3Common_x86.lib;PhysX3Cooking_x86.lib;RepXUpgrader3.lib;PhysXVisualDebuggerSDK.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;PhysX3CharacterKinematic_x86.lib;RepX3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain.lib;OgrePaging.lib;OgreProperty.lib;OgreRTShaderSystem.lib;OgreTerrain.lib;OIS.lib;WINMM.LIB;PhysX3_x86.lib;PhysX3Common_x86.lib;PhysX3Cooking_x86.lib;PhysXVisualDebuggerSDK.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;PhysX3CharacterKinematic_x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib;libcpmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -119,7 +123,6 @@
     <ClInclude Include="include\PlayerCharacter.hpp" />
     <ClInclude Include="include\PowerUp.hpp" />
     <ClInclude Include="include\Projectile.hpp" />
-    <ClInclude Include="include\Sample.h" />
     <ClInclude Include="include\SceneWideEvent.hpp" />
     <ClInclude Include="include\SerializationClassExports.hpp" />
     <ClInclude Include="include\SerializeableData.hpp" />
@@ -131,6 +134,10 @@
     <None Include="..\Media\scripts\Enemy.js" />
     <None Include="..\Media\scripts\playerController.js" />
     <None Include="..\Media\scripts\playerController2.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Media\levelData\level1.txt" />
+    <Text Include="..\Media\levelData\testlevel.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

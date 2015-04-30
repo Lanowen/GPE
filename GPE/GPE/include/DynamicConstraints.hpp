@@ -21,9 +21,11 @@ public:
 		return &mData;
 	}
 
-	virtual bool			updatePvdProperties(PVD::PvdDataStream& pvdConnection,
-		const physx::PxConstraint* c,
-		physx::PxPvdUpdateType::Enum updateType) const	 {return true;}
+	virtual bool			updatePvdProperties(physx::debugger::comm::PvdDataStream& pvdConnection,
+		const PxConstraint* c,
+		PxPvdUpdateType::Enum updateType) const	 {
+		return true;
+	}
 
 	virtual void			onConstraintRelease()	{}
 	virtual void*			getExternalReference(physx::PxU32& typeID) { typeID = physx::PxConstraintExtIDs::eNEXT_FREE_ID; return this; }
@@ -80,7 +82,7 @@ public:
 		}
 		else */
 
-		//TODO: Fix later
+		// TODO: Fix later
 		//if(data->rotX || data->rotY || data->rotZ) {
 		//	physx::PxVec3 axis;
 		//	physx::PxReal dot;

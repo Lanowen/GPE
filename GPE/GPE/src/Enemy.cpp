@@ -1,15 +1,17 @@
-#include <Enemy.hpp>
+#include "Enemy.hpp"
 
 #include <Util.hpp>
 
-#include <Scripting_Helpers.hpp>
-#include <Scripting_ExposePx.hpp>
-#include <Scripting_ExposeGPE.hpp>
+//#include <Scripting_Helpers.hpp>
+//#include <Scripting_ExposePx.hpp>
+//#include <Scripting_ExposeGPE.hpp>
+
+
+
+#include <PlayerCharacter.hpp>
 
 #define MOVESPEED 2
 #define HALFEXTENT 0.4
-
-#include <PlayerCharacter.hpp>
 
 
 Enemy::Enemy(GameState* owner, std::string mesh/*, std::string script*/, bool netOwned) : GameObject(owner){
@@ -27,7 +29,7 @@ Enemy::Enemy(GameState* owner, std::string mesh/*, std::string script*/, bool ne
 	cDesc.stepOffset = 0.05f;
 	cDesc.slopeLimit = 0.707f;
 	cDesc.upDirection = PxVec3(0.0f, 1.0f, 0.0f);
-	cDesc.interactionMode = PxCCTInteractionMode::eINCLUDE;
+	//cDesc.interactionMode = PxCCTInteractionMode::eINCLUDE;
 	//cDesc.maxJumpHeight
 	//cDesc.groupsBitmask
 	cDesc.density = 10.0;
@@ -136,23 +138,28 @@ void Enemy::AdvancePhysics(Real deltaTime){
     if (falling) {
 
         disp.y = -9.81* deltaTime;
-
-        mCCT->move(disp, 0, deltaTime, PxSceneQueryHitType::eBLOCK);
+		
+        //mCCT->move(disp, 0, deltaTime, PxSceneQueryHitType::eBLOCK);
+		mCCT->move(disp, 0, deltaTime, PxControllerFilters());
 
         node->setPosition(Util::vec_from_to<PxExtendedVec3, Vector3>(mCCT->getPosition()));
         return;
     }
 
 	bool hitRes1=false, hitRes2 = false;
-	PxRaycastHit hit1, hit2;
-    if (!(hitRes1 = mPhysScene->raycastSingle(toVec3(mCCT->getPosition()) - (moveDir*HALFEXTENT), castDir, 1 + HALFEXTENT, PxSceneQueryFlag::eBLOCKING_HIT, hit1, PxSceneQueryFilterData(PxSceneQueryFilterFlag::eSTATIC))) &&
-        !(hitRes2 = mPhysScene->raycastSingle(toVec3(mCCT->getPosition()) + (moveDir*HALFEXTENT), castDir, 1 + HALFEXTENT, PxSceneQueryFlag::eBLOCKING_HIT, hit1, PxSceneQueryFilterData(PxSceneQueryFilterFlag::eSTATIC))))
+	//PxRaycastHit hit1, hit2;
+    //if (!(hitRes1 = mPhysScene->raycastSingle(toVec3(mCCT->getPosition()) - (moveDir*HALFEXTENT), castDir, 1 + HALFEXTENT, PxSceneQueryFlag::eBLOCKING_HIT, hit1, PxSceneQueryFilterData(PxSceneQueryFilterFlag::eSTATIC))) &&
+    //    !(hitRes2 = mPhysScene->raycastSingle(toVec3(mCCT->getPosition()) + (moveDir*HALFEXTENT), castDir, 1 + HALFEXTENT, PxSceneQueryFlag::eBLOCKING_HIT, hit2, PxSceneQueryFilterData(PxSceneQueryFilterFlag::eSTATIC))))
+	PxRaycastBuffer hit1, hit2;
+	if (!(hitRes1 = mPhysScene->raycast(toVec3(mCCT->getPosition()) - (moveDir*HALFEXTENT), castDir, 1 + HALFEXTENT, hit1, PxHitFlag::eDEFAULT, PxQueryFilterData(PxQueryFlag::eSTATIC))) &&
+		!(hitRes2 = mPhysScene->raycast(toVec3(mCCT->getPosition()) + (moveDir*HALFEXTENT), castDir, 1 + HALFEXTENT, hit2, PxHitFlag::eDEFAULT, PxQueryFilterData(PxQueryFlag::eSTATIC))))
     {
         moveDir = rotRight.rotate(moveDir);
         castDir = rotRight.rotate(castDir);
 		node->roll(Degree(-90));
 
-        mCCT->move(moveDir*0.005, 0, deltaTime, PxSceneQueryHitType::eBLOCK);
+        //mCCT->move(moveDir*0.005, 0, deltaTime, PxSceneQueryHitType::eBLOCK);
+		mCCT->move(moveDir*0.005, 0, deltaTime, PxControllerFilters());
         //print("lol off edge,", time);
         rotCount++;
         if (rotCount > 4) {
@@ -166,11 +173,13 @@ void Enemy::AdvancePhysics(Real deltaTime){
 
     }
     else {
-		if(hitRes1 && hit1.distance > HALFEXTENT){
-			mCCT->move(castDir*(hit1.distance-HALFEXTENT), 0, deltaTime, PxSceneQueryHitType::eTOUCH);
+		if (hitRes1 && hit1.block.distance > HALFEXTENT){
+			//mCCT->move(castDir*(hit1.distance-HALFEXTENT), 0, deltaTime, PxSceneQueryHitType::eTOUCH);
+			mCCT->move(castDir*(hit1.block.distance - HALFEXTENT), 0, deltaTime, PxControllerFilters());
 		}
-		else if(!hitRes1 && hitRes2 && hit2.distance > HALFEXTENT){
-			mCCT->move(castDir*(hit2.distance-HALFEXTENT), 0, deltaTime, PxSceneQueryHitType::eTOUCH);
+		else if (!hitRes1 && hitRes2 && hit2.block.distance > HALFEXTENT){
+			//mCCT->move(castDir*(hit2.distance-HALFEXTENT), 0, deltaTime, PxSceneQueryHitType::eTOUCH);
+			mCCT->move(castDir*(hit2.block.distance - HALFEXTENT), 0, deltaTime, PxControllerFilters());
 		}
         rotCount = 0;
     }
@@ -180,7 +189,8 @@ void Enemy::AdvancePhysics(Real deltaTime){
 
     disp *= deltaTime;
 
-    mCCT->move(disp, 0, deltaTime, PxSceneQueryHitType::eBLOCK);
+    //mCCT->move(disp, 0, deltaTime, PxSceneQueryHitType::eBLOCK);
+	mCCT->move(disp, 0, deltaTime, PxControllerFilters());
 
 	node->setPosition(Util::vec_from_to<PxExtendedVec3, Vector3>(mCCT->getPosition()));
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <OIS\OIS.h>
+#include <OIS.h>
 #include <GameState.hpp>
 
 class IKeyListener : public OIS::KeyListener{

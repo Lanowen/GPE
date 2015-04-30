@@ -37,7 +37,7 @@ PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_
 	cDesc.stepOffset = 0.05f;
 	cDesc.slopeLimit = 0.707f;
 	cDesc.upDirection = PxVec3(0.0f, 1.0f, 0.0f);
-	cDesc.interactionMode = PxCCTInteractionMode::eINCLUDE;
+	//cDesc.interactionMode = PxCCTInteractionMode::eINCLUDE;
 	//cDesc.maxJumpHeight
 	//cDesc.groupsBitmask
 	cDesc.density = 10.0;
@@ -399,7 +399,8 @@ void PlayerCharacter::AdvancePhysics(Real deltaTime){
 
 	disp.z = -mCCT->getPosition().z; //keep it at ZERO_ZZZZZz
 
-	mCCT->move(disp,0,deltaTime,PxSceneQueryHitType::eBLOCK,0);
+	//mCCT->move(disp, 0, deltaTime, PxSceneQueryHitType::eBLOCK, 0);
+	mCCT->move(disp, 0, deltaTime, PxControllerFilters(), 0);
 
 	pos = Util::vec_from_to<PxExtendedVec3, Vector3>(mCCT->getPosition());
 
@@ -979,7 +980,7 @@ void PlayerCharacter::onShapeHit(const PxControllerShapeHit & hit){
 	args[0] = wrapByVal<PxControllerShapeHit, V8PxControllerShapeHit>(const_cast<PxControllerShapeHit&>(hit));
 	dispatchEvent("onShapeHit", 1, args);*/
 
-	PxRigidDynamic* actor = hit.shape->getActor().is<PxRigidDynamic>();
+	PxRigidDynamic* actor = hit.shape->getActor()->is<PxRigidDynamic>();
 	if(actor)
 	{
 		if(actor->getRigidDynamicFlags() & PxRigidDynamicFlag::eKINEMATIC)

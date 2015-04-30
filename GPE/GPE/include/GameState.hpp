@@ -9,20 +9,20 @@
 #include <OgreCamera.h>
 #include <OgreEntity.h>
 #include <OgreLogManager.h>
-#include <OgreOverlay.h>
-#include <OgreOverlayElement.h>
-#include <OgreOverlayManager.h>
+//#include <OgreOverlay.h>
+//#include <OgreOverlayElement.h>
+//#include <OgreOverlayManager.h>
 #include <OgreRoot.h>
 #include <OgreViewport.h>
 #include <OgreSceneManager.h>
 #include <OgreRenderWindow.h>
 #include <OgreConfigFile.h>
 
-#include <OIS/OISEvents.h>
-#include <OIS/OISInputManager.h>
-#include <OIS/OISKeyboard.h>
-#include <OIS/OISMouse.h>
-#include <OIS/OISJoyStick.h>
+#include <OISEvents.h>
+#include <OISInputManager.h>
+#include <OISKeyboard.h>
+#include <OISMouse.h>
+#include <OISJoyStick.h>
 
 #include <Physics.hpp>
 
@@ -178,7 +178,7 @@ private:
 	physx::PxScene*						mPxScene;
 	physx::PxMaterial*					mMaterial;
 	physx::PxDefaultCpuDispatcher*		mCpuDispatcher;
-	physx::pxtask::CudaContextManager*		mCudaContextManager;
+	physx::PxCudaContextManager*		mCudaContextManager;
 	physx::PxU32						mNbThreads;
 	bool						mCreateCudaCtxManager;
 	physx::PxControllerManager*		mControllerManager;

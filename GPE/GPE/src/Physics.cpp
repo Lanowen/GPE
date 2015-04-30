@@ -46,9 +46,14 @@ void Physics::init(bool mCreateCudaCtxManager){
 //#endif
 //	}
 
+	PxTolerancesScale scale;
+	scale.length = 1;				// length in cm
+	scale.mass = 1;				// mass in grams
+	scale.speed *= scale.length;	// speed in cm/s
+
 	//mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *allocator, gDefaultErrorCallback, PxTolerancesScale());
 	//mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, physx::PxTolerancesScale(), true, mProfileZoneManager);
-	mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, physx::PxTolerancesScale(), true);
+	mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, scale, true);
 	if(!mPhysics)
 		m_pLog->logMessage("PxCreatePhysics failed!");
 
@@ -58,7 +63,10 @@ void Physics::init(bool mCreateCudaCtxManager){
 	if(!PxInitExtensions(*mPhysics))
 		m_pLog->logMessage("PxInitExtensions failed!");
 
-	mCooking = PxCreateCooking(PX_PHYSICS_VERSION, *mFoundation, PxCookingParams());
+	PxCookingParams params(scale);
+	params.meshWeldTolerance = 0.001f;
+	params.meshPreprocessParams = PxMeshPreprocessingFlags(PxMeshPreprocessingFlag::eWELD_VERTICES | PxMeshPreprocessingFlag::eREMOVE_UNREFERENCED_VERTICES | PxMeshPreprocessingFlag::eREMOVE_DUPLICATED_TRIANGLES);
+	mCooking = PxCreateCooking(PX_PHYSICS_VERSION, *mFoundation, params);
 	if(!mCooking)
 		m_pLog->logMessage("PxCreateCooking failed!");
 

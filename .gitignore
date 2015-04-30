@@ -23,6 +23,7 @@
 ipch/
 obj/
 Debug/
+Debug Server/
 Release/
 GPE/Media/Debug/
 GPE/Media/DeferredShadingMedia/

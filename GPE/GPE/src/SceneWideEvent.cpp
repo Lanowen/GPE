@@ -1,7 +1,7 @@
 #include <SceneWideEvent.hpp>
 #include <iostream>
 #include <algorithm>
-#include <V8Scripting.hpp>
+//#include <V8Scripting.hpp>
 
 template<> SceneWideEvent* Ogre::Singleton<SceneWideEvent>::msSingleton = 0;
 

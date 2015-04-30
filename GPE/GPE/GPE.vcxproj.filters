@@ -16,6 +16,12 @@
     <Filter Include="Scripts">
       <UniqueIdentifier>{fa5e1bc7-058d-4e0f-96ff-7d87a8c420a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Media">
+      <UniqueIdentifier>{e25287c3-35b6-44ab-b97c-57e642361596}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Media\levelData">
+      <UniqueIdentifier>{607f4299-b3ed-4c2f-875a-d9834be954a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -78,9 +84,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\GPENet.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Sample.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\SerializationClassExports.hpp">
@@ -160,5 +163,13 @@
     <None Include="..\Media\scripts\Enemy.js">
       <Filter>Scripts</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Media\levelData\level1.txt">
+      <Filter>Resource Files\Media\levelData</Filter>
+    </Text>
+    <Text Include="..\Media\levelData\testlevel.txt">
+      <Filter>Resource Files\Media\levelData</Filter>
+    </Text>
   </ItemGroup>
 </Project>

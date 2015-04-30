@@ -64,8 +64,8 @@ GameState::GameState()
     m_pMouse			= 0;
     m_pJoyStick         = 0;
 
-    mResourcesCfg       = Ogre::StringUtil::BLANK;
-    mPluginsCfg         = Ogre::StringUtil::BLANK;
+    mResourcesCfg       = Ogre::BLANKSTRING;
+	mPluginsCfg			= Ogre::BLANKSTRING;
 
     m_bShutdown         = false;
     m_MoveSpeed		    = 1.f;
@@ -235,7 +235,6 @@ bool GameState::initOgre(Ogre::String wndTitle, OIS::KeyListener *pKeyListener, 
 		socket->AddQueuedCallback(CREATE_ENEMY, boost::bind(&GameState::createEnemy, this, _1));
 		socket->AddQueuedCallback(CREATE_MAINPLAYER, boost::bind(&GameState::createMainPlayer, this, _1));
 		socket->AddQueuedCallback(CREATE_PLAYER, boost::bind(&GameState::createPlayer, this, _1));
-		
 	}	
 
 	socket->AddQueuedCallback(NET_EVENT, boost::bind(&GameState::getNetEvent, this, _1));
@@ -254,7 +253,7 @@ bool GameState::initOgre(Ogre::String wndTitle, OIS::KeyListener *pKeyListener, 
 
 	createScene();
 
-	m_pRSQ = m_pSceneMgr->createRayQuery(Ogre::Ray());
+	//m_pRSQ = m_pSceneMgr->createRayQuery(Ogre::Ray());
 
     m_pLog->logMessage("Game initialized!");
 
@@ -435,7 +434,7 @@ void GameState::createEnemy(GPENet::Datagram dg){
 
 void GameState::onClientConnect(GPENet::Datagram dg){
 	std::map<int, GameObject*>::iterator itr = netMan.objects.begin();
-	boost::shared_ptr<GPENet::Server> server = boost::shared_static_cast<GPENet::Server>(socket);
+	boost::shared_ptr<GPENet::Server> server = boost::static_pointer_cast<GPENet::Server>(socket);
 	for(;itr != netMan.objects.end(); itr++){
 		int id = itr->first;
 		GameObject* go = itr->second;
@@ -555,7 +554,7 @@ GameState::createScene()
 
     m_pViewport->setCamera(m_pCamera);
 
-    m_pBackPlane = new Ogre::Plane(Ogre::Vector3::UNIT_Z, -0.5f);
+    /*m_pBackPlane = new Ogre::Plane(Ogre::Vector3::UNIT_Z, -0.5f);
 
     Ogre::MeshManager::getSingleton().createPlane("bgPlane", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
                                                   *m_pBackPlane, 16384, 16384,1,1,true,1,16384,16384);
@@ -566,7 +565,7 @@ GameState::createScene()
     m_pPlane->setQueryFlags(BG_SELECT);
     m_pPlane->setVisible(false);
 
-    m_pSceneMgr->getRootSceneNode()->createChildSceneNode("PlaneAxis")->attachObject(m_pPlane);
+    m_pSceneMgr->getRootSceneNode()->createChildSceneNode("PlaneAxis")->attachObject(m_pPlane);*/
 //================================================================================================================
 //================================================================================================================
 	Physics* Phys = new Physics();
@@ -575,8 +574,6 @@ GameState::createScene()
 
 	mPhysics = Phys->mPhysics;
 	mCudaContextManager = Phys->mCudaContextManager;
-
-	mControllerManager = PxCreateControllerManager(mPhysics->getFoundation());
 
 	physx::PxSceneDesc sceneDesc(mPhysics->getTolerancesScale());
 	{
@@ -603,6 +600,8 @@ GameState::createScene()
 	mPxScene = mPhysics->createScene(sceneDesc);
 	if (!mPxScene)
 		m_pLog->logMessage("createScene failed!");
+
+	mControllerManager = PxCreateControllerManager(*mPxScene);
 
 	//mScene->setSimulationEventCallback(this);
 
@@ -661,11 +660,15 @@ GameState::createScene()
 
 	char buf[512];
 
-	DataStreamPtr levelData = ResourceGroupManager::getSingletonPtr()->openResource("level1.txt");
+	DataStreamPtr levelData = ResourceGroupManager::getSingletonPtr()->openResource("testlevel.txt");
 	for(int y = 0; !levelData->eof(); y--){
 
 		ZeroMemory(buf, 512);
 		size_t length_read = levelData->readLine(buf, 512);
+
+		int x_offset = 0, y_offset = 0;
+
+		//mPxScene->shiftOrigin(PxVec3(x_offset, y_offset, 0));
 
 		for(int x = 0; x < length_read; x++){
 			switch(buf[x]){
@@ -685,24 +688,27 @@ GameState::createScene()
 				break;
 			case 'b':
 				{
-				node = m_pSceneMgr->getRootSceneNode()->createChildSceneNode(Ogre::Vector3(x,y,0));
+				node = m_pSceneMgr->getRootSceneNode()->createChildSceneNode(Ogre::Vector3(x + x_offset, y + y_offset, 0));
 				ent = m_pSceneMgr->createEntity("SimpleBox.mesh" );
 				node->attachObject( ent );
 				node->setScale( size );
 
-				physx::PxRigidStatic* box = mPhysics->createRigidStatic(physx::PxTransform(physx::PxVec3(x,y,0)));
-				physx::PxShape* shape = box->createShape(physx::PxBoxGeometry(0.5f,0.5f,0.5f), *mMaterial);
+				physx::PxRigidStatic* box = mPhysics->createRigidStatic(physx::PxTransform(physx::PxVec3(x + x_offset, y + y_offset, 0), PxQuat::createIdentity()));
+				PxBoxGeometry geo(0.5f, 0.5f, 0.5f);
+				//PxSphereGeometry geo(0.5);
+				//Util::dout << "Box isValid: " << geo.isValid() << " ~ " << x << " " << y << " ~ " << mPhysics->getTolerancesScale().length;
+				physx::PxShape* shape = box->createShape(geo, *mMaterial);
 				shape->setSimulationFilterData(filterData);
 				mPxScene->addActor(*box);
 
-				static_World->addEntity(ent,Ogre::Vector3(x,y,0),Ogre::Quaternion::IDENTITY,size);
+				static_World->addEntity(ent, Ogre::Vector3(x + x_offset, y + y_offset, 0), Ogre::Quaternion::IDENTITY, size);
 
 				m_pSceneMgr->destroyEntity(ent);
 				m_pSceneMgr->destroySceneNode(node);
 				}
 				break;
 			case 's':
-				spawnPoints.push_back(Vector3(x,y,0));
+				spawnPoints.push_back(Vector3(x + x_offset, y + y_offset, 0));
 				break;
 			case ' ':
 				//do nothing
@@ -716,7 +722,7 @@ GameState::createScene()
 						if(itr->second.classID == "Enemy"){
 							if(isServer){
 								Enemy *nme = new Enemy(this, itr->second.model);
-								nme->setPosition(PxVec3(x,y,0));
+								nme->setPosition(PxVec3(x + x_offset, y + y_offset, 0));
 								nme->setSocket(socket);
 								AddGameObject(nme);
 								netMan.addGameObject(nme);
@@ -1270,6 +1276,9 @@ void GameState::advanceSimulation(float dtime)
 
 bool GameState::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
+	//if (evt.timeSinceLastFrame > 0.5f)
+	//	return true;
+
     if(m_pRenderWnd->isClosed())
         return false;
 
@@ -1408,9 +1417,9 @@ void GameState::onTrigger(PxTriggerPair* pairs, PxU32 count){
 	if(isServer){
 		for(int i = 0; i < count; i++){
 			if(!(pairs[i].flags & (PxTriggerPairFlag::Enum::eDELETED_SHAPE_TRIGGER | PxTriggerPairFlag::Enum::eDELETED_SHAPE_OTHER))){
-				if(pairs[i].triggerShape->getActor().userData != 0 && pairs[i].otherShape->getActor().userData != 0){
-					GameObject* trigggo = reinterpret_cast<GameObject*>(pairs[i].triggerShape->getActor().userData );
-					GameObject* go = reinterpret_cast<GameObject*>(pairs[i].otherShape->getActor().userData );
+				if (pairs[i].triggerShape->getActor()->userData != 0 && pairs[i].otherShape->getActor()->userData != 0){
+					GameObject* trigggo = reinterpret_cast<GameObject*>(pairs[i].triggerShape->getActor()->userData);
+					GameObject* go = reinterpret_cast<GameObject*>(pairs[i].otherShape->getActor()->userData);
 
 					if(go->getType() == GO_TYPE::PLAYER && trigggo->getType() == GO_TYPE::POWERUP){
 						PowerUp* pu = (PowerUp*)trigggo;

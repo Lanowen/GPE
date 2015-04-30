@@ -2,11 +2,11 @@
 
 #include <Ogre.h>
 
-#include <OIS/OISEvents.h>
-#include <OIS/OISInputManager.h>
-#include <OIS/OISKeyboard.h>
-#include <OIS/OISMouse.h>
-#include <OIS/OISJoyStick.h>
+#include <OISEvents.h>
+#include <OISInputManager.h>
+#include <OISKeyboard.h>
+#include <OISMouse.h>
+#include <OISJoyStick.h>
 
 #include <PxPhysicsAPI.h>
 #include <characterkinematic/PxController.h>
