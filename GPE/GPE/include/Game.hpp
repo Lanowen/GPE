@@ -1,17 +1,17 @@
 #pragma once
+#include <GameStateManager.hpp>
 
+namespace gpe {
 
-#include "GameState.hpp"
+	class Game
+	{
+	public:
+		Game();
+		~Game();
 
+		void go();
 
-class Game
-{
-public:
-	Game();
-	~Game();
-
-	void go();
-
-private:
-	GameState* m_pGameState;
-};
+	private:
+		GameStateManager* gamestatemanager_;
+	};
+}

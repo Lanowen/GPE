@@ -47,7 +47,7 @@ public:
 
 protected:
 
-	physx::PxPhysics*							mPhysics;
+	physx::PxPhysics*							physics_;
     inline void _initialise();
     inline void _resize(size_t vertexCount = 0, size_t indexCount = 0);
 

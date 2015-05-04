@@ -25,8 +25,8 @@
 PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_pJoyStick, int im_pJoyDeadZone, GameState* owner, bool netOwned) : GameObject(owner), IKeyListener(owner), IJoyStickListener(owner), m_pCamera(0)
 {
 	netOwned = netOwned;
-	mPhys = owner->getPhysics();
-	mPhysScene = owner->getMainPhysicsScene();
+	mPhys = Physics::getSingletonPtr()->get_physics();
+	mPhysScene = owner->get_physics_scene()->get_scene();
 
 	PxBoxControllerDesc cDesc;
 	
@@ -48,7 +48,7 @@ PlayerCharacter::PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_
 	//cDesc.behaviorCallback
 	cDesc.userData = (GameObject*)this;
 
-	mCCT = owner->getControllerManager()->createController(*mPhys, mPhysScene, cDesc);
+	mCCT = owner->get_physics_scene()->get_controller_manager()->createController(*mPhys, mPhysScene, cDesc);
 	PX_ASSERT(mCCT);
 
 	mCCT->getActor()->userData = (GameObject*)this;
@@ -275,7 +275,7 @@ void PlayerCharacter::Update(Real deltaTime){
 	timeSinceHurt += deltaTime;
 
 	if(canMove()){
-		getInput(deltaTime);
+		GetInput(deltaTime);
 	}
 
 	if(!mFlipping){
@@ -836,7 +836,7 @@ void PlayerCharacter::doButtonReleased( int button ) {
 	}
 }
 
-void PlayerCharacter::getInput(Real deltaTime){
+void PlayerCharacter::GetInput(Real deltaTime){
 
 	Vector3 forward = node->getOrientation()*Vector3::UNIT_Z;
 

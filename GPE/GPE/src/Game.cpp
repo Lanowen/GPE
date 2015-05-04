@@ -1,29 +1,19 @@
-//|||||||||||||||||||||||||||||||||||||||||||||||
+#include <Game.hpp>
+#include <GameState.hpp>
 
-#include "Game.hpp"
+namespace gpe {
 
-//|||||||||||||||||||||||||||||||||||||||||||||||
+	Game::Game() {
+		gamestatemanager_ = new GameStateManager("GPE");
+	}
 
-Game::Game()
-{
-	m_pGameState = 0;
+	Game::~Game() {
+		delete gamestatemanager_;
+	}
+
+	void Game::go() {
+		GameState* testGame = new GameState();
+
+		gamestatemanager_->Start(testGame);
+	}
 }
-
-//|||||||||||||||||||||||||||||||||||||||||||||||
-
-Game::~Game()
-{
-	delete m_pGameState;
-}
-
-//|||||||||||||||||||||||||||||||||||||||||||||||
-
-void Game::go()
-{
-    m_pGameState = new GameState();
-
-	if(m_pGameState->initOgre("MetroidGame", 0, 0))
-		return;
-}
-
-//|||||||||||||||||||||||||||||||||||||||||||||||

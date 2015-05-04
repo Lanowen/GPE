@@ -1,7 +1,7 @@
 #include <PowerUp.hpp>
 
 PowerUp::PowerUp(GameState* owner, Vector3 pos) : GameObject(owner) {
-	PxPhysics* phys = owner->getPhysics();
+	PxPhysics* phys = Physics::getSingletonPtr()->get_physics();
 
 	
 	PxFilterData filterData;
@@ -13,7 +13,7 @@ PowerUp::PowerUp(GameState* owner, Vector3 pos) : GameObject(owner) {
 	shape->setSimulationFilterData(filterData);
 	shape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
 	shape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true);
-	owner->getMainPhysicsScene()->addActor(*box);
+	owner->get_physics_scene()->get_scene()->addActor(*box);
 
 	box->userData = (GameObject*)this;
 

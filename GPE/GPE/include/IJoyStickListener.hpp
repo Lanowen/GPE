@@ -3,14 +3,17 @@
 #include <OIS.h>
 #include <GameState.hpp>
 
-class IJoyStickListener : public OIS::JoyStickListener{
-public:
-	IJoyStickListener(GameState* owner) : listenerOwner(owner) { listenerOwner->RegisterJoyListener(this); }
-	virtual ~IJoyStickListener(){ listenerOwner->DeregisterJoyListener(this); }
+namespace gpe {
 
-	//virtual bool keyPressed(const OIS::KeyEvent &keyEventRef) = 0;
-    //virtual bool keyReleased(const OIS::KeyEvent &keyEventRef) = 0;
+	class IJoyStickListener : public OIS::JoyStickListener{
+	public:
+		IJoyStickListener(GameState* owner) : listenerOwner(owner) { listenerOwner->RegisterJoyListener(this); }
+		virtual ~IJoyStickListener() { listenerOwner->DeregisterJoyListener(this); }
 
-private:
-	GameState* listenerOwner;
-};
+		//virtual bool keyPressed(const OIS::KeyEvent &keyEventRef) = 0;
+		//virtual bool keyReleased(const OIS::KeyEvent &keyEventRef) = 0;
+
+	private:
+		GameState* listenerOwner;
+	};
+}

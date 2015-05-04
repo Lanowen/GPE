@@ -57,12 +57,13 @@ enum ARM_STATE {
 
 using namespace Ogre;
 using namespace physx;
+using namespace gpe;
 
 class PlayerCharacter : public physx::PxUserControllerHitReport/*, public physx::PxControllerBehaviorCallback*/, public GameObject, public IKeyListener, public IJoyStickListener
 {
 	//friend class V8PlayerCharacter;
 public:
-    PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_pJoyStick, int im_pJoyDeadZone, GameState* owner, bool netOwned = true);
+	PlayerCharacter(OIS::Keyboard* im_pKeyboard, OIS::JoyStick* im_pJoyStick, int im_pJoyDeadZone, GameState* owner, bool netOwned = true);
     virtual ~PlayerCharacter();
 
 	virtual void release();
@@ -101,7 +102,7 @@ public:
 	void getPowerUp(POWERUP_TYPE type);
 
 protected:		
-    void getInput(Real deltaTime);
+    void GetInput(Real deltaTime);
 	virtual void onShapeHit(const physx::PxControllerShapeHit & hit);
 	virtual void onControllerHit(const physx::PxControllersHit& hit);
 	virtual void onObstacleHit(const physx::PxControllerObstacleHit& hit);

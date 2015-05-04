@@ -11,62 +11,49 @@
 
 #include <GPENet.hpp>
 
-enum GO_TYPE{
-	PLAYER,
-	ENEMY,
-	PROJECTILE,
-	POWERUP
-};
+namespace gpe {
 
-class GameObject : public EventDispatcherHelper {
-	friend class GameState;
-public:
-	GameObject(GameState* owner);
-	virtual ~GameObject();
+	enum GO_TYPE{
+		PLAYER,
+		ENEMY,
+		PROJECTILE,
+		POWERUP
+	};
 
-	//static v8::Handle<v8::Value> v8registerEventCallback(const v8::Arguments& args);
-	//static v8::Handle<v8::Value> v8removeEventCallback(const v8::Arguments& args);
+	class GameObject : public EventDispatcherHelper {
+		friend class GameState;
+	public:
+		GameObject(GameState* owner);
+		virtual ~GameObject();
 
-	//void registerEventCallback(std::string eventName, v8::Persistent<v8::Function> inFunc);
-	//void removeEventCallback(std::string eventName, v8::Persistent<v8::Function> inFunc);
+		void registerEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc);
+		void removeEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc);
 
-	void registerEventCallback(std::string eventName,boost::function<void(const EventData*)> inFunc);
-	void removeEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc);
+		void dispatchEvent(std::string eventName, const EventData* data);
 
-	//bool loadScript(std::string inScript);
+		//Need compiler v120 for this. God fuck.
+		//template<class... Args>
+		//void dispatchEvent(std::string eventName, Args... args);
 
-	//void dispatchEvent(std::string eventName);
-	//void dispatchEvent(std::string eventName, int argc, v8::Handle<Value> argv[]);
-	void dispatchEvent(std::string eventName, const EventData* data);
+		virtual void release();
+		virtual void Update(Ogre::Real deltaTime);
 
-	//Need compiler v120 for this. God fuck.
-	//template<class... Args>
-	//void dispatchEvent(std::string eventName, Args... args);
+		virtual GO_TYPE getType() = 0;
 
-	virtual void release();
-	virtual void Update(Ogre::Real deltaTime);
+		int netId;
+		bool netOwned; //this means I own this bitch
 
-	//void exposeObject(std::string name, Handle<Data> val);
+		void setSocket(boost::shared_ptr<GPENet::SocketBase> base);
 
-	virtual GO_TYPE getType() = 0;
+	protected:
+		GameState* owner;
+		boost::shared_ptr<GPENet::SocketBase> socket;
 
-	int netId;
-	bool netOwned; //this means I own this bitch
+	private:
+		std::unordered_map<std::string, std::list<boost::function<void(const EventData*)>>> eventsCpp;
 
-	void setSocket(boost::shared_ptr<GPENet::SocketBase> base);
+		bool released;
 
-protected:
-	GameState* owner;
-	boost::shared_ptr<GPENet::SocketBase> socket;
-	//Persistent<FunctionTemplate> fcnTemplate;
+	};
 
-	
-
-private:	
-	//std::vector<ScriptingObject*> attachedScripts;
-	//std::unordered_map<std::string, std::list<v8::Persistent<v8::Function>>> events;
-	std::unordered_map<std::string, std::list<boost::function<void(const EventData*)>>> eventsCpp;
-	
-	bool released;
-	
-};
+}

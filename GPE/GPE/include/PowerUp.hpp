@@ -14,6 +14,7 @@ enum POWERUP_TYPE {
 
 using namespace Ogre;
 using namespace physx;
+using namespace gpe;
 
 class PowerUp : public GameObject {
 public:

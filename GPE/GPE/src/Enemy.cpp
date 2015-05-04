@@ -14,7 +14,7 @@
 #define HALFEXTENT 0.4
 
 
-Enemy::Enemy(GameState* owner, std::string mesh/*, std::string script*/, bool netOwned) : GameObject(owner){
+Enemy::Enemy(GameState* owner, std::string mesh/*, std::string script*/, bool netOwned) : GameObject(owner) {
 
 	netOwned = netOwned;
 
@@ -22,7 +22,7 @@ Enemy::Enemy(GameState* owner, std::string mesh/*, std::string script*/, bool ne
 
 	PxBoxControllerDesc cDesc;
 	
-	cDesc.material		= owner->getPhysics()->createMaterial(0.9f, 0.5f, 0.0f);
+	cDesc.material = Physics::getSingletonPtr()->get_physics()->createMaterial(0.9f, 0.5f, 0.0f);
 	cDesc.position		= PxExtendedVec3(3.f,0.8,0.f);
 	cDesc.contactOffset	= 0.005f;
 	
@@ -40,7 +40,7 @@ Enemy::Enemy(GameState* owner, std::string mesh/*, std::string script*/, bool ne
 	//cDesc.behaviorCallback
 	cDesc.userData = (GameObject*)this;
 
-	mCCT = owner->getControllerManager()->createController(*owner->getPhysics(), owner->getMainPhysicsScene(),cDesc);
+	mCCT = owner->get_physics_scene()->get_controller_manager()->createController(*Physics::getSingletonPtr()->get_physics(), owner->get_physics_scene()->get_scene(), cDesc);
 	PX_ASSERT(mCCT);
 
 	mCCT->getActor()->userData = (GameObject*)this ;
@@ -72,7 +72,7 @@ Enemy::Enemy(GameState* owner, std::string mesh/*, std::string script*/, bool ne
 	childNode->setPosition(Vector3::ZERO);
 	childNode->attachObject(ent);
 
-	mPhysScene = owner->getMainPhysicsScene();
+	mPhysScene = owner->get_physics_scene()->get_scene();
     m_aniStates = ent->getAllAnimationStates();
 
 

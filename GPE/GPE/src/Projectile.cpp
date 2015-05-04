@@ -26,7 +26,7 @@ void Projectile::Initialize(SceneManager* sceneMgr){
 
 
 void Projectile::Initialize(PxVec3 pos, PxQuat dir){
-	actor = owner->getPhysics()->createRigidDynamic(PxTransform(pos, dir));
+	actor = Physics::getSingletonPtr()->get_physics()->createRigidDynamic(PxTransform(pos, dir));
 	actor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, true);
 	actor->setLinearVelocity(dir.rotate(PxVec3(0,0,1)*PROJECTILESPEED));
 
@@ -34,7 +34,7 @@ void Projectile::Initialize(PxVec3 pos, PxQuat dir){
 
 	actor->setName("Projectile");
 
-	PxMaterial* mat = owner->getPhysics()->createMaterial(0,0,0);
+	PxMaterial* mat = Physics::getSingletonPtr()->get_physics()->createMaterial(0, 0, 0);
 	mat->setFrictionCombineMode(PxCombineMode::eMULTIPLY);
 	mat->setRestitutionCombineMode(PxCombineMode::eMULTIPLY);
 	PxShape* shape = actor->createShape(PxSphereGeometry(0.25), *mat);
@@ -45,7 +45,7 @@ void Projectile::Initialize(PxVec3 pos, PxQuat dir){
 	filterData.word1 = 1|2|4|8;	// word1 = ID mask to filter pairs that trigger a contact callback;
 	shape->setSimulationFilterData(filterData);
 
-	owner->getMainPhysicsScene()->addActor(*actor);
+	owner->get_physics_scene()->get_scene()->addActor(*actor);
 
 	//loadScript("BasicProjectile.js");
 

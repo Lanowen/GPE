@@ -4,6 +4,7 @@
 
 using namespace Ogre;
 using namespace physx;
+using namespace gpe;
 
 class EnergyLarge : public PowerUp {
 public:

@@ -97,8 +97,6 @@ void VisualDebugger::_initialise()
 
 void VisualDebugger::update(const physx::PxRenderBuffer& debugRenderable)
 {
-
-	
 	mLines.remove_all();
 	mColours.remove_all();
 	mNbLines = 0;

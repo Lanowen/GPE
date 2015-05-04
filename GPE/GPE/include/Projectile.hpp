@@ -8,6 +8,7 @@
 
 using namespace physx;
 using namespace Ogre;
+using namespace gpe;
 
 class ProjectileEvent: public EventData {
 public:
@@ -19,8 +20,8 @@ public:
 
 class Projectile : public GameObject {
 public:
-	Projectile(GameState* owner, GameObject* spawner, Vector3 pos, Quaternion dir, bool netOwned = true);
-	Projectile(GameState* owner, GameObject* spawner, PxVec3 pos, PxQuat dir, bool netOwned = true);
+	Projectile(gpe::GameState* owner, GameObject* spawner, Vector3 pos, Quaternion dir, bool netOwned = true);
+	Projectile(gpe::GameState* owner, GameObject* spawner, PxVec3 pos, PxQuat dir, bool netOwned = true);
 	virtual ~Projectile();
 
 	virtual GO_TYPE getType() { return GO_TYPE::PROJECTILE; }

@@ -1,79 +1,159 @@
 #include <Physics.hpp>
-
-template<> Physics* Ogre::Singleton<Physics>::msSingleton = 0;
+#include <Ogre.h>
+#include <GameState.hpp>
 
 static PxDefaultAllocator gDefaultAllocatorCallback;
 static PxDefaultErrorCallback gDefaultErrorCallback;
 
-Physics::Physics() : mPhysics(0), mCooking(0), mCudaContextManager(0) {
+template<> gpe::Physics* Ogre::Singleton<gpe::Physics>::msSingleton = 0;
 
+
+PxFilterFlags FilterShader(
+	PxFilterObjectAttributes attributes0, PxFilterData filterData0,
+	PxFilterObjectAttributes attributes1, PxFilterData filterData1,
+	PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize) {
+	// let triggers through
+	if (PxFilterObjectIsTrigger(attributes0) || PxFilterObjectIsTrigger(attributes1)) {
+		pairFlags = PxPairFlag::eTRIGGER_DEFAULT;
+		return PxFilterFlag::eDEFAULT;
+	}
+	// generate contacts for all that were not filtered above
+	pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+
+	// trigger the contact callback for pairs (A,B) where
+	// the filtermask of A contains the ID of B and vice versa.
+	if ((filterData0.word0 & filterData1.word1) && (filterData1.word0 & filterData0.word1))
+		pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND;
+
+	return PxFilterFlag::eDEFAULT;
 }
 
-Physics::~Physics(){
+//PxSimulationFilterShader gDefaultFilterShader = PxDefaultSimulationFilterShader;
+PxSimulationFilterShader g_default_filter_shader = FilterShader;
 
-}
+namespace gpe {	
+	Physics::Physics(bool create_cuda_context_manager) : physics_(0), cooking_(0), cuda_context_manager_(0) {
 
-void Physics::init(bool mCreateCudaCtxManager){
-	
-	Ogre::Log* m_pLog = m_pLog = Ogre::LogManager::getSingleton().getDefaultLog();
+		Ogre::Log* log = Ogre::LogManager::getSingleton().getDefaultLog();
 
-	PxAllocatorCallback* allocator = &gDefaultAllocatorCallback;
+		PxAllocatorCallback* allocator = &gDefaultAllocatorCallback;
 
-	//PxFoundation& foundation = mPhysics->getFoundation();
+		PxFoundation* mFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, *allocator, gDefaultErrorCallback);
+		if (!mFoundation)
+			log->logMessage("PxCreateFoundation failed!");
 
-	PxFoundation* mFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, *allocator, gDefaultErrorCallback);
-	if(!mFoundation)
-		m_pLog->logMessage("PxCreateFoundation failed!");
+		//not build for v110 compiler yet
+		/*PxProfileZoneManager* mProfileZoneManager = &PxProfileZoneManager::createProfileZoneManager(mFoundation);
+		if(!mProfileZoneManager)
+		log->logMessage("PxProfileZoneManager::createProfileZoneManager failed!");*/
 
-	//not build for v110 compiler yet
-	/*PxProfileZoneManager* mProfileZoneManager = &PxProfileZoneManager::createProfileZoneManager(mFoundation);
-	if(!mProfileZoneManager)
-		m_pLog->logMessage("PxProfileZoneManager::createProfileZoneManager failed!");*/
+		//	if(create_cuda_context_manager)
+		//	{
+		//#ifdef PX_WINDOWS
+		//		pxtask::CudaContextManagerDesc cudaContextManagerDesc;
+		//		cuda_context_manager_ = pxtask::createCudaContextManager(*mFoundation, cudaContextManagerDesc, mProfileZoneManager);
+		//		if( cuda_context_manager_ )
+		//		{
+		//			if( !cuda_context_manager_->contextIsValid() )
+		//			{
+		//				cuda_context_manager_->release();
+		//				cuda_context_manager_ = NULL;
+		//			}
+		//		}
+		//#endif
+		//	}
 
-//	if(mCreateCudaCtxManager)
-//	{
-//#ifdef PX_WINDOWS
-//		pxtask::CudaContextManagerDesc cudaContextManagerDesc;
-//		mCudaContextManager = pxtask::createCudaContextManager(*mFoundation, cudaContextManagerDesc, mProfileZoneManager);
-//		if( mCudaContextManager )
-//		{
-//			if( !mCudaContextManager->contextIsValid() )
-//			{
-//				mCudaContextManager->release();
-//				mCudaContextManager = NULL;
-//			}
-//		}
-//#endif
-//	}
+		PxTolerancesScale scale;
+		scale.length = 1;				// length in cm
+		scale.mass = 1;				// mass in grams
+		scale.speed *= scale.length;	// speed in cm/s
 
-	PxTolerancesScale scale;
-	scale.length = 1;				// length in cm
-	scale.mass = 1;				// mass in grams
-	scale.speed *= scale.length;	// speed in cm/s
+		physics_ = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, scale, true);
+		if (!physics_)
+			log->logMessage("PxCreatePhysics failed!");
 
-	//mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *allocator, gDefaultErrorCallback, PxTolerancesScale());
-	//mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, physx::PxTolerancesScale(), true, mProfileZoneManager);
-	mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, scale, true);
-	if(!mPhysics)
-		m_pLog->logMessage("PxCreatePhysics failed!");
+		//if(getApplication().getOrCreateProfileZone(*mFoundation))
+		//	mProfileZoneManager->addProfileZone(*getApplication().getProfileZone());
 
-	//if(getApplication().getOrCreateProfileZone(*mFoundation))
-	//	mProfileZoneManager->addProfileZone(*getApplication().getProfileZone());
+		if (!PxInitExtensions(*physics_))
+			log->logMessage("PxInitExtensions failed!");
 
-	if(!PxInitExtensions(*mPhysics))
-		m_pLog->logMessage("PxInitExtensions failed!");
+		PxCookingParams params(scale);
+		params.meshWeldTolerance = 0.001f;
+		params.meshPreprocessParams = PxMeshPreprocessingFlags(PxMeshPreprocessingFlag::eWELD_VERTICES | PxMeshPreprocessingFlag::eREMOVE_UNREFERENCED_VERTICES | PxMeshPreprocessingFlag::eREMOVE_DUPLICATED_TRIANGLES);
+		cooking_ = PxCreateCooking(PX_PHYSICS_VERSION, *mFoundation, params);
+		if (!cooking_)
+			log->logMessage("PxCreateCooking failed!");
 
-	PxCookingParams params(scale);
-	params.meshWeldTolerance = 0.001f;
-	params.meshPreprocessParams = PxMeshPreprocessingFlags(PxMeshPreprocessingFlag::eWELD_VERTICES | PxMeshPreprocessingFlag::eREMOVE_UNREFERENCED_VERTICES | PxMeshPreprocessingFlag::eREMOVE_DUPLICATED_TRIANGLES);
-	mCooking = PxCreateCooking(PX_PHYSICS_VERSION, *mFoundation, params);
-	if(!mCooking)
-		m_pLog->logMessage("PxCreateCooking failed!");
-
-	/*if (mCreateCudaCtxManager)
-	{
+		/*if (create_cuda_context_manager)
+		{
 		pxtask::CudaContextManagerDesc cudaContextManagerDesc;
-		mCudaContextManager = pxtask::createCudaContextManager(cudaContextManagerDesc, &mPhysics->getProfileZoneManager());
-	}*/
-}
+		cuda_context_manager_ = pxtask::createCudaContextManager(cudaContextManagerDesc, &physics_->getProfileZoneManager());
+		}*/
+	}
 
+	Physics::~Physics() {
+
+	}
+
+	PhysicsScene* Physics::CreateScene(PxVec3 gravity, GameState* gs, int num_threads) {
+		Ogre::Log* log = Ogre::LogManager::getSingleton().getDefaultLog();
+
+		PxCpuDispatcher* cpu_dispatcher;
+
+		PxSceneDesc scenedesc(physics_->getTolerancesScale());
+		{
+			scenedesc.gravity = gravity;
+
+			if (!scenedesc.cpuDispatcher) {
+				cpu_dispatcher = physx::PxDefaultCpuDispatcherCreate(num_threads);
+				if (!cpu_dispatcher)
+					log->logMessage("PxDefaultCpuDispatcherCreate failed!");
+				scenedesc.cpuDispatcher = cpu_dispatcher;
+			}
+			if (!scenedesc.filterShader)
+				scenedesc.filterShader = g_default_filter_shader;
+
+			scenedesc.simulationEventCallback = gs;
+
+			if (!scenedesc.gpuDispatcher && cuda_context_manager_) {
+				scenedesc.gpuDispatcher = cuda_context_manager_->getGpuDispatcher();
+			}
+		}
+
+		PxScene* physics_scene = physics_->createScene(scenedesc);
+
+		if (!physics_scene)
+			log->logMessage("createScene failed!");
+
+		PxControllerManager* controller_manager = PxCreateControllerManager(*physics_scene);
+		VisualDebugger*	visual_debugger = new VisualDebugger(physics_scene, gs->get_scene_manager());
+
+		return new PhysicsScene(physics_scene, cpu_dispatcher, controller_manager, visual_debugger);
+	}
+
+	PhysicsScene* Physics::CreateScene(PxSceneDesc& scenedesc, GameState* gs) {
+		Ogre::Log* log = Ogre::LogManager::getSingleton().getDefaultLog();
+
+		PxScene* physics_scene = physics_->createScene(scenedesc);
+
+		if (!physics_scene)
+			log->logMessage("createScene failed!");
+
+		PxControllerManager* controller_manager = PxCreateControllerManager(*physics_scene);
+		VisualDebugger*	visual_debugger = new VisualDebugger(physics_scene, gs->get_scene_manager());
+
+		return new PhysicsScene(physics_scene, scenedesc.cpuDispatcher, controller_manager, visual_debugger);
+	}
+
+	PhysicsScene::PhysicsScene(PxScene* scene, PxCpuDispatcher* cpu_dispatcher, PxControllerManager* controller_manager, VisualDebugger* visual_debugger) : scene_(scene), cpu_dispatcher_(cpu_dispatcher), controller_manager_(controller_manager), visual_debugger_(visual_debugger) {
+#if _DEBUG
+		visual_debugger_->showAll();
+		visual_debugger_hidden_ = false;
+#else 
+		visual_debugger_->hideAll();
+		visual_debugger_hidden_ = true;
+#endif
+	}
+
+}

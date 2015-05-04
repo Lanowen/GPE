@@ -1,9 +1,4 @@
-//|||||||||||||||||||||||||||||||||||||||||||||||
-
-#ifndef Game_STATE_HPP
-#define Game_STATE_HPP
-
-//|||||||||||||||||||||||||||||||||||||||||||||||
+#pragma once
 
 #include <Ogre.h>
 #include <OgreCamera.h>
@@ -26,7 +21,7 @@
 
 #include <Physics.hpp>
 
-#include <VisualDebugger.hpp>
+
 #include <DynamicConstraints.hpp>
 //#include <V8Scripting.hpp>
 #include <SceneWideEvent.hpp>
@@ -35,9 +30,9 @@
 #include <list>
 
 #include <GPENet.hpp>
+#include <GameStateManager.hpp>
 
 class PlayerCharacter;
-class GameObject;
 class Enemy;
 
 //|||||||||||||||||||||||||||||||||||||||||||||||
@@ -72,213 +67,167 @@ enum NEW_NETUPDATES {
 using namespace Ogre;
 using namespace physx;
 
-class GameState : public Singleton<GameState>, public FrameListener, public WindowEventListener, public OIS::KeyListener, public OIS::MouseListener, public OIS::JoyStickListener, public PxSimulationEventCallback//, OgreBites::SdkTrayListener
-{
-	friend class IKeyListener;
-	friend class IJoyStickListener;
+namespace gpe {
 
-public:
-	GameState();
-	~GameState();
+	class GameObject;
 
-	bool initOgre(Ogre::String wndTitle, OIS::KeyListener *pKeyListener = 0, OIS::MouseListener *pMouseListener = 0);
+	class GameState : public FrameListener, public PxSimulationEventCallback//, OgreBites::SdkTrayListener
+	{
+		friend class IKeyListener;
+		friend class IJoyStickListener;
+		friend class GameStateManager;
+	public:
+		GameState();
+		~GameState();
 
-	PxPhysics* getPhysics();
-	PxScene* getMainPhysicsScene();
-	PxControllerManager* getControllerManager();
+		inline PhysicsScene* get_physics_scene() { return physics_scene_; }
+		inline SceneManager* get_scene_manager() { return scene_manager_; }
+		inline GameStateManager* get_gamestatemanager() { return gamestatemanager_; }
 
-	void AddGameObject(GameObject* go);
-	void DeleteGameObject(GameObject* go);
-	void RemoveGameObject(GameObject* go);
+		void AddGameObject(GameObject* go);
+		void DeleteGameObject(GameObject* go);
+		void RemoveGameObject(GameObject* go);
 
-	void RespawnPlayer(PlayerCharacter* player);
-	PlayerCharacter* SpawnPlayer();
-	PlayerCharacter* SpawnMainPlayer();
+		void RespawnPlayer(PlayerCharacter* player);
+		PlayerCharacter* SpawnPlayer();
+		PlayerCharacter* SpawnMainPlayer();
 
-	void RespawnPlayer(PlayerCharacter* player,Vector3 pos);
-	PlayerCharacter* SpawnPlayer(Vector3 pos);
-	PlayerCharacter* SpawnMainPlayer(Vector3 pos);
+		void RespawnPlayer(PlayerCharacter* player, Vector3 pos);
+		PlayerCharacter* SpawnPlayer(Vector3 pos);
+		PlayerCharacter* SpawnMainPlayer(Vector3 pos);
 
-	void RegisterHit(PlayerCharacter* player, PxControllersHit hit);
+		void RegisterHit(PlayerCharacter* player, PxControllersHit hit);
 
-	static std::string ip;
-	static bool isServer;
+		static std::string ip_;
+		static bool isserver_;
 
-private:
+	private:
 
-	struct PlayerHit {
-		bool operator == (const PlayerHit& other){
-			return player == other.player;
+		inline void set_gamestatemanager(GameStateManager* gsm) { gamestatemanager_ = gsm; }
+		
+		struct PlayerHit {
+			bool operator == (const PlayerHit& other) {
+				return player == other.player;
+			}
+
+			PlayerCharacter* player;
+			PxControllersHit hit;
+		};
+
+		void createScene();
+		void Enter() {
+			gamestatemanager_->get_render_window()->resetStatistics();
+
+			viewport_ = gamestatemanager_->get_render_window()->addViewport(0);
+			viewport_->setBackgroundColour(Ogre::ColourValue(0, 0, 0, 1.0f));
+
+			camera_->setAspectRatio(Ogre::Real(viewport_->getActualWidth()) /
+									Ogre::Real(viewport_->getActualHeight()));
+
+			viewport_->setCamera(camera_);
 		}
+		void Exit() {}
+		void Pause() {}
+		void Resume() {}
+		std::string get_name() { return ""; }
 
-		PlayerCharacter* player;
-		PxControllersHit hit;
+		Vector3 GetBestSpawnpoint();
+
+		void MoveCamera(double timeSinceLastFrame);
+		//void buildGUI();
+
+		void RegisterKeyListener(IKeyListener* listener);
+		void DeregisterKeyListener(IKeyListener* listener);
+		void RegisterJoyListener(IJoyStickListener* listener);
+		void DeregisterJoyListener(IJoyStickListener* listener);
+
+		// FrameListener
+		virtual bool frameRenderingQueued(const FrameEvent& evt);
+
+		// OIS::KeyListener
+		virtual bool keyPressed(const OIS::KeyEvent &e);
+		virtual bool keyReleased(const OIS::KeyEvent &e);
+		// OIS::MouseListener
+		virtual bool mouseMoved(const OIS::MouseEvent &e);
+		virtual bool mousePressed(const OIS::MouseEvent &e, OIS::MouseButtonID id);
+		virtual bool mouseReleased(const OIS::MouseEvent &e, OIS::MouseButtonID id);
+		// OIS::JoyStickListener
+		virtual bool povMoved(const OIS::JoyStickEvent &e, int pov);
+		virtual bool axisMoved(const OIS::JoyStickEvent &e, int axis);
+		virtual bool sliderMoved(const OIS::JoyStickEvent &e, int sliderID);
+		virtual bool buttonPressed(const OIS::JoyStickEvent &e, int button);
+		virtual bool buttonReleased(const OIS::JoyStickEvent &e, int button);
+
+		void update(double timeSinceLastFrame);
+
+		
+
+	protected:
+
+		virtual void onConstraintBreak(PxConstraintInfo* constraints, PxU32 count);
+		virtual void onWake(PxActor** actors, PxU32 count);
+		virtual void onSleep(PxActor** actors, PxU32 count);
+		virtual void onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs);
+		virtual void onTrigger(PxTriggerPair* pairs, PxU32 count);
+
+		//Netwak stuff
+		void createEnemy(GPENet::Datagram dg);
+		void createMainPlayer(GPENet::Datagram dg);
+		void createPlayer(GPENet::Datagram dg);
+		void createBullet(GPENet::Datagram dg);
+		void getNetEvent(GPENet::Datagram dg);
+
+		void onClientConnect(GPENet::Datagram dg);
+		void onPlayerDied(GPENet::Datagram dg);
+
+		void handleInputVel(GPENet::Datagram dg);
+		void handleButtonPressed(GPENet::Datagram dg);
+		void handleButtonReleased(GPENet::Datagram dg);
+		void handleEnemyDeath(GPENet::Datagram dg);
+
+
+		void setIDPosition(GPENet::Datagram dg);
+
+		void handlePlayerHurt(GPENet::Datagram dg);
+		void handleDisconnect(GPENet::Datagram dg);
+		void handlePowerup(GPENet::Datagram dg);
+		void handleCreatePowerup(GPENet::Datagram dg);
+
+	public:
+		void handleEnemyDeathPowerup(Vector3 pos);
+
+	private:
+
+		Viewport*				viewport_;
+
+		PhysicsScene* physics_scene_;
+		physx::PxMaterial*					physics_material_;
+
+		GameStateManager* gamestatemanager_;
+
+		std::vector<Vector3> spawn_points_;
+		std::vector<PlayerCharacter*> players_;
+		std::list<PlayerHit> hits_this_frame_;
+
+		std::vector<GameObject*> gameobjects_;
+		std::vector<IKeyListener*> keylisteners_;
+		std::vector<IJoyStickListener*> joylisteners_;
+
+		unsigned int                zoomState;
+
+		void						advanceSimulation(float dtime);
+		bool				        m_bLMouseDown, m_bRMouseDown;
+
+		Camera*		        camera_;
+		SceneManager*	        scene_manager_;
+		bool				        b_shutdown_;
+
+		std::list<GameObject*> toDelete;
+
+		NetworkedObjectManager netMan;
+		boost::shared_ptr<GPENet::SocketBase> socket;
+		Real hackSendEnemyPosTime;
+
 	};
 
-	void enter();
-	void createScene();
-	void exit();
-
-	Vector3 GetBestSpawnpoint();
-
-	void moveCamera();
-	void getInput(double timeSinceLastFrame);
-    //void buildGUI();
-
-    void RegisterKeyListener(IKeyListener* listener);
-	void DeregisterKeyListener(IKeyListener* listener);
-	void RegisterJoyListener(IJoyStickListener* listener);
-	void DeregisterJoyListener(IJoyStickListener* listener);
-
-	// FrameListener
-    virtual bool frameRenderingQueued(const FrameEvent& evt);
-
-    // OIS::KeyListener
-    virtual bool keyPressed( const OIS::KeyEvent &e );
-    virtual bool keyReleased( const OIS::KeyEvent &e );
-    // OIS::MouseListener
-    virtual bool mouseMoved( const OIS::MouseEvent &e );
-    virtual bool mousePressed( const OIS::MouseEvent &e, OIS::MouseButtonID id );
-    virtual bool mouseReleased( const OIS::MouseEvent &e, OIS::MouseButtonID id );
-    // OIS::JoyStickListener
-    virtual bool povMoved( const OIS::JoyStickEvent &e, int pov );
-    virtual bool axisMoved( const OIS::JoyStickEvent &e, int axis );
-    virtual bool sliderMoved( const OIS::JoyStickEvent &e, int sliderID );
-    virtual bool buttonPressed( const OIS::JoyStickEvent &e, int button );
-    virtual bool buttonReleased( const OIS::JoyStickEvent &e, int button );
-
-// WindowEventListener
-
-    //Adjust mouse clipping area
-    virtual void windowResized(RenderWindow* rw);
-
-    //Unattach OIS before window shutdown (very important under Linux)
-    virtual void windowClosed(RenderWindow* rw);
-
-	void update(double timeSinceLastFrame);
-
-	Root*				    m_pRoot;
-	RenderWindow*			m_pRenderWnd;
-	Viewport*				m_pViewport;
-	Log*				    m_pLog;
-	Timer*				m_pTimer;
-
-	OIS::InputManager*			m_pInputMgr;
-	OIS::Keyboard*				m_pKeyboard;
-	OIS::Mouse*				    m_pMouse;
-	OIS::JoyStick*              m_pJoyStick;
-
-    int                         m_JoyDeadZone;
-
-    Ogre::String                mResourcesCfg;
-    Ogre::String                mPluginsCfg;
-
-	physx::PxPhysics*					mPhysics;
-	physx::PxCooking*					mCooking;
-	physx::PxScene*						mPxScene;
-	physx::PxMaterial*					mMaterial;
-	physx::PxDefaultCpuDispatcher*		mCpuDispatcher;
-	physx::PxCudaContextManager*		mCudaContextManager;
-	physx::PxU32						mNbThreads;
-	bool						mCreateCudaCtxManager;
-	physx::PxControllerManager*		mControllerManager;
-	VisualDebugger*				mVisualDebugger;
-
-	SceneWideEvent*				mEventHandler;
-	//V8Scripting*				mScripting;
-
-	std::vector<Vector3> spawnPoints;
-	std::vector<PlayerCharacter*> players;
-	std::list<PlayerHit> hitsThisFrame;
-
-////#ifdef CLIENT
-//	boost::shared_ptr<GPENet::Client> client;
-////#endif
-////#ifdef SERVER
-//	boost::shared_ptr<GPENet::Server> server;
-////#endif
-
-	boost::shared_ptr<GPENet::SocketBase> socket;
-
-protected:
-
-	virtual void onConstraintBreak(PxConstraintInfo* constraints, PxU32 count);
-	virtual void onWake(PxActor** actors, PxU32 count);
-	virtual void onSleep(PxActor** actors, PxU32 count);
-	virtual void onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs);
-	virtual void onTrigger(PxTriggerPair* pairs, PxU32 count);
-
-	//Netwak stuff
-	void createEnemy(GPENet::Datagram dg);
-	void createMainPlayer(GPENet::Datagram dg);
-	void createPlayer(GPENet::Datagram dg);
-	void createBullet(GPENet::Datagram dg);
-	void getNetEvent(GPENet::Datagram dg);
-
-	void onClientConnect(GPENet::Datagram dg);
-	void onPlayerDied(GPENet::Datagram dg);
-	
-	void handleInputVel(GPENet::Datagram dg);
-	void handleButtonPressed(GPENet::Datagram dg);
-	void handleButtonReleased(GPENet::Datagram dg);
-	void handleEnemyDeath(GPENet::Datagram dg);
-	
-
-	void setIDPosition(GPENet::Datagram dg);
-
-	void handlePlayerHurt(GPENet::Datagram dg);
-	void handleDisconnect(GPENet::Datagram dg);
-	void handlePowerup(GPENet::Datagram dg);
-	void handleCreatePowerup(GPENet::Datagram dg);
-
-public:
-	void handleEnemyDeathPowerup(Vector3 pos);
-	
-
-private:
-    PlayerCharacter*                m_pPlayerChar;
-	//std::vector<Enemy*> mEnemies;
-
-	std::vector<GameObject*> mGameObjects;
-	std::vector<IKeyListener*> mKeyListeners;
-	std::vector<IJoyStickListener*> mJoyListeners;
-
-	Vector3			    m_TranslateVector;
-	Real			        m_MoveSpeed;
-	Degree			    m_RotateSpeed;
-	float				        m_MoveScale;
-	Degree			    m_RotScale;
-
-	RaySceneQuery*		m_pRSQ;
-	SceneNode*		    m_pCurrentObject;
-	Entity*			    m_pCurrentEntity;
-	Entity*			    m_pPlane;
-	Plane*                m_pBackPlane;
-
-	unsigned int                zoomState;
-
-	ManualObject*         m_Grid;
-
-	void						advanceSimulation(float dtime);
-	bool				        m_bLMouseDown, m_bRMouseDown;
-
-	Camera*		        m_pCamera;
-	SceneManager*	        m_pSceneMgr;
-    FrameEvent            m_FrameEvent;
-    bool				        m_bShutdown;
-	bool			pxVisualDebuggerHidden;
-	bool fetchingResults;
-
-	std::list<GameObject*> toDelete;
-
-	NetworkedObjectManager netMan;
-
-	Real hackSendEnemyPosTime;
-
-};
-
-//|||||||||||||||||||||||||||||||||||||||||||||||
-
-#endif
-
-//|||||||||||||||||||||||||||||||||||||||||||||||
+}

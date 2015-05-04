@@ -3,8 +3,12 @@
 #include <Game.hpp>
 
 #include <GPENet.hpp>
+#include <GameState.hpp>
 
 #include <SerializationClassExports.hpp>
+
+using namespace Ogre;
+using namespace gpe;
 
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
@@ -21,8 +25,6 @@ INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR cmdLine, INT)
 {
 	try
 	{
-		std::string ip = "";
-		bool isServer = false;
 //        bool nograb = false;
 //#if OGRE_PLATFORM != OGRE_PLATFORM_WIN32
 //        if (argc >= 2 && Ogre::String(argv[1]) == "nograb")
@@ -33,12 +35,12 @@ INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR cmdLine, INT)
             //nograb = true;
 		size_t pos;
 		if ((pos = Ogre::String(cmdLine).find("server")) != Ogre::String::npos)
-			GameState::isServer = true;
+			GameState::isserver_ = true;
 		if ((pos = Ogre::String(cmdLine).find("client")) != Ogre::String::npos)
-			GameState::isServer = false;
+			GameState::isserver_ = false;
 		if ((pos = Ogre::String(cmdLine).find("ip")) != Ogre::String::npos){
 			size_t space = Ogre::String(cmdLine).find(" ", pos);
-			GameState::ip = Ogre::String(cmdLine).substr(pos + 3, space-(pos + 3));
+			GameState::ip_ = Ogre::String(cmdLine).substr(pos + 3, space-(pos + 3));
 		}
 //#endif
 		Game gpeGame;

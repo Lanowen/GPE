@@ -13,9 +13,9 @@
 
 using namespace Ogre;
 using namespace physx;
+using namespace gpe;
 
 class Enemy : public PxUserControllerHitReport/*, public physx::PxControllerBehaviorCallback*/, public GameObject {
-	friend class V8Enemy;
 public:
     Enemy(GameState* owner, std::string mesh/*, std::string script*/, bool netOwned = true);
 	virtual ~Enemy();

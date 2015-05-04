@@ -1,23 +1,26 @@
 #pragma once
 
-class GameObject;
-
 #include <map>
 
-class NetworkedObjectManager {
-	friend class GameState;
-public:
-	NetworkedObjectManager();
-	virtual ~NetworkedObjectManager();
+namespace gpe {
 
-	int addGameObject(GameObject* obj);
-	void addGameObject(int id, GameObject* obj);
-	void removeGameObject(int id);
-	void removeGameObject(GameObject* go);
+	class GameObject;
 
-	GameObject* getGameObject(int id);
+	class NetworkedObjectManager {
+		friend class GameState;
+	public:
+		NetworkedObjectManager();
+		virtual ~NetworkedObjectManager();
 
-private:
-	int counter;
-	std::map<int, GameObject*> objects;
-};
+		int addGameObject(GameObject* obj);
+		void addGameObject(int id, GameObject* obj);
+		void removeGameObject(int id);
+		void removeGameObject(GameObject* go);
+
+		GameObject* getGameObject(int id);
+
+	private:
+		int counter;
+		std::map<int, GameObject*> objects;
+	};
+}
