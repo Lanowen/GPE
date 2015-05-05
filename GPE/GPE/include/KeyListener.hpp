@@ -11,7 +11,7 @@ namespace gpe {
 		inline virtual bool KeyReleased(const OIS::KeyEvent &keyEventRef) = 0;
 	};
 
-	class KeyListener {
+	class KeyListener : public IKeyListener {
 		friend class GameState;
 		friend class GameStateManager;
 	public:

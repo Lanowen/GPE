@@ -12,7 +12,7 @@ namespace gpe {
 		inline virtual bool MouseReleased(const OIS::MouseEvent &evt, OIS::MouseButtonID id) = 0;
 	};
 
-	class MouseListener {
+	class MouseListener : public IMouseListener {
 		friend class GameState;
 		friend class GameStateManager;
 	public:

@@ -14,7 +14,7 @@ namespace gpe {
 		inline virtual bool ButtonReleased(const OIS::JoyStickEvent &e, int button) = 0;
 	};
 
-	class JoyStickListener {
+	class JoyStickListener : public IJoyStickListener {
 		friend class GameState;
 		friend class GameStateManager;
 	public:
