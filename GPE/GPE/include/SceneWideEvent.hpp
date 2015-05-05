@@ -3,9 +3,9 @@
 #include <list>
 //#include <v8.h>
 #include <OgreSingleton.h>
-#include <EventDispatcherHelper.hpp>
+#include "EventDispatcherHelper.hpp"
 
-#include <EventData.hpp>
+#include "EventData.hpp"
 
 class SceneWideEvent : public Ogre::Singleton<SceneWideEvent> , public EventDispatcherHelper {
 

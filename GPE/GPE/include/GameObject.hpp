@@ -5,11 +5,10 @@
 #include <vector>
 //#include <v8.h>
 //#include <ScriptingObject.hpp>
-#include <EventDispatcherHelper.hpp>
+#include "EventDispatcherHelper.hpp"
 
-#include <GameState.hpp>
-
-#include <GPENet.hpp>
+#include "GameState.hpp"
+#include "GPENet.hpp"
 
 namespace gpe {
 

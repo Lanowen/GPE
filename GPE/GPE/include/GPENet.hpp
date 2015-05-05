@@ -22,7 +22,7 @@
 #include <random>
 #include <map>
 
-#include <SerializeableData.hpp>
+#include "SerializeableData.hpp"
 
 #include <boost/serialization/split_free.hpp>
 
@@ -30,7 +30,7 @@
 
 //#include <BaseTsd.h>
 
-#include <Util.hpp>
+#include "Util.hpp"
 
 namespace GPENet {
 

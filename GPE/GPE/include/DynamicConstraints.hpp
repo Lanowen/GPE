@@ -3,7 +3,7 @@
 #include <PxPhysicsAPI.h>
 #include <PxConstraintDesc.h>
 #include <extensions/PxConstraintExt.h>
-#include <Util.hpp>
+#include "Util.hpp"
 
 class DynamicConstraints : public physx::PxConstraintConnector
 {

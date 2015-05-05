@@ -2,8 +2,8 @@
 //#include <OgreException.h>
 //#include <Game.hpp>
 //
-//#include <GPENet.hpp>
-//#include <GameState.hpp>
+//#include "GPENet.hpp"
+//#include "GameState.hpp"
 //
 //#include <SerializationClassExports.hpp>
 //

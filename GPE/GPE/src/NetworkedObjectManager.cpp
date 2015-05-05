@@ -1,5 +1,5 @@
-#include <NetworkedObjectManager.hpp>
-#include <GameObject.hpp>
+#include "NetworkedObjectManager.hpp"
+#include "GameObject.hpp"
 
 namespace gpe {
 

@@ -1,6 +1,6 @@
 #include "GameState.hpp"
 
-#include <GameObject.hpp>
+#include "GameObject.hpp"
 
 namespace gpe {
 

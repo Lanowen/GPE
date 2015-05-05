@@ -11,7 +11,7 @@
 
 #include <OgreSingleton.h>
 
-#include <VisualDebugger.hpp>
+#include "VisualDebugger.hpp"
 
 using namespace physx;
 

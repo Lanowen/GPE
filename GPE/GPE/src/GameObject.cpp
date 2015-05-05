@@ -1,8 +1,8 @@
-#include <GameObject.hpp>
+#include "GameObject.hpp"
 #include <iostream>
 #include <algorithm>
 //#include <V8Scripting.hpp>
-#include <SceneWideEvent.hpp>
+#include "SceneWideEvent.hpp"
 
 namespace gpe {
 

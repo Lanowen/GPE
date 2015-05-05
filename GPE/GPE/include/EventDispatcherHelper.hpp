@@ -6,7 +6,7 @@
 //#include<V8Scripting.hpp>
 
 #include <boost\function.hpp>
-#include <EventData.hpp>
+#include "EventData.hpp"
 
 class EventDispatcherHelper{
 public:

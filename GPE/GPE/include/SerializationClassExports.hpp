@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SerializeableData.hpp>
+#include "SerializeableData.hpp"
 
 BOOST_SERIALIZATION_ASSUME_ABSTRACT(SerializableData)
 

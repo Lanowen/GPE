@@ -1,5 +1,5 @@
-#include <GameStateManager.hpp>
-#include <GameState.hpp>
+#include "GameStateManager.hpp"
+#include "GameState.hpp"
 
 namespace gpe {
 

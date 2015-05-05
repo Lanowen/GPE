@@ -1,4 +1,4 @@
-#include <GPENet.hpp>
+#include "GPENet.hpp"
 
 namespace GPENet {
 
