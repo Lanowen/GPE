@@ -5,6 +5,7 @@ namespace gpe {
 
 	Game::Game() {
 		gamestatemanager_ = new GameStateManager("GPE");
+		gamestatemanager_handle = gamestatemanager_;
 	}
 
 	Game::~Game() {
@@ -12,8 +13,6 @@ namespace gpe {
 	}
 
 	void Game::go() {
-		GameState* testGame = new GameState();
-
-		gamestatemanager_->Start(testGame);
+		GPE_extern_go();
 	}
 }

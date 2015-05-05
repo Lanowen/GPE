@@ -1,6 +1,8 @@
 #pragma once
 #include <GameStateManager.hpp>
 
+extern void GPE_extern_go();
+
 namespace gpe {
 
 	class Game
@@ -14,4 +16,6 @@ namespace gpe {
 	private:
 		GameStateManager* gamestatemanager_;
 	};
+
+	extern GameStateManager* gamestatemanager_handle;
 }

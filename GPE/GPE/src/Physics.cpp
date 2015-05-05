@@ -32,8 +32,7 @@ PxFilterFlags FilterShader(
 PxSimulationFilterShader g_default_filter_shader = FilterShader;
 
 namespace gpe {	
-	Physics::Physics(bool create_cuda_context_manager) : physics_(0), cooking_(0), cuda_context_manager_(0) {
-
+	Physics::Physics() : physics_(0), cooking_(0), cuda_context_manager_(0){
 		Ogre::Log* log = Ogre::LogManager::getSingleton().getDefaultLog();
 
 		PxAllocatorCallback* allocator = &gDefaultAllocatorCallback;
@@ -90,13 +89,15 @@ namespace gpe {
 		pxtask::CudaContextManagerDesc cudaContextManagerDesc;
 		cuda_context_manager_ = pxtask::createCudaContextManager(cudaContextManagerDesc, &physics_->getProfileZoneManager());
 		}*/
+
+		msSingleton = this;
 	}
 
 	Physics::~Physics() {
 
 	}
 
-	PhysicsScene* Physics::CreateScene(PxVec3 gravity, GameState* gs, int num_threads) {
+	PhysicsScene* Physics::CreateScene(PxVec3 gravity, GameState* gs, Ogre::SceneManager& scene_manager, int num_threads) {
 		Ogre::Log* log = Ogre::LogManager::getSingleton().getDefaultLog();
 
 		PxCpuDispatcher* cpu_dispatcher;
@@ -127,7 +128,7 @@ namespace gpe {
 			log->logMessage("createScene failed!");
 
 		PxControllerManager* controller_manager = PxCreateControllerManager(*physics_scene);
-		VisualDebugger*	visual_debugger = new VisualDebugger(physics_scene, gs->get_scene_manager());
+		VisualDebugger*	visual_debugger = new VisualDebugger(physics_scene, scene_manager);
 
 		return new PhysicsScene(physics_scene, cpu_dispatcher, controller_manager, visual_debugger);
 	}

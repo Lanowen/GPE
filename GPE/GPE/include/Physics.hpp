@@ -50,19 +50,19 @@ namespace gpe {
 			}
 		}
 
-		inline PxScene* get_scene() { return scene_; }
-		inline PxCpuDispatcher* get_cpu_dispatcher() { return cpu_dispatcher_; }
-		inline PxControllerManager* get_controller_manager() { return controller_manager_; }
-		inline VisualDebugger* get_visual_debugger() { return visual_debugger_; }
+		inline PxScene& get_scene() const { return *scene_; }
+		inline PxCpuDispatcher& get_cpu_dispatcher() const { return *cpu_dispatcher_; }
+		inline PxControllerManager& get_controller_manager() const { return *controller_manager_; }
+		inline VisualDebugger& get_visual_debugger() const { return *visual_debugger_; }
 
 	private:
 		PhysicsScene(PxScene* scene, PxCpuDispatcher* cpu_dispatcher, PxControllerManager* controller_manager, VisualDebugger* visual_debugger);
 
 	private:
 		PxScene* scene_;
-		PxCpuDispatcher*		cpu_dispatcher_;
-		PxControllerManager*		controller_manager_;
-		VisualDebugger*				visual_debugger_;		
+		PxCpuDispatcher* cpu_dispatcher_;
+		PxControllerManager* controller_manager_;
+		VisualDebugger* visual_debugger_;		
 
 		bool fetching_results_;
 		bool visual_debugger_hidden_;
@@ -70,22 +70,27 @@ namespace gpe {
 
 	class Physics : public Ogre::Singleton<Physics> {
 	public:
-		Physics(bool create_cuda_context_manager);
+		
 		virtual ~Physics();
 
-		inline PxPhysics* get_physics() { return physics_; }
-		inline PxCooking* get_cooking() { return cooking_; }
-		inline PxCudaContextManager* get_cuda_context_manager() { return cuda_context_manager_; }
+		static void Initialize() { if (!msSingleton) new Physics(); }
 
-		PhysicsScene* CreateScene(PxVec3 gravity, GameState* gs, int num_threads = 1);
+		inline PxPhysics& get_physics() { return *physics_; }
+		inline PxCooking& get_cooking() { return *cooking_; }
+		inline PxCudaContextManager& get_cuda_context_manager() { return *cuda_context_manager_; }
+
+		PhysicsScene* CreateScene(PxVec3 gravity, GameState* gs, Ogre::SceneManager& scene_manager, int num_threads = 1);
 		PhysicsScene* CreateScene(PxSceneDesc& scenedesc, GameState* gs);
 		
 		static inline Physics& getSingleton() { assert(msSingleton);  return *msSingleton; }
 		static inline Physics* getSingletonPtr() { return msSingleton; }
 
 	private:
-		PxPhysics*						physics_;
-		PxCooking*						cooking_;
-		PxCudaContextManager*		cuda_context_manager_;
+		Physics();
+
+	private:
+		PxPhysics* physics_;
+		PxCooking* cooking_;
+		PxCudaContextManager* cuda_context_manager_;
 	};
 }

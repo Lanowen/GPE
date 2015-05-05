@@ -79,7 +79,6 @@ namespace gpe {
 		keyboard_->setEventCallback(this);
 		mouse_->setEventCallback(this);
 
-
 		if (ois_inputmanager_->getNumberOfDevices(OIS::OISJoyStick) > 0) {
 			//mJoysticks.resize( mInputSystem->numJoySticks() );
 			//        mJoysticks.resize( mInputSystem->getNumberOfDevices(OIS::OISJoyStick) );
@@ -95,6 +94,8 @@ namespace gpe {
 
 			joystick_dead_zone_ = joystick_->MAX_AXIS*0.4;
 		}
+
+		Physics::Initialize();
 	}
 
 
@@ -200,7 +201,7 @@ namespace gpe {
 
 	bool GameStateManager::keyPressed(const OIS::KeyEvent &keyEventRef) {
 		if (!gamestates_.empty()) {
-			return (--gamestates_.end())->second->keyPressed(keyEventRef);
+			return (--gamestates_.end())->second->KeyPressed(keyEventRef);
 		}
 
 		return true;
@@ -208,7 +209,7 @@ namespace gpe {
 
 	bool GameStateManager::keyReleased(const OIS::KeyEvent &keyEventRef) {
 		if (!gamestates_.empty()) {
-			return (--gamestates_.end())->second->keyReleased(keyEventRef);
+			return (--gamestates_.end())->second->KeyReleased(keyEventRef);
 		}
 
 		return true;
@@ -216,7 +217,7 @@ namespace gpe {
 
 	bool GameStateManager::mouseMoved(const OIS::MouseEvent &evt) {
 		if (!gamestates_.empty()) {
-			return (--gamestates_.end())->second->mouseMoved(evt);
+			return (--gamestates_.end())->second->MouseMoved(evt);
 		}
 
 		return true;
@@ -224,7 +225,7 @@ namespace gpe {
 
 	bool GameStateManager::mousePressed(const OIS::MouseEvent &evt, OIS::MouseButtonID id) {
 		if (!gamestates_.empty()) {
-			return (--gamestates_.end())->second->mousePressed(evt, id);
+			return (--gamestates_.end())->second->MousePressed(evt, id);
 		}
 
 		return true;
@@ -232,7 +233,7 @@ namespace gpe {
 
 	bool GameStateManager::mouseReleased(const OIS::MouseEvent &evt, OIS::MouseButtonID id) {
 		if (!gamestates_.empty()) {
-			return (--gamestates_.end())->second->mouseReleased(evt, id);
+			return (--gamestates_.end())->second->MouseReleased(evt, id);
 		}
 
 		return true;
@@ -240,7 +241,7 @@ namespace gpe {
 
 	bool GameStateManager::povMoved(const OIS::JoyStickEvent &evt, int pov) {
 		if (!gamestates_.empty()) {
-			return (--gamestates_.end())->second->povMoved(evt, pov);
+			return (--gamestates_.end())->second->PovMoved(evt, pov);
 		}
 
 		return true;
@@ -248,7 +249,7 @@ namespace gpe {
 
 	bool GameStateManager::axisMoved(const OIS::JoyStickEvent &evt, int axis) {
 		if (!gamestates_.empty()) {
-			return (--gamestates_.end())->second->axisMoved(evt, axis);
+			return (--gamestates_.end())->second->AxisMoved(evt, axis);
 		}
 
 		return true;
@@ -256,7 +257,7 @@ namespace gpe {
 
 	bool GameStateManager::sliderMoved(const OIS::JoyStickEvent &e, int sliderID) {
 		if (!gamestates_.empty()) {
-			return (--gamestates_.end())->second->sliderMoved(e, sliderID);
+			return (--gamestates_.end())->second->SliderMoved(e, sliderID);
 		}
 
 		return true;
@@ -264,7 +265,7 @@ namespace gpe {
 
 	bool GameStateManager::buttonPressed(const OIS::JoyStickEvent &evt, int button) {
 		if (!gamestates_.empty()) {
-			return (--gamestates_.end())->second->buttonPressed(evt, button);
+			return (--gamestates_.end())->second->ButtonPressed(evt, button);
 		}
 
 		return true;
@@ -272,7 +273,7 @@ namespace gpe {
 
 	bool GameStateManager::buttonReleased(const OIS::JoyStickEvent &evt, int button) {
 		if (!gamestates_.empty()) {
-			return (--gamestates_.end())->second->buttonReleased(evt, button);
+			return (--gamestates_.end())->second->ButtonReleased(evt, button);
 		}
 
 		return true;

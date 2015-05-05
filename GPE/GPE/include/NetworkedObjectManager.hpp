@@ -7,7 +7,6 @@ namespace gpe {
 	class GameObject;
 
 	class NetworkedObjectManager {
-		friend class GameState;
 	public:
 		NetworkedObjectManager();
 		virtual ~NetworkedObjectManager();
@@ -18,9 +17,9 @@ namespace gpe {
 		void removeGameObject(GameObject* go);
 
 		GameObject* getGameObject(int id);
+		std::map<int, GameObject*> objects;
 
 	private:
-		int counter;
-		std::map<int, GameObject*> objects;
+		unsigned int counter;
 	};
 }

@@ -38,7 +38,7 @@ public:
 	static RenderProfile OGRE_PARTICLE_VELOCITIES;
 	static RenderProfile OGRE_SOFTBODY;
 
-	VisualDebugger(physx::PxScene* scene, Ogre::SceneManager* mSceneMgr);
+	VisualDebugger(physx::PxScene* scene, Ogre::SceneManager& mSceneMgr);
 	virtual ~VisualDebugger();
 	void update(const physx::PxRenderBuffer& debugRenderable);
 

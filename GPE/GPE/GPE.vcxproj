@@ -16,13 +16,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -42,11 +42,13 @@
     <IncludePath>$(ProjectDir)/include;C:\Dev\Libraries\Boost\boost_1_57_0;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\OgreMain\include;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\include;C:\Dev\Libraries\nVidia\PhysX-3.3.2_WINDOWS_SDK_Core\Include;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\includes;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Dev\Libraries\Boost\boost_1_57_0\stage\lib;C:\Dev\Libraries\nVidia\PhysX-3.3.2_WINDOWS_SDK_Core\Lib\vc11win32;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\lib\$(Configuration);C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\$(Configuration);$(LibraryPath)</LibraryPath>
     <SourcePath>$(ProjectDir)/src;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\OgreMain\src;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\src;$(SourcePath)</SourcePath>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(ProjectDir)/include;C:\Dev\Libraries\Boost\boost_1_57_0;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\OgreMain\include;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\include;C:\Dev\Libraries\nVidia\PhysX-3.3.2_WINDOWS_SDK_Core\Include;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\includes;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Dev\Libraries\Boost\boost_1_57_0\stage\lib;C:\Dev\Libraries\nVidia\PhysX-3.3.2_WINDOWS_SDK_Core\Lib\vc11win32;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\lib\$(Configuration);C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\$(Configuration);$(LibraryPath)</LibraryPath>
     <SourcePath>$(ProjectDir)/src;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\OgreMain\src;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\src;$(SourcePath)</SourcePath>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -85,11 +87,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Enemy.cpp" />
-    <ClCompile Include="src\EnergyLarge.cpp" />
     <ClCompile Include="src\EventData.cpp" />
     <ClCompile Include="src\EventDispatcherHelper.cpp" />
-    <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\GameState.cpp" />
     <ClCompile Include="src\GameStateManager.cpp" />
@@ -97,9 +96,6 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\NetworkedObjectManager.cpp" />
     <ClCompile Include="src\Physics.cpp" />
-    <ClCompile Include="src\PlayerCharacter.cpp" />
-    <ClCompile Include="src\PowerUp.cpp" />
-    <ClCompile Include="src\Projectile.cpp" />
     <ClCompile Include="src\SceneWideEvent.cpp" />
     <ClCompile Include="src\SerializeableData.cpp" />
     <ClCompile Include="src\VisualDebugger.cpp" />
@@ -108,23 +104,18 @@
     <ClInclude Include="include\buffer.hpp" />
     <ClInclude Include="include\DotSceneLoader.hpp" />
     <ClInclude Include="include\DynamicConstraints.hpp" />
-    <ClInclude Include="include\Enemy.hpp" />
-    <ClInclude Include="include\EnergyLarge.hpp" />
     <ClInclude Include="include\ErrorStream.h" />
     <ClInclude Include="include\EventData.hpp" />
     <ClInclude Include="include\EventDispatcherHelper.hpp" />
-    <ClInclude Include="include\Game.hpp" />
     <ClInclude Include="include\GameObject.hpp" />
     <ClInclude Include="include\GameState.hpp" />
     <ClInclude Include="include\GameStateManager.hpp" />
     <ClInclude Include="include\GPENet.hpp" />
-    <ClInclude Include="include\IKeyListener.hpp" />
-    <ClInclude Include="include\IJoyStickListener.hpp" />
+    <ClInclude Include="include\KeyListener.hpp" />
+    <ClInclude Include="include\JoyStickListener.hpp" />
+    <ClInclude Include="include\MouseListener.hpp" />
     <ClInclude Include="include\NetworkedObjectManager.hpp" />
     <ClInclude Include="include\Physics.hpp" />
-    <ClInclude Include="include\PlayerCharacter.hpp" />
-    <ClInclude Include="include\PowerUp.hpp" />
-    <ClInclude Include="include\Projectile.hpp" />
     <ClInclude Include="include\SceneWideEvent.hpp" />
     <ClInclude Include="include\SerializationClassExports.hpp" />
     <ClInclude Include="include\SerializeableData.hpp" />

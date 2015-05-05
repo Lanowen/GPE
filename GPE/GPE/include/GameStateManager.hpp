@@ -34,10 +34,15 @@ namespace gpe {
 		inline Ogre::RenderWindow* get_render_window() { return render_window_; }
 		inline Ogre::Log* get_log() { return log_; }
 
-		inline OIS::InputManager* get_ois_inputmanager() { return ois_inputmanager_; }
-		inline OIS::Keyboard* get_keyboard() { return keyboard_; }
-		inline OIS::Mouse* get_mouse() { return mouse_; }
-		inline OIS::JoyStick* get_joystick() { return joystick_; }
+		//TODO: add bool device_connected for keyboard, mouse, joystick
+		inline bool ois_inputmanager_connected() { return ois_inputmanager_ ? true : false; }
+		inline OIS::InputManager& get_ois_inputmanager() { assert(ois_inputmanager_); return *ois_inputmanager_; }
+		inline bool keyboard_connected() { return keyboard_ ? true : false; }
+		inline OIS::Keyboard& get_keyboard() { assert(keyboard_); return *keyboard_; }
+		inline bool mouse_connected() { return mouse_ ? true : false; }
+		inline OIS::Mouse& get_mouse() { assert(mouse_); return *mouse_; }
+		inline bool joystick_connected() { return joystick_ ? true : false; }
+		inline OIS::JoyStick& get_joystick() { assert(joystick_); return *joystick_; }
 
 		inline int get_joystick_dead_zone() { return joystick_dead_zone_; }
 
@@ -65,12 +70,12 @@ namespace gpe {
 		Ogre::RenderWindow* render_window_;
 		Ogre::Log* log_;
 
-		OIS::InputManager*			ois_inputmanager_;
-		OIS::Keyboard*				keyboard_;
-		OIS::Mouse*				    mouse_;
-		OIS::JoyStick*              joystick_;
+		OIS::InputManager* ois_inputmanager_;
+		OIS::Keyboard* keyboard_;
+		OIS::Mouse* mouse_;
+		OIS::JoyStick* joystick_;
 
-		int                         joystick_dead_zone_;
+		int joystick_dead_zone_;
 
 	private:
 		std::map<std::string, GameState*> gamestates_;

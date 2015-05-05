@@ -33,7 +33,7 @@ VisualDebugger::RenderProfile::RenderProfile(Ogre::RenderOperation::OperationTyp
 {
 }
 
-VisualDebugger::VisualDebugger(physx::PxScene* scene, Ogre::SceneManager* mSceneMgr){
+VisualDebugger::VisualDebugger(physx::PxScene* scene, Ogre::SceneManager& mSceneMgr) {
 	mScene = scene;
 	mNbLines = 0;
 	mProfile = RenderProfile(Ogre::RenderOperation::OT_LINE_LIST, false, true, false, false, false);
@@ -49,7 +49,7 @@ VisualDebugger::VisualDebugger(physx::PxScene* scene, Ogre::SceneManager* mScene
 		material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
 	}
 
-	mVisualDebuggerNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("VisualDebuggerNode");
+	mVisualDebuggerNode = mSceneMgr.getRootSceneNode()->createChildSceneNode("VisualDebuggerNode");
 
 	mVisualDebuggerNode->attachObject(this);
 
