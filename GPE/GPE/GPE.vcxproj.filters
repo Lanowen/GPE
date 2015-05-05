@@ -80,15 +80,6 @@
     <ClInclude Include="include\buffer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\DotSceneLoader.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DynamicConstraints.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\ErrorStream.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\EventDispatcherHelper.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>

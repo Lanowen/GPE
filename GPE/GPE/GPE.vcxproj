@@ -102,9 +102,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\buffer.hpp" />
-    <ClInclude Include="include\DotSceneLoader.hpp" />
-    <ClInclude Include="include\DynamicConstraints.hpp" />
-    <ClInclude Include="include\ErrorStream.h" />
     <ClInclude Include="include\EventData.hpp" />
     <ClInclude Include="include\EventDispatcherHelper.hpp" />
     <ClInclude Include="include\GameObject.hpp" />
