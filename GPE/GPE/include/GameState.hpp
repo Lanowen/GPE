@@ -20,7 +20,7 @@ namespace gpe {
 
 	class GameObject;
 
-	class GameState : public FrameListener, public PxSimulationEventCallback, public MouseListener, public KeyListener, public JoyStickListener//, OgreBites::SdkTrayListener
+	class GameState : public FrameListener, public MouseListener, public KeyListener, public JoyStickListener//, OgreBites::SdkTrayListener
 	{
 		friend class GameStateManager;
 	public:
@@ -30,7 +30,7 @@ namespace gpe {
 		inline PhysicsScene& get_physics_scene() { return *physics_scene_; }
 		inline SceneManager& get_scene_manager() { return *scene_manager_; }
 		inline GameStateManager& get_gamestatemanager() { return *gamestatemanager_; }
-		inline void set_physics_target_fps(PxReal fps) { physics_target_frame_rate_ = fps; }
+		inline void set_physics_target_fps(PxReal fps) { target_frame_rate_ = fps; }
 		inline std::vector<GameObject*>& get_gameobjects() { return gameobjects_; }
 
 		void AddGameObject(GameObject* go);
@@ -46,8 +46,6 @@ namespace gpe {
 		inline void set_gamestatemanager(GameStateManager* gsm) { gamestatemanager_ = gsm; }
 
 	protected:
-
-		virtual void createScene();
 		virtual void Enter() {
 			gamestatemanager_->get_render_window()->resetStatistics();
 
@@ -66,8 +64,7 @@ namespace gpe {
 
 		virtual void AdvanceSimulation(PxReal frameRate) = 0;
 
-		//virtual bool UpdateGameObjects(Ogre::Real timeSinceLastFrame);
-		virtual bool Update(Ogre::Real timeSinceLastFrame) = 0;
+		virtual bool Update(Ogre::Real timeSinceLastFrame);
 
 	protected:
 		Camera* camera_;
@@ -86,8 +83,8 @@ namespace gpe {
 		// FrameListener
 		virtual bool frameRenderingQueued(const FrameEvent& evt);
 
-		PxReal physics_target_frame_rate_;
-		PxReal physics_time_since_last_frame_;
+		Ogre::Real target_frame_rate_;
+		Ogre::Real time_since_last_frame_;
 
 		std::list<GameObject*> gameobjects_to_delete_;
 	};

@@ -98,6 +98,7 @@
     <ClCompile Include="src\Physics.cpp" />
     <ClCompile Include="src\SceneWideEvent.cpp" />
     <ClCompile Include="src\SerializeableData.cpp" />
+    <ClCompile Include="src\Util.cpp" />
     <ClCompile Include="src\VisualDebugger.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -7,8 +7,8 @@ namespace gpe {
 
 	class IKeyListener {
 	public:
-		inline virtual bool KeyPressed(const OIS::KeyEvent &keyEventRef) = 0;
-		inline virtual bool KeyReleased(const OIS::KeyEvent &keyEventRef) = 0;
+		virtual bool KeyPressed(const OIS::KeyEvent &keyEventRef) = 0;
+		virtual bool KeyReleased(const OIS::KeyEvent &keyEventRef) = 0;
 	};
 
 	class KeyListener : public IKeyListener {

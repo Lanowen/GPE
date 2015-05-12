@@ -79,11 +79,39 @@ namespace gpe {
 		inline PxCooking& get_cooking() { return *cooking_; }
 		inline PxCudaContextManager& get_cuda_context_manager() { return *cuda_context_manager_; }
 
-		PhysicsScene* CreateScene(PxVec3 gravity, GameState* gs, Ogre::SceneManager& scene_manager, int num_threads = 1);
-		PhysicsScene* CreateScene(PxSceneDesc& scenedesc, GameState* gs);
+		PhysicsScene* CreateScene(PxVec3 gravity, PxSimulationEventCallback* callback, Ogre::SceneManager& scene_manager, int num_threads = 1);
+		PhysicsScene* CreateScene(PxSceneDesc& scenedesc, Ogre::SceneManager& scene_manager);
 		
 		static inline Physics& getSingleton() { assert(msSingleton);  return *msSingleton; }
 		static inline Physics* getSingletonPtr() { return msSingleton; }
+
+		static inline PxTriangleMesh* CreateTrimesh(char* src) {
+			PxDefaultFileInputData readbuffer(src);
+			if (!readbuffer.isValid() || readbuffer.getLength() == 0)
+				return 0;
+
+			PxTriangleMesh* trimesh = Physics::getSingleton().get_physics().createTriangleMesh(readbuffer);
+			return trimesh;
+		}
+
+		PxSceneDesc CreateDefaultSceneDesc(PxVec3 gravity, PxSimulationEventCallback* callback, int num_threads = 1);
+
+		static inline void CookTrimesh(char* output_src, std::vector<PxVec3>& vertices, std::vector<PxU32>& faces) {
+			PxTriangleMeshDesc meshDesc;
+			meshDesc.points.count = vertices.size();
+			meshDesc.points.stride = sizeof(PxVec3);
+			meshDesc.points.data = vertices.data();
+
+			meshDesc.triangles.count = faces.size() / 3;
+			meshDesc.triangles.stride = 3 * sizeof(PxU32);
+			meshDesc.triangles.data = faces.data();
+			bool isvalid = Physics::getSingleton().get_cooking().validateTriangleMesh(meshDesc);
+
+			PxDefaultFileOutputStream writebuffer(output_src);
+			bool status = Physics::getSingleton().get_cooking().cookTriangleMesh(meshDesc, writebuffer);
+			if (!status)
+				throw Ogre::Exception(0, "PhysX cooking failed, see console for error messages.", "gpe::Physics::CookTrimesh");
+		}
 
 	private:
 		Physics();

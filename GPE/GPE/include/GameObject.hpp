@@ -12,12 +12,7 @@
 
 namespace gpe {
 
-	enum GO_TYPE{
-		PLAYER,
-		ENEMY,
-		PROJECTILE,
-		POWERUP
-	};
+	typedef int GO_TYPE;
 
 	class GameObject : public EventDispatcherHelper {
 		friend class GameState;
@@ -37,7 +32,7 @@ namespace gpe {
 		virtual void release();
 		virtual void Update(Ogre::Real deltaTime);
 
-		virtual GO_TYPE getType() = 0;
+		inline virtual GO_TYPE getType() = 0;
 
 		int netId;
 		bool netOwned; //this means I own this bitch

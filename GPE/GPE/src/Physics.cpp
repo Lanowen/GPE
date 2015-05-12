@@ -97,31 +97,36 @@ namespace gpe {
 
 	}
 
-	PhysicsScene* Physics::CreateScene(PxVec3 gravity, GameState* gs, Ogre::SceneManager& scene_manager, int num_threads) {
+	PxSceneDesc Physics::CreateDefaultSceneDesc(PxVec3 gravity, PxSimulationEventCallback* callback, int num_threads) {
 		Ogre::Log* log = Ogre::LogManager::getSingleton().getDefaultLog();
 
-		PxCpuDispatcher* cpu_dispatcher;
-
 		PxSceneDesc scenedesc(physics_->getTolerancesScale());
-		{
-			scenedesc.gravity = gravity;
 
-			if (!scenedesc.cpuDispatcher) {
-				cpu_dispatcher = physx::PxDefaultCpuDispatcherCreate(num_threads);
-				if (!cpu_dispatcher)
-					log->logMessage("PxDefaultCpuDispatcherCreate failed!");
-				scenedesc.cpuDispatcher = cpu_dispatcher;
-			}
-			if (!scenedesc.filterShader)
-				scenedesc.filterShader = g_default_filter_shader;
+		scenedesc.gravity = gravity;
 
-			scenedesc.simulationEventCallback = gs;
-
-			if (!scenedesc.gpuDispatcher && cuda_context_manager_) {
-				scenedesc.gpuDispatcher = cuda_context_manager_->getGpuDispatcher();
-			}
+		if (!scenedesc.cpuDispatcher) {
+			PxCpuDispatcher* cpu_dispatcher = physx::PxDefaultCpuDispatcherCreate(num_threads);
+			if (!cpu_dispatcher)
+				log->logMessage("PxDefaultCpuDispatcherCreate failed!");
+			scenedesc.cpuDispatcher = cpu_dispatcher;
 		}
+		if (!scenedesc.filterShader)
+			scenedesc.filterShader = g_default_filter_shader;
 
+		scenedesc.simulationEventCallback = callback;
+
+		if (!scenedesc.gpuDispatcher && cuda_context_manager_) {
+			scenedesc.gpuDispatcher = cuda_context_manager_->getGpuDispatcher();
+		}
+		
+
+		return scenedesc;
+	}
+
+	PhysicsScene* Physics::CreateScene(PxVec3 gravity, PxSimulationEventCallback* callback, Ogre::SceneManager& scene_manager, int num_threads) {
+		Ogre::Log* log = Ogre::LogManager::getSingleton().getDefaultLog();
+
+		PxSceneDesc scenedesc = CreateDefaultSceneDesc(gravity, callback, num_threads);
 		PxScene* physics_scene = physics_->createScene(scenedesc);
 
 		if (!physics_scene)
@@ -130,10 +135,10 @@ namespace gpe {
 		PxControllerManager* controller_manager = PxCreateControllerManager(*physics_scene);
 		VisualDebugger*	visual_debugger = new VisualDebugger(physics_scene, scene_manager);
 
-		return new PhysicsScene(physics_scene, cpu_dispatcher, controller_manager, visual_debugger);
+		return new PhysicsScene(physics_scene, scenedesc.cpuDispatcher, controller_manager, visual_debugger);
 	}
 
-	PhysicsScene* Physics::CreateScene(PxSceneDesc& scenedesc, GameState* gs) {
+	PhysicsScene* Physics::CreateScene(PxSceneDesc& scenedesc, Ogre::SceneManager& scene_manager) {
 		Ogre::Log* log = Ogre::LogManager::getSingleton().getDefaultLog();
 
 		PxScene* physics_scene = physics_->createScene(scenedesc);
@@ -142,7 +147,7 @@ namespace gpe {
 			log->logMessage("createScene failed!");
 
 		PxControllerManager* controller_manager = PxCreateControllerManager(*physics_scene);
-		VisualDebugger*	visual_debugger = new VisualDebugger(physics_scene, gs->get_scene_manager());
+		VisualDebugger*	visual_debugger = new VisualDebugger(physics_scene, scene_manager);
 
 		return new PhysicsScene(physics_scene, scenedesc.cpuDispatcher, controller_manager, visual_debugger);
 	}

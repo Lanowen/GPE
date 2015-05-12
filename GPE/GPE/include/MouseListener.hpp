@@ -7,9 +7,9 @@ namespace gpe {
 
 	class IMouseListener {
 	public:
-		inline virtual bool MouseMoved(const OIS::MouseEvent &evt) = 0;
-		inline virtual bool MousePressed(const OIS::MouseEvent &evt, OIS::MouseButtonID id) = 0;
-		inline virtual bool MouseReleased(const OIS::MouseEvent &evt, OIS::MouseButtonID id) = 0;
+		virtual bool MouseMoved(const OIS::MouseEvent &evt) = 0;
+		virtual bool MousePressed(const OIS::MouseEvent &evt, OIS::MouseButtonID id) = 0;
+		virtual bool MouseReleased(const OIS::MouseEvent &evt, OIS::MouseButtonID id) = 0;
 	};
 
 	class MouseListener : public IMouseListener {

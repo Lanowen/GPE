@@ -1,11 +1,21 @@
 #pragma once
 
-#include <sstream>
-#include <WinBase.h>
+#include <fcntl.h>
+#include <io.h>
+#include <iostream>
+#include <Windows.h>
+
+namespace Ogre {
+	class Vector3;
+}
+
+namespace physx {
+	class PxVec3;
+}
 
 namespace Util {
 
-template <class vect1, class vect2>
+	template <class vect1, class vect2>
 	static inline vect2 vec_from_to(vect1 inVect)
 	{
 		vect2 v;
@@ -26,6 +36,42 @@ template <class vect1, class vect2>
 		return q;
 	}
 
+static void ShowWin32Console() {
+	static const WORD MAX_CONSOLE_LINES = 500;
+	int hConHandle;
+	long lStdHandle;
+	CONSOLE_SCREEN_BUFFER_INFO coninfo;
+	FILE *fp;
+	// allocate a console for this app
+	AllocConsole();
+	// set the screen buffer to be big enough to let us scroll text
+	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &coninfo);
+	coninfo.dwSize.Y = MAX_CONSOLE_LINES;
+	SetConsoleScreenBufferSize(GetStdHandle(STD_OUTPUT_HANDLE),
+								coninfo.dwSize);
+	// redirect unbuffered STDOUT to the console
+	lStdHandle = (long)GetStdHandle(STD_OUTPUT_HANDLE);
+	hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
+	fp = _fdopen(hConHandle, "w");
+	*stdout = *fp;
+	setvbuf(stdout, NULL, _IONBF, 0);
+	// redirect unbuffered STDIN to the console
+	lStdHandle = (long)GetStdHandle(STD_INPUT_HANDLE);
+	hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
+	fp = _fdopen(hConHandle, "r");
+	*stdin = *fp;
+	setvbuf(stdin, NULL, _IONBF, 0);
+	// redirect unbuffered STDERR to the console
+	lStdHandle = (long)GetStdHandle(STD_ERROR_HANDLE);
+	hConHandle = _open_osfhandle(lStdHandle, _O_TEXT);
+	fp = _fdopen(hConHandle, "w");
+	*stderr = *fp;
+	setvbuf(stderr, NULL, _IONBF, 0);
+	// make cout, wcout, cin, wcin, wcerr, cerr, wclog and clog
+	// point to console as well
+	std::ios::sync_with_stdio();
+}
+
 static void DebugOutput(std::string message){
 	OutputDebugStringA(message.c_str());
 }
@@ -38,75 +84,33 @@ class DebugLog {
 
 public:
 
-	DebugLog() {
+	DebugLog();
 
-	}
+	virtual ~DebugLog();
 
-	virtual ~DebugLog(){
+	DebugLog& operator<<(const char*& message);
 
-	}
+	DebugLog& operator<<(const WCHAR*& message);
 
-	DebugLog& operator<<(const char*& message){
-		OutputDebugStringA(message);
-		return *this;
-	}
+	DebugLog& operator<<(const std::string& message);
 
-	DebugLog& operator<<(const WCHAR*& message){
-		OutputDebugStringW(message);
-		return *this;
-	}
+	DebugLog& operator<<(const std::wstring& message);
 
-	DebugLog& operator<<(const std::string& message){
-		OutputDebugStringA(message.c_str());
-		return *this;
-	}
+	DebugLog& operator<<(const int& val);
 
-	DebugLog& operator<<(const std::wstring& message){
-		OutputDebugStringW(message.c_str());
-		return *this;
-	}
+	DebugLog& operator<<(const float& val);
 
-	DebugLog& operator<<(const int& val){
-		std::stringstream ss;
-		ss << val;
-		OutputDebugStringA(ss.str().c_str());
-		return *this;
-	}
+	DebugLog& operator<<(const double& val);
 
-	DebugLog& operator<<(const float& val){
-		std::stringstream ss;
-		ss << val;
-		OutputDebugStringA(ss.str().c_str());
-		return *this;
-	}
+	DebugLog& operator<<(const short& val);
 
-	DebugLog& operator<<(const double& val){
-		std::stringstream ss;
-		ss << val;
-		OutputDebugStringA(ss.str().c_str());
-		return *this;
-	}
+	DebugLog& operator<<(const unsigned int& val);
 
-	DebugLog& operator<<(const short& val){
-		std::stringstream ss;
-		ss << val;
-		OutputDebugStringA(ss.str().c_str());
-		return *this;
-	}
+	DebugLog& operator<<(const unsigned short& val);
 
-	DebugLog& operator<<(const unsigned int& val){
-		std::stringstream ss;
-		ss << val;
-		OutputDebugStringA(ss.str().c_str());
-		return *this;
-	}
+	DebugLog& operator<<(const physx::PxVec3& val);
 
-	DebugLog& operator<<(const unsigned short& val){
-		std::stringstream ss;
-		ss << val;
-		OutputDebugStringA(ss.str().c_str());
-		return *this;
-	}
+	DebugLog& operator<<(const Ogre::Vector3& val);
 
 	// this is the type of std::cout
     typedef std::basic_ostream<char, std::char_traits<char> > CoutType;
@@ -115,48 +119,10 @@ public:
     typedef CoutType& (*StandardEndLine)(CoutType&);
 
     // define an operator<< to take in std::endl
-    DebugLog& operator<<(StandardEndLine manip)
-    {
-    	OutputDebugStringA("\n");
+	DebugLog& operator<<(StandardEndLine manip);
 
-    	return *this;
-    }
-
-//	static DebugLog* getInstance(){
-//		if(instance == 0)
-//			instance = new DebugLog();
-//
-//		return instance;
-//	}
-//
-//public:
-//	static DebugLog& operator<<(DebugLog, const char*& message){
-//		return *getInstance() << message;
-//	}
-//
-//	static DebugLog& operator<<(DebugLog, const WCHAR*& message){
-//		OutputDebugStringW(message);
-//		return *getInstance() << message;
-//	}
-//
-//	static DebugLog& operator<<(DebugLog, const std::string& message){
-//		OutputDebugStringA(message.c_str());
-//		return *getInstance() << message;
-//	}
-//
-//	static DebugLog& operator<<(DebugLog, const std::wstring& message){
-//		OutputDebugStringW(message.c_str());
-//		return *getInstance() << message;
-//	}
-//
-//private:
-//	static DebugLog* instance;
 };
 
-//DebugLog* DebugLog::instance = 0;
-
 static DebugLog dout;
-
-
 
 }

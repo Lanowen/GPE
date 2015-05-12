@@ -7,11 +7,11 @@ namespace gpe {
 
 	class IJoyStickListener {
 	public:
-		inline virtual bool PovMoved(const OIS::JoyStickEvent &e, int pov) = 0;
-		inline virtual bool AxisMoved(const OIS::JoyStickEvent &e, int axis) = 0;
-		inline virtual bool SliderMoved(const OIS::JoyStickEvent &e, int sliderID) = 0;
-		inline virtual bool ButtonPressed(const OIS::JoyStickEvent &e, int button) = 0;
-		inline virtual bool ButtonReleased(const OIS::JoyStickEvent &e, int button) = 0;
+		virtual bool PovMoved(const OIS::JoyStickEvent &e, int pov) = 0;
+		virtual bool AxisMoved(const OIS::JoyStickEvent &e, int axis) = 0;
+		virtual bool SliderMoved(const OIS::JoyStickEvent &e, int sliderID) = 0;
+		virtual bool ButtonPressed(const OIS::JoyStickEvent &e, int button) = 0;
+		virtual bool ButtonReleased(const OIS::JoyStickEvent &e, int button) = 0;
 	};
 
 	class JoyStickListener : public IJoyStickListener {

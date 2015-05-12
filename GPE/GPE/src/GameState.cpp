@@ -4,20 +4,13 @@
 
 namespace gpe {
 
-	GameState::GameState(std::string name) : viewport_(0), physics_target_frame_rate_(1.0 / 60.0), physics_time_since_last_frame_(0), name_(name) {
-		createScene();
+	GameState::GameState(std::string name) : viewport_(0), target_frame_rate_(1.0 / 60.0), time_since_last_frame_(0), name_(name) {
 	}
 
 	GameState::~GameState() {
 		for (int i = 0; i < gameobjects_.size(); i++) {
 			delete gameobjects_[i];
 		}
-	}
-
-	void GameState::createScene() {
-		Ogre::Log* log = Ogre::LogManager::getSingleton().getDefaultLog();
-
-		log->logMessage("[GameState]: Creating Scene...");
 	}
 
 	void GameState::AddGameObject(GameObject* go) {
@@ -62,12 +55,12 @@ namespace gpe {
 			return false;
 
 		bool res = true;
-		physics_time_since_last_frame_ += evt.timeSinceLastFrame;
+		time_since_last_frame_ += evt.timeSinceLastFrame;
 		
-		while (physics_time_since_last_frame_ >= physics_target_frame_rate_) {
-			AdvanceSimulation(physics_target_frame_rate_);
-			res = Update(physics_target_frame_rate_);
-			physics_time_since_last_frame_ -= physics_target_frame_rate_;
+		while (time_since_last_frame_ >= target_frame_rate_) {
+			AdvanceSimulation(target_frame_rate_);
+			res = Update(target_frame_rate_);
+			time_since_last_frame_ -= target_frame_rate_;
 			if (!res)
 				break;
 		}		
