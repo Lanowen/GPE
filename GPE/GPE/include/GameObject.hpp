@@ -18,7 +18,7 @@ namespace gpe {
 		friend class GameState;
 	public:
 		GameObject(GameState* owner);
-		virtual ~GameObject();
+		
 
 		void registerEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc);
 		void removeEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc);
@@ -40,6 +40,7 @@ namespace gpe {
 		void setSocket(boost::shared_ptr<GPENet::SocketBase> base);
 
 	protected:
+		virtual ~GameObject();
 		GameState* owner;
 		boost::shared_ptr<GPENet::SocketBase> socket;
 

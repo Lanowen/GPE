@@ -62,7 +62,7 @@ namespace gpe {
 		PxScene* scene_;
 		PxCpuDispatcher* cpu_dispatcher_;
 		PxControllerManager* controller_manager_;
-		VisualDebugger* visual_debugger_;		
+		VisualDebugger* visual_debugger_;
 
 		bool fetching_results_;
 		bool visual_debugger_hidden_;
@@ -78,6 +78,7 @@ namespace gpe {
 		inline PxPhysics& get_physics() { return *physics_; }
 		inline PxCooking& get_cooking() { return *cooking_; }
 		inline PxCudaContextManager& get_cuda_context_manager() { return *cuda_context_manager_; }
+		inline PxMaterial* get_default_material() { return default_material_; }
 
 		PhysicsScene* CreateScene(PxVec3 gravity, PxSimulationEventCallback* callback, Ogre::SceneManager& scene_manager, int num_threads = 1);
 		PhysicsScene* CreateScene(PxSceneDesc& scenedesc, Ogre::SceneManager& scene_manager);
@@ -117,6 +118,7 @@ namespace gpe {
 		Physics();
 
 	private:
+		PxMaterial* default_material_;
 		PxPhysics* physics_;
 		PxCooking* cooking_;
 		PxCudaContextManager* cuda_context_manager_;

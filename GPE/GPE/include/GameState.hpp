@@ -12,6 +12,7 @@
 #include "MouseListener.hpp"
 #include "KeyListener.hpp"
 #include "JoyStickListener.hpp"
+#include "EventDispatcher.hpp"
 
 using namespace Ogre;
 using namespace physx;
@@ -32,6 +33,7 @@ namespace gpe {
 		inline GameStateManager& get_gamestatemanager() { return *gamestatemanager_; }
 		inline void set_physics_target_fps(PxReal fps) { target_frame_rate_ = fps; }
 		inline std::vector<GameObject*>& get_gameobjects() { return gameobjects_; }
+		inline EventDispatcher& get_event_dispatcher() { return *event_dispatcher_; }
 
 		void AddGameObject(GameObject* go);
 		void DeleteGameObject(GameObject* go);
@@ -40,6 +42,7 @@ namespace gpe {
 	protected:
 		inline void set_physics_scene(PhysicsScene* phys_scene) { physics_scene_ = phys_scene; }
 		inline void set_scene_manager(SceneManager* scene_man) { scene_manager_ = scene_man; }
+		inline void set_event_dispatcher(EventDispatcher* event_handler) { event_dispatcher_ = event_handler; }
 
 	private:
 
@@ -77,6 +80,7 @@ namespace gpe {
 
 		Viewport* viewport_;
 		SceneManager* scene_manager_;
+		EventDispatcher* event_dispatcher_;
 
 		std::vector<GameObject*> gameobjects_;
 

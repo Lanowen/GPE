@@ -7,10 +7,10 @@
 
 #include "EventData.hpp"
 
-class SceneWideEvent : public Ogre::Singleton<SceneWideEvent> , public EventDispatcherHelper {
+class EventDispatcher : public EventDispatcherHelper {
 
 public:
-	SceneWideEvent();
+	EventDispatcher();
 
 	//static const std::string ONFRAMEQUEUED;
 
@@ -23,8 +23,8 @@ public:
 	void registerEventCallback(std::string eventName,boost::function<void(const EventData*)> inFunc);
 	void removeEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc);
 
-	//static void dispatch_SceneWide(std::string currEvent);
-	static void dispatch_SceneWide(std::string currEvent, const EventData* data);
+	//static void dispatch_event(std::string currEvent);
+	void dispatch_event(std::string currEvent, const EventData* data);
 
 private:	
 	//std::list<v8::Persistent<v8::Function>> m_onFrameQueued;

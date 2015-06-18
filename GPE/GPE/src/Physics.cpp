@@ -90,6 +90,10 @@ namespace gpe {
 		cuda_context_manager_ = pxtask::createCudaContextManager(cudaContextManagerDesc, &physics_->getProfileZoneManager());
 		}*/
 
+		default_material_ = physics_->createMaterial(0.9f, 0.5f, 0.0f);
+		default_material_->setFrictionCombineMode(PxCombineMode::eMAX);
+		default_material_->setRestitutionCombineMode(PxCombineMode::eMAX);
+
 		msSingleton = this;
 	}
 

@@ -8,20 +8,20 @@ namespace gpe {
 	}
 
 	GameState::~GameState() {
-		for (int i = 0; i < gameobjects_.size(); i++) {
+		for (unsigned int i = 0; i < gameobjects_.size(); i++) {
 			delete gameobjects_[i];
 		}
 	}
 
 	void GameState::AddGameObject(GameObject* go) {
-		gameobjects_.push_back(go);
+		go->released = false;
+		gameobjects_.push_back(go);		
 	}
 
 	void GameState::DeleteGameObject(GameObject* go) {
 
 		if (!physics_scene_->get_fetching_results()) {
 			RemoveGameObject(go);
-
 			delete go;
 		}
 		else {
@@ -35,6 +35,7 @@ namespace gpe {
 		std::vector<GameObject*>::iterator itr = std::find<std::vector<GameObject*>::iterator, GameObject*>(gameobjects_.begin(), gameobjects_.end(), go);
 		if (itr != gameobjects_.end()) {
 			gameobjects_.erase(itr);
+			go->released = true;
 		}
 	}
 

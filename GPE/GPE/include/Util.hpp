@@ -15,8 +15,18 @@ namespace physx {
 
 namespace Util {
 
+	template <class vect_to, class vect_from>
+	inline vect_to vect_convert(vect_from inVect) {
+		vect_to v;
+		v.x = inVect.x;
+		v.y = inVect.y;
+		v.z = inVect.z;
+		return v;
+	}
+
+	#pragma deprecated(vect_from_to)
 	template <class vect1, class vect2>
-	static inline vect2 vec_from_to(vect1 inVect)
+	__declspec(deprecated("Use Util::vect_convert for implicit template recognition of second vector parameter"))inline vect2 vec_from_to(vect1 inVect)
 	{
 		vect2 v;
 		v.x = inVect.x;
@@ -26,7 +36,7 @@ namespace Util {
 	}
 
 	template <class quat1, class quat2>
-	static inline quat2 quat_from_to(quat1 inQuat)
+	inline quat2 quat_from_to(quat1 inQuat)
 	{
 		quat2 q;
 		q.x = inQuat.x;

@@ -2,17 +2,17 @@
 #include <iostream>
 #include <algorithm>
 //#include <V8Scripting.hpp>
-#include "SceneWideEvent.hpp"
+#include "EventDispatcher.hpp"
 
 namespace gpe {
 
-	GameObject::GameObject(GameState* owner) : owner(owner), netId(-1), released(false), netOwned(true) {
+	GameObject::GameObject(GameState* owner) : owner(owner), netId(-1), released(true), netOwned(true) {
 	}
 
 	GameObject::~GameObject() {
 		for (std::unordered_map<std::string, std::list<boost::function<void(const EventData*)>>>::iterator itr = eventsCpp.begin(); itr != eventsCpp.end(); itr++) {
 			for (std::list<boost::function<void(const EventData*)>>::iterator itr2 = itr->second.begin(); itr2 != itr->second.end(); itr2++) {
-				SceneWideEvent::getSingletonPtr()->removeEventCallback(itr->first, *itr2);
+				owner->get_event_dispatcher().removeEventCallback(itr->first, *itr2);
 			}
 		}
 	}
@@ -24,7 +24,7 @@ namespace gpe {
 	void GameObject::registerEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc) {
 		std::list<boost::function<void(const EventData*)>>::iterator itr;
 
-		SceneWideEvent::getSingletonPtr()->registerEventCallback(eventName, inFunc);
+		owner->get_event_dispatcher().registerEventCallback(eventName, inFunc);
 
 		std::unordered_map<std::string, std::list<boost::function<void(const EventData*)>>>::iterator itrListeners = eventsCpp.find(eventName);
 		if (itrListeners != eventsCpp.end()) {
@@ -48,7 +48,7 @@ namespace gpe {
 	void GameObject::removeEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc) {
 		std::list<boost::function<void(const EventData*)>>::iterator itr;
 
-		SceneWideEvent::getSingletonPtr()->removeEventCallback(eventName, inFunc);
+		owner->get_event_dispatcher().removeEventCallback(eventName, inFunc);
 
 		std::unordered_map<std::string, std::list<boost::function<void(const EventData*)>>>::iterator itrListeners = eventsCpp.find(eventName);
 		if (itrListeners != eventsCpp.end()) {
@@ -96,8 +96,13 @@ namespace gpe {
 
 	}
 
+	//use this instead of GameObject::~GameObject, so that handles from GameState are sure to be cleared before deleting.
 	void GameObject::release() {
-		released = true;
+		if (released) {
+			delete this;
+			return;
+		}
+
 		owner->DeleteGameObject(this);
 	}
 }
