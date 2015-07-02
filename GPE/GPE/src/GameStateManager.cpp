@@ -56,7 +56,6 @@ namespace gpe {
 		Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
 		Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
-
 		unsigned long hWnd = 0;
 		OIS::ParamList paramList;
 		render_window_->getCustomAttribute("WINDOW", &hWnd);
@@ -70,14 +69,21 @@ namespace gpe {
 
 		ois_inputmanager_ = OIS::InputManager::createInputSystem(paramList);
 
-		keyboard_ = static_cast<OIS::Keyboard*>(ois_inputmanager_->createInputObject(OIS::OISKeyboard, true));
-		mouse_ = static_cast<OIS::Mouse*>(ois_inputmanager_->createInputObject(OIS::OISMouse, true));
+		if (ois_inputmanager_->getNumberOfDevices(OIS::OISKeyboard) > 0) {
+			keyboard_ = static_cast<OIS::Keyboard*>(ois_inputmanager_->createInputObject(OIS::OISKeyboard, true));
 
-		mouse_->getMouseState().height = render_window_->getHeight();
-		mouse_->getMouseState().width = render_window_->getWidth();
+			keyboard_->setEventCallback(this);
+		}
+		
 
-		keyboard_->setEventCallback(this);
-		mouse_->setEventCallback(this);
+		if (ois_inputmanager_->getNumberOfDevices(OIS::OISMouse) > 0) {
+			mouse_ = static_cast<OIS::Mouse*>(ois_inputmanager_->createInputObject(OIS::OISMouse, true));
+
+			mouse_->getMouseState().height = render_window_->getHeight();
+			mouse_->getMouseState().width = render_window_->getWidth();
+
+			mouse_->setEventCallback(this);
+		}
 
 		if (ois_inputmanager_->getNumberOfDevices(OIS::OISJoyStick) > 0) {
 			//mJoysticks.resize( mInputSystem->numJoySticks() );
@@ -160,8 +166,12 @@ namespace gpe {
 
 	bool GameStateManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
 		//Need to capture/update each device
-		keyboard_->capture();
-		mouse_->capture();
+		if (keyboard_) {
+			keyboard_->capture();
+		}
+		if (mouse_) {
+			mouse_->capture();
+		}
 		if (joystick_) {
 			joystick_->capture();
 		}

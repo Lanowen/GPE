@@ -50,10 +50,10 @@ namespace gpe {
 			}
 		}
 
-		inline PxScene& get_scene() const { return *scene_; }
-		inline PxCpuDispatcher& get_cpu_dispatcher() const { return *cpu_dispatcher_; }
-		inline PxControllerManager& get_controller_manager() const { return *controller_manager_; }
-		inline VisualDebugger& get_visual_debugger() const { return *visual_debugger_; }
+		inline PxScene* get_scene() const { return scene_; }
+		inline PxCpuDispatcher* get_cpu_dispatcher() const { return cpu_dispatcher_; }
+		inline PxControllerManager* get_controller_manager() const { return controller_manager_; }
+		inline VisualDebugger* get_visual_debugger() const { return visual_debugger_; }
 
 	private:
 		PhysicsScene(PxScene* scene, PxCpuDispatcher* cpu_dispatcher, PxControllerManager* controller_manager, VisualDebugger* visual_debugger);
@@ -75,13 +75,13 @@ namespace gpe {
 
 		static void Initialize() { if (!msSingleton) new Physics(); }
 
-		inline PxPhysics& get_physics() { return *physics_; }
-		inline PxCooking& get_cooking() { return *cooking_; }
-		inline PxCudaContextManager& get_cuda_context_manager() { return *cuda_context_manager_; }
+		inline PxPhysics* get_physics() { return physics_; }
+		inline PxCooking* get_cooking() { return cooking_; }
+		inline PxCudaContextManager* get_cuda_context_manager() { return cuda_context_manager_; }
 		inline PxMaterial* get_default_material() { return default_material_; }
 
-		PhysicsScene* CreateScene(PxVec3 gravity, PxSimulationEventCallback* callback, Ogre::SceneManager& scene_manager, int num_threads = 1);
-		PhysicsScene* CreateScene(PxSceneDesc& scenedesc, Ogre::SceneManager& scene_manager);
+		PhysicsScene* CreateScene(PxVec3 gravity, PxSimulationEventCallback* callback, Ogre::SceneManager* scene_manager, int num_threads = 1);
+		PhysicsScene* CreateScene(PxSceneDesc& scenedesc, Ogre::SceneManager* scene_manager);
 		
 		static inline Physics& getSingleton() { assert(msSingleton);  return *msSingleton; }
 		static inline Physics* getSingletonPtr() { return msSingleton; }
@@ -91,13 +91,13 @@ namespace gpe {
 			if (!readbuffer.isValid() || readbuffer.getLength() == 0)
 				return 0;
 
-			PxTriangleMesh* trimesh = Physics::getSingleton().get_physics().createTriangleMesh(readbuffer);
+			PxTriangleMesh* trimesh = Physics::getSingletonPtr()->get_physics()->createTriangleMesh(readbuffer);
 			return trimesh;
 		}
 
 		PxSceneDesc CreateDefaultSceneDesc(PxVec3 gravity, PxSimulationEventCallback* callback, int num_threads = 1);
 
-		static inline void CookTrimesh(char* output_src, std::vector<PxVec3>& vertices, std::vector<PxU32>& faces) {
+		inline void CookTrimesh(char* output_src, std::vector<PxVec3>& vertices, std::vector<PxU32>& faces) {
 			PxTriangleMeshDesc meshDesc;
 			meshDesc.points.count = vertices.size();
 			meshDesc.points.stride = sizeof(PxVec3);
@@ -106,10 +106,10 @@ namespace gpe {
 			meshDesc.triangles.count = faces.size() / 3;
 			meshDesc.triangles.stride = 3 * sizeof(PxU32);
 			meshDesc.triangles.data = faces.data();
-			bool isvalid = Physics::getSingleton().get_cooking().validateTriangleMesh(meshDesc);
+			bool isvalid = cooking_->validateTriangleMesh(meshDesc);
 
 			PxDefaultFileOutputStream writebuffer(output_src);
-			bool status = Physics::getSingleton().get_cooking().cookTriangleMesh(meshDesc, writebuffer);
+			bool status = cooking_->cookTriangleMesh(meshDesc, writebuffer);
 			if (!status)
 				throw Ogre::Exception(0, "PhysX cooking failed, see console for error messages.", "gpe::Physics::CookTrimesh");
 		}

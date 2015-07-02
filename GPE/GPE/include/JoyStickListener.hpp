@@ -2,6 +2,7 @@
 
 #include <OIS.h>
 #include <vector>
+#include <stack>
 
 namespace gpe {
 
@@ -26,9 +27,7 @@ namespace gpe {
 		}
 
 		inline virtual void DeregisterJoyListener(IJoyStickListener* listener) {
-			std::vector<IJoyStickListener*>::iterator itr = std::find<std::vector<IJoyStickListener*>::iterator, IJoyStickListener*>(joylisteners_.begin(), joylisteners_.end(), listener);
-			if (itr != joylisteners_.end())
-				joylisteners_.erase(itr);
+			to_delete_.push(listener);
 		}
 
 	private:
@@ -77,7 +76,18 @@ namespace gpe {
 			return true;
 		}
 
+		inline void JoyStickListenerPost() {
+			while (to_delete_.size() > 0) {
+				std::vector<IJoyStickListener*>::iterator itr = std::find<std::vector<IJoyStickListener*>::iterator, IJoyStickListener*>(joylisteners_.begin(), joylisteners_.end(), to_delete_.top());
+				if (itr != joylisteners_.end())
+					joylisteners_.erase(itr);
+
+				to_delete_.pop();
+			}
+		}
+
 	private:
 		std::vector<IJoyStickListener*> joylisteners_;
+		std::stack<IJoyStickListener*> to_delete_;
 	};
 }

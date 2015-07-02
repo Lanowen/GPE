@@ -72,6 +72,9 @@
       <Command>
       </Command>
     </PostBuildEvent>
+    <Lib>
+      <AdditionalDependencies>OgreMain_d.lib;OgrePaging_d.lib;OgreProperty_d.lib;OgreRTShaderSystem_d.lib;OgreTerrain_d.lib;OIS_d.lib;WINMM.LIB;PhysX3DEBUG_x86.lib;PhysX3CommonDEBUG_x86.lib;PhysX3CookingDEBUG_x86.lib;PhysXVisualDebuggerSDKDEBUG.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;PhysX3CharacterKinematicDEBUG_x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -89,6 +92,12 @@
       <AdditionalDependencies>OgreMain.lib;OgrePaging.lib;OgreProperty.lib;OgreRTShaderSystem.lib;OgreTerrain.lib;OIS.lib;WINMM.LIB;PhysX3_x86.lib;PhysX3Common_x86.lib;PhysX3Cooking_x86.lib;PhysXVisualDebuggerSDK.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;PhysX3CharacterKinematic_x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>LIBCMT.lib;libcpmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
+    <Lib>
+      <AdditionalDependencies>OgreMain.lib;OgrePaging.lib;OgreProperty.lib;OgreRTShaderSystem.lib;OgreTerrain.lib;OIS.lib;WINMM.LIB;PhysX3_x86.lib;PhysX3Common_x86.lib;PhysX3Cooking_x86.lib;PhysXVisualDebuggerSDK.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;PhysX3CharacterKinematic_x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\EventData.cpp" />
@@ -113,6 +122,7 @@
     <ClInclude Include="include\GameState.hpp" />
     <ClInclude Include="include\GameStateManager.hpp" />
     <ClInclude Include="include\GPENet.hpp" />
+    <ClInclude Include="include\GPE_Exception.hpp" />
     <ClInclude Include="include\KeyListener.hpp" />
     <ClInclude Include="include\JoyStickListener.hpp" />
     <ClInclude Include="include\MouseListener.hpp" />

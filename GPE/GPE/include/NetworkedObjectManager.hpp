@@ -17,9 +17,11 @@ namespace gpe {
 		void removeGameObject(GameObject* go);
 
 		GameObject* getGameObject(int id);
-		std::map<int, GameObject*> objects;
+		
 
 	private:
-		unsigned int counter;
+		unsigned int counter_;
+
+		std::map<int, GameObject*> objects_;
 	};
 }

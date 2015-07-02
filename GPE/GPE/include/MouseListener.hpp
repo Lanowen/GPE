@@ -2,6 +2,7 @@
 
 #include <OIS.h>
 #include <vector>
+#include <stack>
 
 namespace gpe {
 
@@ -24,9 +25,7 @@ namespace gpe {
 		}
 
 		inline virtual void DeregisterMouseListener(IMouseListener* listener) {
-			std::vector<IMouseListener*>::iterator itr = std::find<std::vector<IMouseListener*>::iterator, IMouseListener*>(mouselisteners_.begin(), mouselisteners_.end(), listener);
-			if (itr != mouselisteners_.end())
-				mouselisteners_.erase(itr);
+			to_delete_.push(listener);
 		}
 
 	private:
@@ -57,7 +56,18 @@ namespace gpe {
 			return true;
 		}
 
+		inline void MouseListenerPost() {
+			while (to_delete_.size() > 0) {
+				std::vector<IMouseListener*>::iterator itr = std::find<std::vector<IMouseListener*>::iterator, IMouseListener*>(mouselisteners_.begin(), mouselisteners_.end(), to_delete_.top());
+				if (itr != mouselisteners_.end())
+					mouselisteners_.erase(itr);
+
+				to_delete_.pop();
+			}
+		}
+
 	private:
 		std::vector<IMouseListener*> mouselisteners_;
+		std::stack<IMouseListener*> to_delete_;
 	};
 }

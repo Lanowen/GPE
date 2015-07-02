@@ -127,7 +127,7 @@ namespace gpe {
 		return scenedesc;
 	}
 
-	PhysicsScene* Physics::CreateScene(PxVec3 gravity, PxSimulationEventCallback* callback, Ogre::SceneManager& scene_manager, int num_threads) {
+	PhysicsScene* Physics::CreateScene(PxVec3 gravity, PxSimulationEventCallback* callback, Ogre::SceneManager* scene_manager, int num_threads) {
 		Ogre::Log* log = Ogre::LogManager::getSingleton().getDefaultLog();
 
 		PxSceneDesc scenedesc = CreateDefaultSceneDesc(gravity, callback, num_threads);
@@ -142,7 +142,7 @@ namespace gpe {
 		return new PhysicsScene(physics_scene, scenedesc.cpuDispatcher, controller_manager, visual_debugger);
 	}
 
-	PhysicsScene* Physics::CreateScene(PxSceneDesc& scenedesc, Ogre::SceneManager& scene_manager) {
+	PhysicsScene* Physics::CreateScene(PxSceneDesc& scenedesc, Ogre::SceneManager* scene_manager) {
 		Ogre::Log* log = Ogre::LogManager::getSingleton().getDefaultLog();
 
 		PxScene* physics_scene = physics_->createScene(scenedesc);

@@ -110,35 +110,6 @@ typedef unsigned int UINT32;
 		}
 	};
 
-	class CreateBullet : public SerializableData {
-	public:
-
-		CreateBullet(){}
-
-		virtual ~CreateBullet(){}
-
-		int id, parentid;
-		float px, py, pz;
-		float dx, dy, dz, dw;
-
-	private:
-		friend class boost::serialization::access;
-
-		template<class Archive>
-		void serialize(Archive & ar, const unsigned int version){
-			ar & boost::serialization::base_object<SerializableData>(*this);
-			ar & id;
-			ar & parentid;
-			ar & px;
-			ar & py;
-			ar & pz;
-			ar & dx;
-			ar & dy;
-			ar & dz;
-			ar & dw;
-		}
-	};
-
 	class NetEvent : public SerializableData {
 	public:
 
@@ -160,51 +131,4 @@ typedef unsigned int UINT32;
 		}
 	};
 
-	class CreatePowerUp : public SerializableData {
-	public:
-
-		CreatePowerUp(){}
-
-		virtual ~CreatePowerUp(){}
-
-		int id;
-		int powerupType;
-		float px, py, pz;
-
-	private:
-		friend class boost::serialization::access;
-
-		template<class Archive>
-		void serialize(Archive & ar, const unsigned int version){
-			ar & boost::serialization::base_object<SerializableData>(*this);
-			ar & id;
-			ar & powerupType;
-			ar & px;
-			ar & py;
-			ar & pz;
-		}
-	};
-
 	
-	class GetPowerUp : public SerializableData {
-	public:
-
-		GetPowerUp(){}
-
-		virtual ~GetPowerUp(){}
-
-		int targetid, puID;
-		int powerupType;
-
-	private:
-		friend class boost::serialization::access;
-
-		template<class Archive>
-		void serialize(Archive & ar, const unsigned int version){
-			ar & boost::serialization::base_object<SerializableData>(*this);
-			ar & targetid;
-			ar & puID;
-			ar & powerupType;
-		}
-	};
-

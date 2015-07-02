@@ -2,6 +2,7 @@
 
 #include <OIS.h>
 #include <vector>
+#include <stack>
 
 namespace gpe {
 
@@ -23,9 +24,8 @@ namespace gpe {
 		}
 
 		inline virtual void DeregisterKeyListener(IKeyListener* listener) {
-			std::vector<IKeyListener*>::iterator itr = std::find<std::vector<IKeyListener*>::iterator, IKeyListener*>(keylisteners_.begin(), keylisteners_.end(), listener);
-			if (itr != keylisteners_.end())
-				keylisteners_.erase(itr);
+			to_delete_.push(listener);
+			
 		}
 
 	private:
@@ -46,7 +46,18 @@ namespace gpe {
 			return true;
 		}
 
+		inline void KeyListenerPost() {
+			while (to_delete_.size() > 0) {
+				std::vector<IKeyListener*>::iterator itr = std::find<std::vector<IKeyListener*>::iterator, IKeyListener*>(keylisteners_.begin(), keylisteners_.end(), to_delete_.top());
+				if (itr != keylisteners_.end())
+					keylisteners_.erase(itr);
+
+				to_delete_.pop();
+			}
+		}
+
 	private:
 		std::vector<IKeyListener*> keylisteners_;
+		std::stack<IKeyListener*> to_delete_;
 	};
 }

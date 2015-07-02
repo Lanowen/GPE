@@ -16,39 +16,49 @@ namespace gpe {
 
 	class GameObject : public EventDispatcherHelper {
 		friend class GameState;
+		friend class NetworkedObjectManager;
 	public:
-		GameObject(GameState* owner);
+		GameObject(std::string name);
 		
+		inline GameState* get_owner() { return owner_; }
+		inline std::string get_name() { return name_; }
 
 		void registerEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc);
 		void removeEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc);
 
 		void dispatchEvent(std::string eventName, const EventData* data);
 
-		//Need compiler v120 for this. God fuck.
+		//Need compiler v120 for this.....
 		//template<class... Args>
 		//void dispatchEvent(std::string eventName, Args... args);
 
 		virtual void release();
 		virtual void Update(Ogre::Real deltaTime);
 
-		inline virtual GO_TYPE getType() = 0;
+		
 
-		int netId;
-		bool netOwned; //this means I own this bitch
+		inline virtual GO_TYPE getType() = 0;
 
 		void setSocket(boost::shared_ptr<GPENet::SocketBase> base);
 
 	protected:
 		virtual ~GameObject();
-		GameState* owner;
-		boost::shared_ptr<GPENet::SocketBase> socket;
+		boost::shared_ptr<GPENet::SocketBase> socket_;
+
+		//This is where you do your logic adding physics and graphics objects to their respective Scenes
+		virtual void AddedToState(GameState* owner) = 0;
+
+		//This is where you do your logic removing physics and graphics objects from their respective Scenes
+		virtual void RemovedFromState(GameState* owner) = 0;
 
 	private:
-		std::unordered_map<std::string, std::list<boost::function<void(const EventData*)>>> eventsCpp;
+		std::unordered_map<std::string, std::list<boost::function<void(const EventData*)>>> eventsCpp_;
+		GameState* owner_;
+		std::string name_;
 
-		bool released;
-
+		bool released_;
+		int netId_;
+		bool netOwned_;
 	};
 
 }

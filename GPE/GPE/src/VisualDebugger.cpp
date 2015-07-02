@@ -33,9 +33,9 @@ VisualDebugger::RenderProfile::RenderProfile(Ogre::RenderOperation::OperationTyp
 {
 }
 
-VisualDebugger::VisualDebugger(physx::PxScene* scene, Ogre::SceneManager& mSceneMgr) {
-	mScene = scene;
-	mNbLines = 0;
+VisualDebugger::VisualDebugger(physx::PxScene* scene, Ogre::SceneManager* visualDebuggerScene_Mgr) {
+	visualDebuggerScene_ = scene;
+	nbLines_ = 0;
 	mProfile = RenderProfile(Ogre::RenderOperation::OT_LINE_LIST, false, true, false, false, false);
 	_initialise();
 
@@ -49,11 +49,11 @@ VisualDebugger::VisualDebugger(physx::PxScene* scene, Ogre::SceneManager& mScene
 		material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
 	}
 
-	mVisualDebuggerNode = mSceneMgr.getRootSceneNode()->createChildSceneNode("VisualDebuggerNode");
+	visualDebuggerNode_ = visualDebuggerScene_Mgr->getRootSceneNode()->createChildSceneNode("VisualDebuggerNode");
 
-	mVisualDebuggerNode->attachObject(this);
+	visualDebuggerNode_->attachObject(this);
 
-	mVisualDebuggerNode->setVisible(true);
+	visualDebuggerNode_->setVisible(true);
 }
 
 VisualDebugger::~VisualDebugger(){
@@ -95,13 +95,19 @@ void VisualDebugger::_initialise()
  mIndexBufferCapacity = 0;
 }
 
+void VisualDebugger::DrawVector(physx::PxVec3 position, physx::PxVec3 direction, physx::PxReal length) {
+	debug_vectors_.push_back(position);
+	direction.normalize();
+	debug_vectors_.push_back(position + direction*length);
+}
+
 void VisualDebugger::update(const physx::PxRenderBuffer& debugRenderable)
 {
-	mLines.remove_all();
-	mColours.remove_all();
-	mNbLines = 0;
+	lines_.remove_all();
+	colours_.remove_all();
+	nbLines_ = 0;
 
-	if(debugRenderable.getNbLines() == 0){
+	if(debugRenderable.getNbLines() == 0 && debug_vectors_.size() == 0){
 		return;
 	}
   
@@ -110,21 +116,35 @@ void VisualDebugger::update(const physx::PxRenderBuffer& debugRenderable)
 
 	while(nbLines--)
 	{
-		mLines.push_back(lines->pos0.x);
-		mLines.push_back(lines->pos0.y);
-		mLines.push_back(lines->pos0.z);
-		mLines.push_back(lines->pos1.x);
-		mLines.push_back(lines->pos1.y);
-		mLines.push_back(lines->pos1.z);
-		mColours.push_back(lines->color0);
-		mColours.push_back(lines->color1);
+		lines_.push_back(lines->pos0.x);
+		lines_.push_back(lines->pos0.y);
+		lines_.push_back(lines->pos0.z);
+		lines_.push_back(lines->pos1.x);
+		lines_.push_back(lines->pos1.y);
+		lines_.push_back(lines->pos1.z);
+		colours_.push_back(lines->color0);
+		colours_.push_back(lines->color1);
 		lines++;
 	}
 
-	mNbLines += debugRenderable.getNbLines();
+	for (int i = 0; i < debug_vectors_.size(); i += 2) {
+		lines_.push_back(debug_vectors_[i].x);
+		lines_.push_back(debug_vectors_[i].y);
+		lines_.push_back(debug_vectors_[i].z);
+		lines_.push_back(debug_vectors_[i+1].x);
+		lines_.push_back(debug_vectors_[i + 1].y);
+		lines_.push_back(debug_vectors_[i + 1].z);
+		colours_.push_back(0xFF0000);
+		colours_.push_back(0xFF0000);
+	}
+
+	nbLines_ += debugRenderable.getNbLines();
+	nbLines_ += debug_vectors_.size() *3;
  
 	drawVisualDebugger();
-	mVisualDebuggerNode->needUpdate();
+	visualDebuggerNode_->needUpdate();
+
+	debug_vectors_.clear();
 }
 
 void VisualDebugger::_resize(size_t vertexCount, size_t indexCount)
@@ -249,12 +269,12 @@ void VisualDebugger::_resize(size_t vertexCount, size_t indexCount)
 
 void VisualDebugger::drawVisualDebugger()
 {
-	_resize(mNbLines * 2, 0);
+	_resize(lines_.size() / 3, 0);
 
 	// Write the vertices.
-	mVertexBuffer->writeData(0, 3 * mNbLines * 2 * sizeof(float), mLines.first());
+	mVertexBuffer->writeData(0, lines_.size() * sizeof(float), lines_.first());
 
-	mVertexColourBuffer->writeData(0, mNbLines * 2 * sizeof(unsigned int), mColours.first());
+	mVertexColourBuffer->writeData(0, colours_.size() * sizeof(unsigned int), colours_.first());
 
 	mBox.setInfinite();
 }
@@ -277,58 +297,58 @@ float VisualDebugger::getSquaredViewDepth(const Ogre::Camera* cam) const
 void VisualDebugger::showAll(){
 
 	/*for(int i = 0; i < physx::PxVisualizationParameter::eNUM_VALUES; i++){
-		mScene->setVisualizationParameter((physx::PxVisualizationParameter::Enum)i, 1.0f);
+		visualDebuggerScene_->setVisualizationParameter((physx::PxVisualizationParameter::Enum)i, 1.0f);
 	}*/
 
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eSCALE, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eWORLD_AXES, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eBODY_AXES, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eBODY_MASS_AXES, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eBODY_LIN_VELOCITY, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eBODY_ANG_VELOCITY, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eBODY_JOINT_GROUPS, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eCONTACT_POINT, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eCONTACT_NORMAL, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eCONTACT_ERROR, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eCONTACT_FORCE, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eACTOR_AXES, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_AABBS, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_AXES, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_FNORMALS, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_EDGES, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eSCALE, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eWORLD_AXES, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eBODY_AXES, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eBODY_MASS_AXES, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eBODY_LIN_VELOCITY, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eBODY_ANG_VELOCITY, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eBODY_JOINT_GROUPS, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eCONTACT_POINT, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eCONTACT_NORMAL, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eCONTACT_ERROR, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eCONTACT_FORCE, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eACTOR_AXES, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_AABBS, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_SHAPES, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_AXES, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_FNORMALS, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_EDGES, 1.0f);
 	
-		//mScene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_STATIC, 1.0f);
-		//mScene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_DYNAMIC, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_PAIRS, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eJOINT_LIMITS, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_POSITION, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_VELOCITY, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_COLLISION_NORMAL, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_BOUNDS, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_GRID, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_BROADPHASE_BOUNDS, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_MAX_MOTION_DISTANCE, 1.0f);
-	//mScene->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_DRAINS, 1.0f);
-	/*mScene->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_MESH, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_ATTACHMENTS, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_COLLISIONS, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_SELFCOLLISIONS, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_SLEEP, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_TEARING, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_VALIDBOUNDS, 1.0f);
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_SHAPES, 1.0f);*/
+		//visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_STATIC, 1.0f);
+		//visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_DYNAMIC, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eCOLLISION_PAIRS, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eJOINT_LOCAL_FRAMES, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eJOINT_LIMITS, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_POSITION, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_VELOCITY, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_COLLISION_NORMAL, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_BOUNDS, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_GRID, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_BROADPHASE_BOUNDS, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_MAX_MOTION_DISTANCE, 1.0f);
+	//visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::ePARTICLE_SYSTEM_DRAINS, 1.0f);
+	/*visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_MESH, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_ATTACHMENTS, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_COLLISIONS, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_SELFCOLLISIONS, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_SLEEP, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_TEARING, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_VALIDBOUNDS, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eDEFORMABLE_SHAPES, 1.0f);*/
 
-	mScene->setVisualizationParameter(physx::PxVisualizationParameter::eCULL_BOX, 1.0f);
+	visualDebuggerScene_->setVisualizationParameter(physx::PxVisualizationParameter::eCULL_BOX, 1.0f);
 
-	mVisualDebuggerNode->setVisible(true);
+	visualDebuggerNode_->setVisible(true);
 }
 
 void VisualDebugger::hideAll(){
 	for(int i = 0; i < physx::PxVisualizationParameter::eNUM_VALUES ; i++){
-		mScene->setVisualizationParameter((physx::PxVisualizationParameter::Enum)i, 0.0f);
+		visualDebuggerScene_->setVisualizationParameter((physx::PxVisualizationParameter::Enum)i, 0.0f);
 	}
 
-	mVisualDebuggerNode->setVisible(false);
+	visualDebuggerNode_->setVisible(false);
 }

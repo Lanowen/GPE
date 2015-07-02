@@ -5,5 +5,5 @@ public:
 	EventData();
 	virtual ~EventData();
 
-	void* data;
+	void* data_;
 };

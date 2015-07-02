@@ -125,7 +125,7 @@ namespace GPENet {
 		void Clear();
 
 	private:
-		std::map<UINT32, HistoryEntry> history;
+		std::map<UINT32, HistoryEntry> history; //should make this a queue probably
 		UINT32 lastProcessedAck;
 		UINT32 lastProcessedAck_bitfield;
 		Client* owner;

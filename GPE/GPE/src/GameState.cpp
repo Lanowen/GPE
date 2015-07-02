@@ -1,6 +1,7 @@
 #include "GameState.hpp"
 
 #include "GameObject.hpp"
+#include "GPE_Exception.hpp"
 
 namespace gpe {
 
@@ -14,8 +15,15 @@ namespace gpe {
 	}
 
 	void GameState::AddGameObject(GameObject* go) {
-		go->released = false;
-		gameobjects_.push_back(go);		
+		if (go->released_ == false && go->owner_ != this)
+			throw General_Exception("You cannot add a gameobject to two scenes!");
+		else if (go->owner_ == this)
+			throw General_Exception("You cannot add a gameobject to the same scene twice!");
+
+		go->released_ = false;
+		go->owner_ = this;
+		gameobjects_.push_back(go);
+		go->AddedToState(this);
 	}
 
 	void GameState::DeleteGameObject(GameObject* go) {
@@ -35,7 +43,9 @@ namespace gpe {
 		std::vector<GameObject*>::iterator itr = std::find<std::vector<GameObject*>::iterator, GameObject*>(gameobjects_.begin(), gameobjects_.end(), go);
 		if (itr != gameobjects_.end()) {
 			gameobjects_.erase(itr);
-			go->released = true;
+			go->released_ = true;
+			go->owner_ = 0;
+			go->RemovedFromState(this);
 		}
 	}
 
@@ -50,20 +60,16 @@ namespace gpe {
 	}
 
 	bool GameState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
-		//if (evt.timeSinceLastFrame > 0.5f)
-		//	return true;
 		if (gamestatemanager_->get_render_window()->isClosed())
 			return false;
 
 		bool res = true;
 		time_since_last_frame_ += evt.timeSinceLastFrame;
 		
-		while (time_since_last_frame_ >= target_frame_rate_) {
+		if(time_since_last_frame_ >= target_frame_rate_) {
 			AdvanceSimulation(target_frame_rate_);
 			res = Update(target_frame_rate_);
-			time_since_last_frame_ -= target_frame_rate_;
-			if (!res)
-				break;
+			time_since_last_frame_ = fmod(time_since_last_frame_, target_frame_rate_);
 		}		
 
 		if (gameobjects_to_delete_.size() > 0) {
@@ -75,6 +81,10 @@ namespace gpe {
 			}
 			gameobjects_to_delete_.clear();
 		}
+		KeyListenerPost();
+		MouseListenerPost();
+		JoyStickListenerPost();
+
 		return res;
 	}
 

@@ -38,9 +38,11 @@ public:
 	static RenderProfile OGRE_PARTICLE_VELOCITIES;
 	static RenderProfile OGRE_SOFTBODY;
 
-	VisualDebugger(physx::PxScene* scene, Ogre::SceneManager& mSceneMgr);
+	VisualDebugger(physx::PxScene* scene, Ogre::SceneManager* visualDebuggerScene_Mgr);
 	virtual ~VisualDebugger();
 	void update(const physx::PxRenderBuffer& debugRenderable);
+
+	void DrawVector(physx::PxVec3 position, physx::PxVec3 direction, physx::PxReal length);
 
 	void showAll();
 	void hideAll();
@@ -83,12 +85,13 @@ protected:
      Ogre::HardwareIndexBufferSharedPtr mIndexBuffer;
 
 private:
-	physx::PxScene*						mScene;
-	Ogre::SceneNode*				mVisualDebuggerNode;
+	physx::PxScene*						visualDebuggerScene_;
+	Ogre::SceneNode*				visualDebuggerNode_;
 	void							drawVisualDebugger();
-	unsigned int					mNbLines;
-	buffer<float>					mLines;
-	buffer<unsigned int>			mColours;
+	unsigned int					nbLines_;
+	buffer<float>					lines_;
+	buffer<unsigned int>			colours_;
+	std::vector<physx::PxVec3>		debug_vectors_;
 };
 
 #undef ABORT_IF_EMPTY

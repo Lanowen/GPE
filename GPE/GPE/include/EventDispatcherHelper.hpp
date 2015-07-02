@@ -11,8 +11,8 @@ public:
 	EventDispatcherHelper();
 	virtual ~EventDispatcherHelper();
 	
-	std::string currEvent;
-	std::list<boost::function<void(const EventData*)>>::iterator* tempNextCpp;
+	std::string currEvent_;
+	std::list<boost::function<void(const EventData*)>>::iterator* tempNextCpp_;
 
 	void runThroughList(std::string eventName, std::list<boost::function<void(const EventData*)>>& inList, const EventData* data);
 };

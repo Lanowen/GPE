@@ -1,8 +1,8 @@
 #include "EventDispatcherHelper.hpp"
 
 EventDispatcherHelper::EventDispatcherHelper(){
-	tempNextCpp = 0;
-	currEvent = "";
+	tempNextCpp_ = 0;
+	currEvent_ = "";
 };
 
 EventDispatcherHelper::~EventDispatcherHelper(){
@@ -10,19 +10,19 @@ EventDispatcherHelper::~EventDispatcherHelper(){
 }
 
 void EventDispatcherHelper::runThroughList(std::string eventName, std::list<boost::function<void(const EventData*)>>& inList, const EventData* data){
-	currEvent = eventName;
+	currEvent_ = eventName;
 
 	std::list<boost::function<void(const EventData*)>>::iterator itr = inList.begin();
 
-	for(tempNextCpp = &itr; *tempNextCpp != inList.end(); ++*tempNextCpp){
-		(**tempNextCpp)(data);
+	for(tempNextCpp_ = &itr; *tempNextCpp_ != inList.end(); ++*tempNextCpp_){
+		(**tempNextCpp_)(data);
 
 		//This might not be working properly...
-		if(tempNextCpp == 0 || *tempNextCpp == inList.end()){
+		if(tempNextCpp_ == 0 || *tempNextCpp_ == inList.end()){
 			break;
 		}
 	}
 
-	tempNextCpp = 0;
-	currEvent = "";
+	tempNextCpp_ = 0;
+	currEvent_ = "";
 };

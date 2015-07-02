@@ -28,16 +28,20 @@ namespace gpe {
 		GameState(std::string name);
 		~GameState();
 
-		inline PhysicsScene& get_physics_scene() { return *physics_scene_; }
-		inline SceneManager& get_scene_manager() { return *scene_manager_; }
-		inline GameStateManager& get_gamestatemanager() { return *gamestatemanager_; }
+		inline PhysicsScene* get_physics_scene() { return physics_scene_; }
+		inline SceneManager* get_scene_manager() { return scene_manager_; }
+		inline GameStateManager* get_gamestatemanager() { return gamestatemanager_; }
 		inline void set_physics_target_fps(PxReal fps) { target_frame_rate_ = fps; }
 		inline std::vector<GameObject*>& get_gameobjects() { return gameobjects_; }
-		inline EventDispatcher& get_event_dispatcher() { return *event_dispatcher_; }
+		inline EventDispatcher* get_event_dispatcher() { return event_dispatcher_; }
 
 		void AddGameObject(GameObject* go);
 		void DeleteGameObject(GameObject* go);
 		void RemoveGameObject(GameObject* go);
+
+		inline Ogre::CompositorInstance* AddCompositor(char* compositor) {
+			return Ogre::CompositorManager::getSingleton().addCompositor(viewport_, compositor);
+		}
 
 	protected:
 		inline void set_physics_scene(PhysicsScene* phys_scene) { physics_scene_ = phys_scene; }
