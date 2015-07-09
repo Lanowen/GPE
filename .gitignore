@@ -25,18 +25,7 @@ obj/
 Debug/
 Debug Server/
 Release/
-GPE/Media/Debug/
-GPE/Media/DeferredShadingMedia/
-GPE/Media/fonts/
-GPE/Media/materials/
-GPE/Media/models/
-GPE/Media/packs/
-GPE/Media/particle/
-GPE/Media/PCZAppMedia/
-GPE/Media/RTShaderLib/
-GPE/Media/thumbnails/
-GPE/Media/CMakeLists.txt
-GPE/Media/terrain.cfg
+GPE/Media/
 New Folder/
 [Bb]in
 Ankh.NoLoad

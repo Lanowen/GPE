@@ -1,6 +1,0 @@
-<tools>
-    <tool>
-      <scale x="1.000000" y="1.000000" z="1.000000"/>
-      <entity name="Box01" meshFile="SimpleBox.mesh"/>
-    </tool>
-</tools>
