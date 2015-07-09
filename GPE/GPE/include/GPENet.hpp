@@ -142,7 +142,7 @@ namespace GPENet {
 			Datagram param;
 		};
 
-		void serviceRunner();
+		static void serviceRunner();
 
 	protected:
 
@@ -163,7 +163,18 @@ namespace GPENet {
 		template<class T>
 		inline void Send(T& data, UINT32 updateType, DatagramImportance importance = DatagramImportance::UNRELIABLE) {
 			boost::shared_ptr<T> temp = boost::make_shared<T>(data);
-			Send(boost::dynamic_pointer_cast<SerializableData>(temp), updateType, importance);
+			try {
+				Send(boost::dynamic_pointer_cast<SerializableData>(temp), updateType, importance);
+			}
+			catch (boost::system::system_error &e) {
+				Util::dout << boost::diagnostic_information(e) << std::endl;
+			}
+			catch (boost::exception &e) {
+				Util::dout << boost::diagnostic_information(e);
+			}
+			catch (const std::exception& e) {
+				Util::dout << e.what() << std::endl;
+			}
 		}
 
 		virtual void Send(const boost::shared_ptr<SerializableData> data, UINT32 updateType, DatagramImportance importance = DatagramImportance::UNRELIABLE) = 0;
@@ -190,9 +201,9 @@ namespace GPENet {
 		static boost::asio::io_service io_service;
 		boost::shared_ptr<udp::socket> socket;
 		//std::auto_ptr<boost::thread> worker_thread;
-		boost::thread worker_thread;
+		static boost::thread worker_thread;
 
-		std::auto_ptr<boost::asio::io_service::work> work;
+		static boost::asio::io_service::work work;
 		boost::array<char, MAXBUFFSIZE> dataBuff;
 		
 		std::map<UINT32, boost::function<void (Datagram)>> callbacks;
@@ -209,7 +220,7 @@ namespace GPENet {
 	
 	private:
 
-		Client(udp::endpoint local_endPoint, bool resuse_address = false);
+		Client(udp::endpoint local_endPoint, bool resuse_address = true);
 
 		void beginListening();
 

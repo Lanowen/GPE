@@ -22,16 +22,16 @@ namespace gpe {
 		JoyStickListener() { }
 		virtual ~JoyStickListener() {}
 
-		inline virtual void RegisterJoyListener(IJoyStickListener* listener) {
+		inline void RegisterJoyListener(IJoyStickListener* listener) {
 			joylisteners_.push_back(listener);
 		}
 
-		inline virtual void DeregisterJoyListener(IJoyStickListener* listener) {
+		inline void DeregisterJoyListener(IJoyStickListener* listener) {
 			to_delete_.push(listener);
 		}
 
 	private:
-		inline virtual bool PovMoved(const OIS::JoyStickEvent &e, int pov) {
+		inline bool PovMoved(const OIS::JoyStickEvent &e, int pov) {
 			std::vector<IJoyStickListener*>::iterator itr = joylisteners_.begin();
 			for (; itr != joylisteners_.end(); itr++) {
 				(*itr)->PovMoved(e, pov);
@@ -40,7 +40,7 @@ namespace gpe {
 			return true;
 		}
 
-		inline virtual bool AxisMoved(const OIS::JoyStickEvent &e, int axis) {
+		inline bool AxisMoved(const OIS::JoyStickEvent &e, int axis) {
 			std::vector<IJoyStickListener*>::iterator itr = joylisteners_.begin();
 			for (; itr != joylisteners_.end(); itr++) {
 				(*itr)->AxisMoved(e, axis);
@@ -49,7 +49,7 @@ namespace gpe {
 			return true;
 		}
 
-		inline virtual bool SliderMoved(const OIS::JoyStickEvent &e, int sliderID) {
+		inline bool SliderMoved(const OIS::JoyStickEvent &e, int sliderID) {
 			std::vector<IJoyStickListener*>::iterator itr = joylisteners_.begin();
 			for (; itr != joylisteners_.end(); itr++) {
 				(*itr)->SliderMoved(e, sliderID);
@@ -58,7 +58,7 @@ namespace gpe {
 			return true;
 		}
 
-		inline virtual bool ButtonPressed(const OIS::JoyStickEvent &e, int button) {
+		inline bool ButtonPressed(const OIS::JoyStickEvent &e, int button) {
 			std::vector<IJoyStickListener*>::iterator itr = joylisteners_.begin();
 			for (; itr != joylisteners_.end(); itr++) {
 				(*itr)->ButtonPressed(e, button);
@@ -67,7 +67,7 @@ namespace gpe {
 			return true;
 		}
 
-		inline virtual bool ButtonReleased(const OIS::JoyStickEvent &e, int button) {
+		inline bool ButtonReleased(const OIS::JoyStickEvent &e, int button) {
 			std::vector<IJoyStickListener*>::iterator itr = joylisteners_.begin();
 			for (; itr != joylisteners_.end(); itr++) {
 				(*itr)->ButtonReleased(e, button);

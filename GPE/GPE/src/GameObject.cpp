@@ -6,15 +6,15 @@
 
 namespace gpe {
 
-	GameObject::GameObject(string name) : owner_(0), netId_(-1), released_(true), netOwned_(true), name_(name) {
+	GameObject::GameObject(string name) : owner_(0), net_id_(-1), released_(true), net_owned_(false), name_(name) {
 	}
 
 	GameObject::~GameObject() {
-		for (std::unordered_map<std::string, std::list<boost::function<void(const EventData*)>>>::iterator itr = eventsCpp_.begin(); itr != eventsCpp_.end(); itr++) {
-			for (std::list<boost::function<void(const EventData*)>>::iterator itr2 = itr->second.begin(); itr2 != itr->second.end(); itr2++) {
-				owner_->get_event_dispatcher()->removeEventCallback(itr->first, *itr2);
-			}
-		}
+		//for (std::unordered_map<std::string, std::list<boost::function<void(const EventData*)>>>::iterator itr = eventsCpp_.begin(); itr != eventsCpp_.end(); itr++) {
+		//	for (std::list<boost::function<void(const EventData*)>>::iterator itr2 = itr->second.begin(); itr2 != itr->second.end(); itr2++) {
+		//		owner_->get_event_dispatcher()->removeEventCallback(itr->first, *itr2);
+		//	}
+		//}
 	}
 
 	void GameObject::setSocket(boost::shared_ptr<GPENet::SocketBase> base) {

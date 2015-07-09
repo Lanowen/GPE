@@ -22,6 +22,8 @@ namespace gpe {
 		
 		inline GameState* get_owner() { return owner_; }
 		inline std::string get_name() { return name_; }
+		inline bool get_net_owned() { return net_owned_; }
+		inline int get_net_id() { return net_id_; }
 
 		void registerEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc);
 		void removeEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc);
@@ -32,7 +34,7 @@ namespace gpe {
 		//template<class... Args>
 		//void dispatchEvent(std::string eventName, Args... args);
 
-		virtual void release();
+		
 		virtual void Update(Ogre::Real deltaTime);
 
 		
@@ -52,13 +54,15 @@ namespace gpe {
 		virtual void RemovedFromState(GameState* owner) = 0;
 
 	private:
+		virtual void release();
+
 		std::unordered_map<std::string, std::list<boost::function<void(const EventData*)>>> eventsCpp_;
 		GameState* owner_;
 		std::string name_;
 
 		bool released_;
-		int netId_;
-		bool netOwned_;
+		int net_id_;
+		bool net_owned_;
 	};
 
 }

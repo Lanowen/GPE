@@ -13,23 +13,23 @@ namespace gpe {
 		virtual bool MouseReleased(const OIS::MouseEvent &evt, OIS::MouseButtonID id) = 0;
 	};
 
-	class MouseListener : public IMouseListener {
+	class MouseListener {
 		friend class GameState;
 		friend class GameStateManager;
 	public:
 		MouseListener() {}
 		virtual ~MouseListener() {}
 
-		inline virtual void RegisterMouseListener(IMouseListener* listener) {
+		inline void RegisterMouseListener(IMouseListener* listener) {
 			mouselisteners_.push_back(listener);
 		}
 
-		inline virtual void DeregisterMouseListener(IMouseListener* listener) {
+		inline void DeregisterMouseListener(IMouseListener* listener) {
 			to_delete_.push(listener);
 		}
 
 	private:
-		inline virtual bool MouseMoved(const OIS::MouseEvent &evt) {
+		inline bool MouseMoved(const OIS::MouseEvent &evt) {
 			std::vector<IMouseListener*>::iterator itr = mouselisteners_.begin();
 			for (; itr != mouselisteners_.end(); itr++) {
 				(*itr)->MouseMoved(evt);
@@ -38,7 +38,7 @@ namespace gpe {
 			return true;
 		}
 
-		inline virtual bool MousePressed(const OIS::MouseEvent &evt, OIS::MouseButtonID id) {
+		inline bool MousePressed(const OIS::MouseEvent &evt, OIS::MouseButtonID id) {
 			std::vector<IMouseListener*>::iterator itr = mouselisteners_.begin();
 			for (; itr != mouselisteners_.end(); itr++) {
 				(*itr)->MousePressed(evt, id);
@@ -47,7 +47,7 @@ namespace gpe {
 			return true;
 		}
 
-		inline virtual bool MouseReleased(const OIS::MouseEvent &evt, OIS::MouseButtonID id) {
+		inline bool MouseReleased(const OIS::MouseEvent &evt, OIS::MouseButtonID id) {
 			std::vector<IMouseListener*>::iterator itr = mouselisteners_.begin();
 			for (; itr != mouselisteners_.end(); itr++) {
 				(*itr)->MouseReleased(evt, id);

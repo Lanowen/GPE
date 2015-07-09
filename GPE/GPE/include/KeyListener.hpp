@@ -12,24 +12,24 @@ namespace gpe {
 		virtual bool KeyReleased(const OIS::KeyEvent &keyEventRef) = 0;
 	};
 
-	class KeyListener : public IKeyListener {
+	class KeyListener {
 		friend class GameState;
 		friend class GameStateManager;
 	public:
 		KeyListener() {}
 		virtual ~KeyListener() {}
 
-		inline virtual void RegisterKeyListener(IKeyListener* listener) {
+		inline void RegisterKeyListener(IKeyListener* listener) {
 			keylisteners_.push_back(listener);
 		}
 
-		inline virtual void DeregisterKeyListener(IKeyListener* listener) {
+		inline void DeregisterKeyListener(IKeyListener* listener) {
 			to_delete_.push(listener);
 			
 		}
 
 	private:
-		inline virtual  bool KeyPressed(const OIS::KeyEvent &keyEventRef) {
+		inline bool KeyPressed(const OIS::KeyEvent &keyEventRef) {
 			std::vector<IKeyListener*>::iterator itr = keylisteners_.begin();
 			for (; itr != keylisteners_.end(); itr++) {
 				(*itr)->KeyPressed(keyEventRef);
@@ -38,7 +38,7 @@ namespace gpe {
 			return true;
 		}
 
-		inline virtual bool KeyReleased(const OIS::KeyEvent &keyEventRef) {
+		inline bool KeyReleased(const OIS::KeyEvent &keyEventRef) {
 			std::vector<IKeyListener*>::iterator itr = keylisteners_.begin();
 			for (; itr != keylisteners_.end(); itr++) {
 				(*itr)->KeyReleased(keyEventRef);

@@ -3,6 +3,8 @@
 namespace GPENet {
 
 	boost::asio::io_service SocketBase::io_service;
+	boost::asio::io_service::work SocketBase::work(SocketBase::io_service);
+	boost::thread SocketBase::worker_thread(boost::bind(&SocketBase::serviceRunner));
 
 	void OrderedDatagamHistory::Update(UINT32 ack, UINT32 ack_bitfield){
 		UINT32 diff_ack_bitfield = lastProcessedAck_bitfield;
@@ -141,19 +143,24 @@ namespace GPENet {
 		history.clear();
 	}
 
-	//static void serviceRunner(boost::shared_ptr<boost::asio::io_service> io_service){
-	void SocketBase::serviceRunner(){
+	void SocketBase::serviceRunner() {
 		try {
-			io_service.run();
+			SocketBase::io_service.run();
+		}
+		catch (boost::system::system_error &e) {
+			Util::dout << boost::diagnostic_information(e) << std::endl;
+		}
+		catch (boost::exception &e) {
+			Util::dout << boost::diagnostic_information(e);
 		}
 		catch (const std::exception& e) {
-			std::cerr << e.what() << std::endl;
+			Util::dout  << e.what() << std::endl;
 		}
 		
 		assert(0);
 	}
 
-	SocketBase::SocketBase(udp::endpoint local_endPoint, bool reuse_address) : work(new boost::asio::io_service::work(io_service))/*, worker_thread(boost::thread(boost::bind(serviceRunner, boost::ref(io_service))))*/, socket(new udp::socket(io_service)) {
+	SocketBase::SocketBase(udp::endpoint local_endPoint, bool reuse_address) : /*work(new boost::asio::io_service::work(io_service))/*, worker_thread(boost::thread(boost::bind(serviceRunner, boost::ref(io_service)))),*/ socket(new udp::socket(io_service)) {
 
 			socket->open(udp::v4());
 			try{
@@ -163,15 +170,19 @@ namespace GPENet {
 				boost::asio::socket_base::non_blocking_io command(true);
 				socket->io_control(command);
 			}
+			catch (boost::system::system_error &e) {
+				Util::dout << "Socket Base::SocketBase " << e.what() << std::endl;
+				Util::dout << "Socket Base::SocketBase " << boost::diagnostic_information(e) << std::endl;
+			}
 			catch (std::exception e){
 				Util::dout << e.what() << std::endl;
 			}
 
 			//worker_thread = boost::thread(boost::bind(serviceRunner, boost::ref(io_service)));
-			worker_thread = boost::thread(boost::bind(&SocketBase::serviceRunner, this));
+			//worker_thread = boost::thread(boost::bind(&SocketBase::serviceRunner, this));
 	}
 
-	SocketBase::SocketBase() : /*io_service(new boost::asio::io_service),*/ work(new boost::asio::io_service::work(io_service))/*, worker_thread(boost::thread(boost::bind(serviceRunner, boost::ref(io_service))))*/, socket(new udp::socket(io_service)) {
+	SocketBase::SocketBase() : /*io_service(new boost::asio::io_service),*/ /*work(new boost::asio::io_service::work(io_service))/*, worker_thread(boost::thread(boost::bind(serviceRunner, boost::ref(io_service)))), */ socket(new udp::socket(io_service)) {
 
 			socket->open(udp::v4());
 
@@ -180,11 +191,11 @@ namespace GPENet {
 	}
 
 	SocketBase::~SocketBase(){
-			work.reset();
+			//work.reset();
 	}
 
 	void SocketBase::Initialize(){
-			//worker_thread = boost::thread(boost::bind(serviceRunner, boost::ref(io_service)));
+		//worker_thread = boost::thread(boost::bind(&SocketBase::serviceRunner, this));
 	}
 
 	void SocketBase::tryCallCallbacks(Datagram& dg){

@@ -17,6 +17,8 @@ namespace gpe {
 		void removeGameObject(GameObject* go);
 
 		GameObject* getGameObject(int id);
+
+		inline std::map<int, GameObject*>& get_objects() { return objects_; }
 		
 
 	private:
