@@ -5,7 +5,7 @@
 
 namespace gpe {
 
-	GameState::GameState(std::string name) : viewport_(0), target_frame_rate_(1.0 / 60.0), time_since_last_frame_(0), name_(name) {
+	GameState::GameState(std::string name) : viewport_(0), name_(name) {
 	}
 
 	GameState::~GameState() {
@@ -61,19 +61,7 @@ namespace gpe {
 		return true;
 	}
 
-	bool GameState::frameRenderingQueued(const Ogre::FrameEvent& evt) {
-		if (gamestatemanager_->get_render_window()->isClosed())
-			return false;
-
-		bool res = true;
-		time_since_last_frame_ += evt.timeSinceLastFrame;
-		
-		if(time_since_last_frame_ >= target_frame_rate_) {
-			AdvanceSimulation(target_frame_rate_);
-			res = Update(target_frame_rate_);
-			time_since_last_frame_ = fmod(time_since_last_frame_, target_frame_rate_);
-		}		
-
+	bool GameState::PostUpdate() {
 		if (gameobjects_to_delete_.size() > 0) {
 			std::list<GameObject*>::iterator itr = gameobjects_to_delete_.begin();
 			for (; itr != gameobjects_to_delete_.end(); itr++) {
@@ -88,7 +76,6 @@ namespace gpe {
 		MouseListenerPost();
 		JoyStickListenerPost();
 
-		return res;
+		return true;
 	}
-
 }

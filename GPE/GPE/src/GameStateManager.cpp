@@ -3,7 +3,8 @@
 
 namespace gpe {
 
-	GameStateManager::GameStateManager(char* window_title) : joystick_dead_zone_(0), joystick_(0), mouse_(0), keyboard_(0), ois_inputmanager_(0), log_(0), render_window_(0), root_(0) {
+	GameStateManager::GameStateManager(char* window_title) : joystick_dead_zone_(0), time_since_last_frame_(0), target_frame_rate_(1.0 / 60.0), joystick_(nullptr), mouse_(nullptr), 
+																keyboard_(nullptr), ois_inputmanager_(nullptr), log_(nullptr), render_window_(nullptr), root_(nullptr) {
 		Ogre::LogManager* logmgr = new Ogre::LogManager();
 
 		log_ = logmgr->createLog("GPE_logfile.txt", true, true, false);
@@ -51,6 +52,9 @@ namespace gpe {
 		render_window_->setActive(true);
 
 		root_->addFrameListener(this);
+
+		//Register as a Window listener
+		Ogre::WindowEventUtilities::addWindowEventListener(render_window_, this);
 		log_->logMessage("Game initialized!");
 
 		Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
@@ -113,16 +117,25 @@ namespace gpe {
 			delete state.second;
 		}
 
-		if (ois_inputmanager_) {
+		if (mouse_ != nullptr) {
 			ois_inputmanager_->destroyInputObject(mouse_);
+			mouse_ = nullptr;
+		}
+		if (keyboard_ != nullptr) {
 			ois_inputmanager_->destroyInputObject(keyboard_);
+			keyboard_ = nullptr;
+		}
+		if (joystick_ != nullptr) {
 			ois_inputmanager_->destroyInputObject(joystick_);
-
-			OIS::InputManager::destroyInputSystem(ois_inputmanager_);
-			ois_inputmanager_ = 0;
+			joystick_ = nullptr;
 		}
 
-		if (root_)
+		if (ois_inputmanager_ != nullptr) {
+			OIS::InputManager::destroyInputSystem(ois_inputmanager_);
+			ois_inputmanager_ = nullptr;
+		}
+
+		if (root_ != nullptr)
 			delete root_;
 	}
 
@@ -164,23 +177,63 @@ namespace gpe {
 		state->Enter();
 	}
 
-	bool GameStateManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
-		//Need to capture/update each device
-		if (keyboard_) {
-			keyboard_->capture();
-		}
-		if (mouse_) {
-			mouse_->capture();
-		}
-		if (joystick_) {
-			joystick_->capture();
-		}
+	bool GameStateManager::frameStarted(const Ogre::FrameEvent& evt) {
+		if (gamestates_.empty())
+			return false;
+			
+		time_since_last_frame_ += evt.timeSinceLastFrame;
 
-		if (!gamestates_.empty()) {
-			return (--gamestates_.end())->second->frameRenderingQueued(evt);
+		if (time_since_last_frame_ >= target_frame_rate_) {
+			(--gamestates_.end())->second->AdvanceSimulation(target_frame_rate_);
 		}
 
 		return true;
+	}
+
+	bool GameStateManager::frameRenderingQueued(const Ogre::FrameEvent& evt) {
+		if (gamestates_.empty())
+			return false;
+
+		if (get_render_window()->isClosed())
+			return false;
+
+		bool res = true;
+
+		if (time_since_last_frame_ >= target_frame_rate_) {
+
+			(--gamestates_.end())->second->get_physics_scene()->FetchResults(); //block until physics thread joins
+
+			//Need to capture/update each device
+			if (keyboard_ != nullptr) {
+				keyboard_->capture();
+			}
+			if (mouse_ != nullptr) {
+				mouse_->capture();
+			}
+			if (joystick_ != nullptr) {
+				joystick_->capture();
+			}			
+
+			res &= (--gamestates_.end())->second->Update(target_frame_rate_);
+		}
+
+		return res;
+	}
+
+	bool GameStateManager::frameEnded(const Ogre::FrameEvent& evt) {
+		if (gamestates_.empty())
+			return false;
+
+		bool res = true;
+
+		if (time_since_last_frame_ >= target_frame_rate_) {
+			
+			res &= (--gamestates_.end())->second->PostUpdate();
+
+			time_since_last_frame_ = fmod(time_since_last_frame_, target_frame_rate_);
+		}
+
+		return res;
 	}
 
 	//Adjust mouse clipping area
@@ -199,14 +252,27 @@ namespace gpe {
 		//Only close for window that created OIS (the main window in these demos)
 		if (rw == render_window_) {
 			if (ois_inputmanager_) {
-				ois_inputmanager_->destroyInputObject(mouse_);
-				ois_inputmanager_->destroyInputObject(keyboard_);
-				ois_inputmanager_->destroyInputObject(joystick_);
+				if (mouse_ != nullptr) {
+					ois_inputmanager_->destroyInputObject(mouse_);
+					mouse_ = nullptr;
+				}
+				if (keyboard_ != nullptr) {
+					ois_inputmanager_->destroyInputObject(keyboard_);
+					keyboard_ = nullptr;
+				}
+				if (joystick_ != nullptr) {
+					ois_inputmanager_->destroyInputObject(joystick_);
+					joystick_ = nullptr;
+				}
 
-				OIS::InputManager::destroyInputSystem(ois_inputmanager_);
-				ois_inputmanager_ = 0;
+				if (ois_inputmanager_ != nullptr) {
+					OIS::InputManager::destroyInputSystem(ois_inputmanager_);
+					ois_inputmanager_ = nullptr;
+				}
 			}
 		}
+
+		Stop();
 	}
 
 	bool GameStateManager::keyPressed(const OIS::KeyEvent &keyEventRef) {

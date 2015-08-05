@@ -40,12 +40,18 @@ namespace gpe {
 		
 
 		inline virtual GO_TYPE getType() = 0;
-
-		void setSocket(boost::shared_ptr<GPENet::SocketBase> base);
+#ifndef WIN8_ARM
+		inline void setSocket(boost::shared_ptr<GPENet::SocketBase> base) {
+			socket_ = base;
+		}
+#endif
 
 	protected:
 		virtual ~GameObject();
+
+#ifndef WIN8_ARM
 		boost::shared_ptr<GPENet::SocketBase> socket_;
+#endif
 
 		//This is where you do your logic adding physics and graphics objects to their respective Scenes
 		virtual void AddedToState(GameState* owner) = 0;

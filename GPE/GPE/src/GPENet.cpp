@@ -1,5 +1,7 @@
 #include "GPENet.hpp"
 
+#ifndef WIN8_ARM
+
 namespace GPENet {
 
 	boost::asio::io_service SocketBase::io_service;
@@ -712,3 +714,5 @@ namespace GPENet {
 	}
 
 }
+
+#endif

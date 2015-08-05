@@ -9,6 +9,7 @@
 #include <OISKeyboard.h>
 #include <OISMouse.h>
 #include <OISJoyStick.h>
+#include <future>
 
 using namespace std;
 
@@ -20,9 +21,12 @@ namespace gpe {
 	public:
 		GameStateManager(char* window_title);
 		~GameStateManager();
-		void Start(GameState* state) {
+		inline void Start(GameState* state) {
 			ChangeState(state);
 			root_->startRendering();
+		}
+		inline void Stop() {
+			root_->queueEndRendering();
 		}
 		void ChangeState(GameState* state);
 		void Clear();
@@ -46,10 +50,15 @@ namespace gpe {
 
 		inline int get_joystick_dead_zone() { return joystick_dead_zone_; }
 
+		inline void set_physics_target_frame_rate(Ogre::Real fps_inverse) { target_frame_rate_ = fps_inverse; }
+
 	protected:
 		virtual void windowResized(Ogre::RenderWindow* rw);
 		virtual void windowClosed(Ogre::RenderWindow* rw);
+
+		virtual bool frameStarted(const Ogre::FrameEvent& evt);
 		virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
+		virtual bool frameEnded(const Ogre::FrameEvent& evt);
 
 		// OIS::KeyListener
 		virtual bool keyPressed(const OIS::KeyEvent &e);
@@ -79,5 +88,8 @@ namespace gpe {
 
 	private:
 		std::map<std::string, GameState*> gamestates_;
+
+		Ogre::Real target_frame_rate_;
+		Ogre::Real time_since_last_frame_;
 	};
 }

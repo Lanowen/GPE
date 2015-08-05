@@ -17,10 +17,6 @@ namespace gpe {
 		//}
 	}
 
-	void GameObject::setSocket(boost::shared_ptr<GPENet::SocketBase> base) {
-		socket_ = base;
-	}
-
 	void GameObject::registerEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc) {
 		std::list<boost::function<void(const EventData*)>>::iterator itr;
 

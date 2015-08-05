@@ -89,6 +89,8 @@ namespace Util {
 		return q;
 	}
 
+#ifndef WIN8_ARM
+
 static void ShowWin32Console() {
 	static const WORD MAX_CONSOLE_LINES = 500;
 	int hConHandle;
@@ -124,6 +126,8 @@ static void ShowWin32Console() {
 	// point to console as well
 	std::ios::sync_with_stdio();
 }
+
+#endif
 
 static void DebugOutput(std::string message){
 	OutputDebugStringA(message.c_str());

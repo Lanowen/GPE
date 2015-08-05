@@ -31,8 +31,12 @@ namespace gpe {
 		PX_FORCE_INLINE void AdvanceSimulation(PxReal timestep) {
 			scene_->simulate(timestep);
 			fetching_results_ = true;
-			PxU32 err;
-			bool res = scene_->fetchResults(true, &err);
+			//PxU32 err;
+			//scene_->fetchResults(true, &err);
+		}
+
+		PX_FORCE_INLINE void FetchResults() {
+			scene_->fetchResults(true);
 			fetching_results_ = false;
 
 			if (!visual_debugger_hidden_)

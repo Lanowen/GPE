@@ -1,5 +1,6 @@
 #pragma once
 
+#ifndef WIN8_ARM
 #include <boost\asio.hpp>
 #include <boost\smart_ptr.hpp>
 #include <boost\array.hpp>
@@ -335,3 +336,5 @@ namespace GPENet {
 		boost::recursive_mutex clientMtx;
 	};
 }
+
+#endif

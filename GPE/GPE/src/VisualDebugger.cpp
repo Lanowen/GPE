@@ -127,7 +127,7 @@ void VisualDebugger::update(const physx::PxRenderBuffer& debugRenderable)
 		lines++;
 	}
 
-	for (int i = 0; i < debug_vectors_.size(); i += 2) {
+	for (unsigned int i = 0; i < debug_vectors_.size(); i += 2) {
 		lines_.push_back(debug_vectors_[i].x);
 		lines_.push_back(debug_vectors_[i].y);
 		lines_.push_back(debug_vectors_[i].z);
