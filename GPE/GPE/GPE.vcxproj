@@ -21,12 +21,13 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B25C7BFA-0D83-4967-AF63-CB680F7C5E6E}</ProjectGuid>
     <RootNamespace>GPE</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
@@ -38,7 +39,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -66,12 +67,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)/include;C:\Dev\Libraries\Boost\boost_1_57_0;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\OgreMain\include;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\include;C:\Dev\Libraries\nVidia\PhysX-3.3.2_WINDOWS_SDK_Core\Include;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Dev\Libraries\Boost\boost_1_57_0\stage\lib;C:\Dev\Libraries\nVidia\PhysX-3.3.2_WINDOWS_SDK_Core\Lib\vc11win32;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\lib\$(Configuration);C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)/include;C:\Dev\Libraries\Boost\boost_1_60_0;C:\Dev\Libraries\Ogre\OgreSDK_vc12_v1-9-0\OgreMain\include;C:\Dev\Libraries\Ogre\OgreSDK_vc12_v1-9-0\include;C:\Dev\Libraries\nVidia\PhysX-3.3\PhysXSDK\Include;C:\Dev\Libraries\Ogre\OgreSDK_vc12_v1-9-0\Dependencies\src\ois\includes;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Dev\Libraries\Boost\boost_1_60_0\stage\lib;C:\Dev\Libraries\nVidia\PhysX-3.3\PhysXSDK\Lib\vc14win32;C:\Dev\Libraries\Ogre\OgreSDK_vc12_v1-9-0\lib\$(Configuration);C:\Dev\Libraries\Ogre\OgreSDK_vc12_v1-9-0\Dependencies\src\ois\$(Configuration);$(LibraryPath)</LibraryPath>
     <SourcePath>$(ProjectDir)/src;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\OgreMain\src;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\src;$(SourcePath)</SourcePath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <OutDir>$(ProjectDir)..\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <IncludePath>$(ProjectDir)/include;C:\Dev\Libraries\Boost\boost_1_57_0;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\OgreMain\include;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\include;C:\Dev\Libraries\nVidia\PhysX-3.3.2_WINDOWS_SDK_Core\Include;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\includes;$(IncludePath)</IncludePath>
@@ -80,8 +83,8 @@
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)/include;C:\Dev\Libraries\Boost\boost_1_57_0;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\OgreMain\include;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\include;C:\Dev\Libraries\nVidia\PhysX-3.3.2_WINDOWS_SDK_Core\Include;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Dev\Libraries\Boost\boost_1_57_0\stage\lib;C:\Dev\Libraries\nVidia\PhysX-3.3.2_WINDOWS_SDK_Core\Lib\vc11win32;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\lib\$(Configuration);C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)/include;C:\Dev\Libraries\Boost\boost_1_60_0;C:\Dev\Libraries\Ogre\OgreSDK_vc12_v1-9-0\OgreMain\include;C:\Dev\Libraries\Ogre\OgreSDK_vc12_v1-9-0\include;C:\Dev\Libraries\nVidia\PhysX-3.3\PhysXSDK\Include;C:\Dev\Libraries\Ogre\OgreSDK_vc12_v1-9-0\Dependencies\src\ois\includes;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Dev\Libraries\Boost\boost_1_60_0\stage\lib;C:\Dev\Libraries\nVidia\PhysX-3.3\PhysXSDK\Lib\vc14win32;C:\Dev\Libraries\Ogre\OgreSDK_vc12_v1-9-0\lib\$(Configuration);C:\Dev\Libraries\Ogre\OgreSDK_vc12_v1-9-0\Dependencies\src\ois\$(Configuration);$(LibraryPath)</LibraryPath>
     <SourcePath>$(ProjectDir)/src;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\OgreMain\src;C:\Dev\Libraries\Ogre\OgreSDK_vc11_v1-9-0\Dependencies\src\ois\src;$(SourcePath)</SourcePath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <OutDir>$(ProjectDir)..\$(Configuration)\</OutDir>
@@ -98,22 +101,30 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PreprocessorDefinitions>WIN32;PHYSX_PROFILE_SDK;PX_CHECKED;PX_SUPPORT_VISUAL_DEBUGGER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;PHYSX_PROFILE_SDK;PX_CHECKED;PX_SUPPORT_VISUAL_DEBUGGER;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <AdditionalOptions>/Zm1000 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>OgreMain_d.lib;OgrePaging_d.lib;OgreProperty_d.lib;OgreRTShaderSystem_d.lib;OgreTerrain_d.lib;OIS_d.lib;WINMM.LIB;PhysX3DEBUG_x86.lib;PhysX3CommonDEBUG_x86.lib;PhysX3CookingDEBUG_x86.lib;PhysXVisualDebuggerSDKDEBUG.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;PhysX3CharacterKinematicDEBUG_x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <IgnoreAllDefaultLibraries>
-      </IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>LIBCMT.lib;LIBCPMTD.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <PreventDllBinding>
+      </PreventDllBinding>
     </Link>
     <PostBuildEvent>
       <Command>
       </Command>
     </PostBuildEvent>
     <Lib>
-      <AdditionalDependencies>OgreMain_d.lib;OgrePaging_d.lib;OgreProperty_d.lib;OgreRTShaderSystem_d.lib;OgreTerrain_d.lib;OIS_d.lib;WINMM.LIB;PhysX3DEBUG_x86.lib;PhysX3CommonDEBUG_x86.lib;PhysX3CookingDEBUG_x86.lib;PhysXVisualDebuggerSDKDEBUG.lib;PhysX3ExtensionsDEBUG.lib;PhysX3VehicleDEBUG.lib;PhysX3CharacterKinematicDEBUG_x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <ClCompile>
@@ -145,6 +156,10 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;WIN32;PHYSX_PROFILE_SDK;PX_SUPPORT_VISUAL_DEBUGGER;CLIENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <AdditionalOptions>/Zm1000 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -157,7 +172,7 @@
       <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
     <Lib>
-      <AdditionalDependencies>OgreMain.lib;OgrePaging.lib;OgreProperty.lib;OgreRTShaderSystem.lib;OgreTerrain.lib;OIS.lib;WINMM.LIB;PhysX3_x86.lib;PhysX3Common_x86.lib;PhysX3Cooking_x86.lib;PhysXVisualDebuggerSDK.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;PhysX3CharacterKinematic_x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>OgreMain.lib;OgrePaging.lib;OgreProperty.lib;OgreRTShaderSystem.lib;OgreTerrain.lib;OIS.lib;PhysX3_x86.lib;PhysX3Common_x86.lib;PhysX3Cooking_x86.lib;PhysXVisualDebuggerSDK.lib;PhysX3Extensions.lib;PhysX3Vehicle.lib;PhysX3CharacterKinematic_x86.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
@@ -215,6 +230,7 @@
     <ClInclude Include="include\EventDispatcher.hpp" />
     <ClInclude Include="include\SerializationClassExports.hpp" />
     <ClInclude Include="include\SerializeableData.hpp" />
+    <ClInclude Include="include\stdafx.h" />
     <ClInclude Include="include\Util.hpp" />
     <ClInclude Include="include\VisualDebugger.hpp" />
   </ItemGroup>

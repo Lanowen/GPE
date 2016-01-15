@@ -1,4 +1,7 @@
+#include "stdafx.h"
+
 #include "GameState.hpp"
+#include "GameStateManager.hpp"
 
 #include "GameObject.hpp"
 #include "GPE_Exception.hpp"
@@ -49,6 +52,19 @@ namespace gpe {
 			go->released_ = true;
 			go->owner_ = 0;
 		}
+	}
+
+	inline void GameState::Enter()
+	{
+		gamestatemanager_->get_render_window()->resetStatistics();
+
+		viewport_ = gamestatemanager_->get_render_window()->addViewport(0);
+		viewport_->setBackgroundColour(Ogre::ColourValue(0, 0, 0, 1.0f));
+
+		camera_->setAspectRatio(Ogre::Real(viewport_->getActualWidth()) /
+								Ogre::Real(viewport_->getActualHeight()));
+
+		viewport_->setCamera(camera_);
 	}
 
 	bool GameState::Update(Ogre::Real timeSinceLastFrame) {

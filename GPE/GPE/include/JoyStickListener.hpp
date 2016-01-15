@@ -1,9 +1,5 @@
 #pragma once
 
-#include <OIS.h>
-#include <vector>
-#include <stack>
-
 namespace gpe {
 
 	class IJoyStickListener {

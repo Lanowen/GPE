@@ -1,16 +1,5 @@
 #pragma once
 
-#include <map>
-#include <Ogre.h>
-#include <OgreSingleton.h>
-
-#include <OISEvents.h>
-#include <OISInputManager.h>
-#include <OISKeyboard.h>
-#include <OISMouse.h>
-#include <OISJoyStick.h>
-#include <future>
-
 using namespace std;
 
 namespace gpe {

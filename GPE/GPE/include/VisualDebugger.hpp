@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Ogre.h>
-#include <buffer.hpp>
+#include "buffer.hpp"
 
 #include <PxPhysicsAPI.h>
 #include <common/PxRenderBuffer.h>

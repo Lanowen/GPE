@@ -1,9 +1,13 @@
 #pragma once
 
-class EventData {
-public:
-	EventData();
-	virtual ~EventData();
+namespace gpe
+{
+	class EventData
+	{
+	public:
+		EventData();
+		virtual ~EventData();
 
-	void* data_;
-};
+		void* data_;
+	};
+}

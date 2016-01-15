@@ -5,9 +5,6 @@
 #include <boost\smart_ptr.hpp>
 #include <boost\array.hpp>
 #include <boost\thread.hpp>
-#include <list>
-#include <deque>
-#include <vector>
 
 #include <boost\serialization\serialization.hpp>
 #include <boost/serialization/shared_ptr.hpp>
@@ -17,11 +14,7 @@
 #include <boost\archive\text_oarchive.hpp>
 //#include <boost/archive/binary_oarchive.hpp>
 //#include <boost/archive/binary_iarchive.hpp>
-#include <ostream>
-#include <iostream>
 //#include <boost\any.hpp>
-#include <random>
-#include <map>
 
 #include "SerializeableData.hpp"
 

@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 //#include "OgrePlatform.h"
 //#include <OgreException.h>
 //#include <Game.hpp>

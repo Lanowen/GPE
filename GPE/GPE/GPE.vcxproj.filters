@@ -119,6 +119,9 @@
     <ClInclude Include="include\GPE_Exception.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Media\scripts\playerController.js">

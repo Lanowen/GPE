@@ -1,23 +1,24 @@
 #pragma once
 
-#include <list>
-//#include <v8.h>
-#include <OgreSingleton.h>
 #include "EventDispatcherHelper.hpp"
 
-#include "EventData.hpp"
+namespace gpe
+{
+	class EventData;
 
-class EventDispatcher : public EventDispatcherHelper {
+	class EventDispatcher : public EventDispatcherHelper
+	{
 
-public:
-	EventDispatcher();
+	public:
+		EventDispatcher();
 
-	void registerEventCallback(std::string eventName,boost::function<void(const EventData*)> inFunc);
-	void removeEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc);
+		void registerEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc);
+		void removeEventCallback(std::string eventName, boost::function<void(const EventData*)> inFunc);
 
-	void dispatch_event(std::string currEvent_, const EventData* data);
+		void dispatch_event(std::string currEvent_, const EventData* data);
 
-private:	
+	private:
 
-	std::unordered_map<std::string, std::list<boost::function<void(const EventData*)>>> events_;
-};
+		std::unordered_map<std::string, std::list<boost::function<void(const EventData*)>>> events_;
+	};
+}

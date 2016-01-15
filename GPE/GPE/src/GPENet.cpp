@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "GPENet.hpp"
 
 #ifndef WIN8_ARM

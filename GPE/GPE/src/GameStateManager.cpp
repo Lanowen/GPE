@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "GameStateManager.hpp"
 #include "GameState.hpp"
 

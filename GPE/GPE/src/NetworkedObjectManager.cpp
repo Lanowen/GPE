@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "NetworkedObjectManager.hpp"
 #include "GameObject.hpp"
 

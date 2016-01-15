@@ -1,14 +1,11 @@
 #pragma once
 
-#include <Ogre.h>
-#include <list>
-#include <vector>
-//#include <v8.h>
-//#include <ScriptingObject.hpp>
 #include "EventDispatcherHelper.hpp"
 
-#include "GameState.hpp"
-#include "GPENet.hpp"
+namespace GPENet
+{
+	class SocketBase;
+}
 
 namespace gpe {
 
@@ -35,13 +32,11 @@ namespace gpe {
 		//void dispatchEvent(std::string eventName, Args... args);
 
 		
-		virtual void Update(Ogre::Real deltaTime);
-
-		
+		virtual void Update(Ogre::Real deltaTime);		
 
 		inline virtual GO_TYPE getType() = 0;
 #ifndef WIN8_ARM
-		inline void setSocket(boost::shared_ptr<GPENet::SocketBase> base) {
+		inline void setSocket(std::shared_ptr<GPENet::SocketBase> base) {
 			socket_ = base;
 		}
 #endif
@@ -50,7 +45,7 @@ namespace gpe {
 		virtual ~GameObject();
 
 #ifndef WIN8_ARM
-		boost::shared_ptr<GPENet::SocketBase> socket_;
+		std::shared_ptr<GPENet::SocketBase> socket_;
 #endif
 
 		//This is where you do your logic adding physics and graphics objects to their respective Scenes

@@ -1,8 +1,12 @@
+#include "stdafx.h"
+
 #include "GameObject.hpp"
-#include <iostream>
-#include <algorithm>
-//#include <V8Scripting.hpp>
+
+#include "GameState.hpp"
+#include "GPENet.hpp"
 #include "EventDispatcher.hpp"
+
+using namespace std;
 
 namespace gpe {
 

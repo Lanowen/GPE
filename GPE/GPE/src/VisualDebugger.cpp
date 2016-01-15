@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "VisualDebugger.hpp"
 
 //VisualDebugger::RenderProfile  OGRE_VISUALDEBUGGER = VisualDebugger::RenderProfile(Ogre::RenderOperation::OT_LINE_LIST, false, true, false, false, false);

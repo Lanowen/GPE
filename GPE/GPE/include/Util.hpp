@@ -5,7 +5,7 @@
 #include <iostream>
 #include <Windows.h>
 #include <vector>
-#include <tuple>
+
 
 #include <OgreVector2.h>
 #include <OgreVector3.h>

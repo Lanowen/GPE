@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "SerializeableData.hpp"
 
 //#include <boost\archive\text_iarchive.hpp>

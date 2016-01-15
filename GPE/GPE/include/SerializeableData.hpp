@@ -4,7 +4,6 @@
 #include <boost\archive\text_oarchive.hpp>
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/export.hpp>
-#include <iostream>
 
 //namespace GPENet {
 

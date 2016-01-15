@@ -1,21 +1,25 @@
 #pragma once
 
-#include <PxPhysicsAPI.h>
-#include <extensions/PxExtensionsAPI.h>
-#include <extensions/PxDefaultAllocator.h>
-#include <extensions/PxDefaultErrorCallback.h>
-#include <extensions/PxDefaultCpuDispatcher.h>
-#include <extensions/PxDefaultSimulationFilterShader.h>
-#include <pxtask/PxCudaContextManager.h>
-#include <foundation/PxFoundation.h>
+//#include <extensions/PxExtensionsAPI.h>
+//#include <extensions/PxDefaultAllocator.h>
+//#include <extensions/PxDefaultErrorCallback.h>
+//#include <extensions/PxDefaultCpuDispatcher.h>
+//#include <extensions/PxDefaultSimulationFilterShader.h>
+//#include <pxtask/PxCudaContextManager.h>
+//#include <foundation/PxFoundation.h>
 
-#include <OgreSingleton.h>
-
+#include <PxScene.h>
 #include "VisualDebugger.hpp"
 
 using namespace physx;
 
-
+namespace physx
+{
+	class PxCpuDispatcher;
+	class PxControllerManager;
+	class PxCooking;
+	class PxCudaContextManager;
+}
 
 namespace gpe {
 
@@ -90,7 +94,7 @@ namespace gpe {
 		static inline Physics& getSingleton() { assert(msSingleton);  return *msSingleton; }
 		static inline Physics* getSingletonPtr() { return msSingleton; }
 
-		static inline PxTriangleMesh* CreateTrimesh(char* src) {
+		static PxTriangleMesh* CreateTrimesh(char* src) {
 			PxDefaultFileInputData readbuffer(src);
 			if (!readbuffer.isValid() || readbuffer.getLength() == 0)
 				return 0;
@@ -101,7 +105,7 @@ namespace gpe {
 
 		PxSceneDesc CreateDefaultSceneDesc(PxVec3 gravity, PxSimulationEventCallback* callback, int num_threads = 1);
 
-		inline void CookTrimesh(char* output_src, std::vector<PxVec3>& vertices, std::vector<PxU32>& faces) {
+		void CookTrimesh(char* output_src, std::vector<PxVec3>& vertices, std::vector<PxU32>& faces) {
 			PxTriangleMeshDesc meshDesc;
 			meshDesc.points.count = vertices.size();
 			meshDesc.points.stride = sizeof(PxVec3);

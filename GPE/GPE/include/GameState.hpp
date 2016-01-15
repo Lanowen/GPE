@@ -1,18 +1,10 @@
 #pragma once
 
-#include <Ogre.h>
-#include <OgreCamera.h>
-//#include <OgreOverlay.h>
-//#include <OgreOverlayElement.h>
-//#include <OgreOverlayManager.h>
-#include <OgreViewport.h>
 #include "Physics.hpp"
-#include <list>
-#include "GameStateManager.hpp"
+
 #include "MouseListener.hpp"
 #include "KeyListener.hpp"
 #include "JoyStickListener.hpp"
-#include "EventDispatcher.hpp"
 
 using namespace Ogre;
 using namespace physx;
@@ -20,6 +12,8 @@ using namespace physx;
 namespace gpe {
 
 	class GameObject;
+	class PhysicsScene;
+	class EventDispatcher;
 
 	class GameState : public MouseListener, public KeyListener, public JoyStickListener//, OgreBites::SdkTrayListener
 	{
@@ -53,24 +47,14 @@ namespace gpe {
 		inline void set_gamestatemanager(GameStateManager* gsm) { gamestatemanager_ = gsm; }
 
 	protected:
-		virtual void Enter() {
-			gamestatemanager_->get_render_window()->resetStatistics();
-
-			viewport_ = gamestatemanager_->get_render_window()->addViewport(0);
-			viewport_->setBackgroundColour(Ogre::ColourValue(0, 0, 0, 1.0f));
-
-			camera_->setAspectRatio(Ogre::Real(viewport_->getActualWidth()) /
-									Ogre::Real(viewport_->getActualHeight()));
-
-			viewport_->setCamera(camera_);
-		}
+		virtual void Enter();
 		virtual void Exit() {}
 		virtual void Pause() {}
 		virtual void Resume() {}
 		const std::string get_name() { return name_; }
 
 		inline virtual void AdvanceSimulation(PxReal frameRate) {
-			get_physics_scene()->AdvanceSimulation(frameRate);
+			physics_scene_->AdvanceSimulation(frameRate);
 		}
 
 		virtual bool Update(Ogre::Real timeSinceLastFrame);

@@ -1,3 +1,5 @@
+#include "stdafx.h"
+
 #include "Physics.hpp"
 #include <Ogre.h>
 #include "GameState.hpp"
